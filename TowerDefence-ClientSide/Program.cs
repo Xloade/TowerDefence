@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TurretDefence_ClientSide
+namespace TowerDefence_ClientSide
 {
     static class Program
     {

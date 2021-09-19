@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace TurretDefence_ClientSide
+namespace TowerDefence_ClientSide
 {
     public partial class GameStartMenu : Form
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace TurretDefence_ClientSide
+namespace TowerDefence_ClientSide
 {
     partial class GameStartMenu
     {
