@@ -137,7 +137,7 @@ class SpaceOfShapes : StartDraw
     }
     protected override void btn_Click(object sender, EventArgs e)
     {
-        connection.SendAsync("SendMessage", "player1", (sender as Button).Name, new string[] { });
+        connection.SendAsync("SendMessage", playerType.ToString(), (sender as Button).Name, new string[] { });
         //Graphics gr = Graphics.FromImage(DrawArea);
         //switch ((sender as Button).Name)
         //{
@@ -347,7 +347,7 @@ class SpaceOfShapes : StartDraw
     }
     protected override void Mouse_Click(object sender, MouseEventArgs e)
     {
-        connection.SendAsync("SendMessage", "player1", "explotion", new string[] { e.X.ToString(), e.Y.ToString() });
+        connection.SendAsync("SendMessage", playerType.ToString(), "explotion", new string[] { e.X.ToString(), e.Y.ToString() });
         //Explotion(e.X, e.Y, 8F, 25f, Color.Red, 2F);
     }
     public void SpeedDecay(float strenth)
@@ -357,5 +357,12 @@ class SpaceOfShapes : StartDraw
             shape.StepX = shape.StepX * (1 - strenth);
             shape.StepY = shape.StepY * (1 - strenth);
         }
+    }
+    protected override void OnFormClosing(FormClosingEventArgs e)
+    {
+        graphicalTimer.Stop();
+        physicsTimer.Stop();
+        connection.StopAsync();
+        base.OnFormClosing(e);
     }
 }
