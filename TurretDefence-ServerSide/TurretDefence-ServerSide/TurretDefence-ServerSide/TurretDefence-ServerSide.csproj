@@ -6,4 +6,9 @@
     <RootNamespace>TurretDefence_ServerSide</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.SignalR" Version="2.4.2" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
 </Project>
