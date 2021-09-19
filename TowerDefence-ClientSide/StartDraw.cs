@@ -39,7 +39,7 @@ public abstract class StartDraw : Form
             btn.Name = name;
             btn.Text = name;
             int btnWidth = name.Length * 10 + 4;
-            btn.Location = new Point(btnX, DrawArea.Height -73);
+            btn.Location = new Point(btnX, DrawArea.Height-200);
             btn.Size = new Size(btnWidth, 20);
             btn.Click += new EventHandler(btn_Click);
             this.Controls.Add(btn);
@@ -62,13 +62,12 @@ public abstract class StartDraw : Form
 
         this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
         this.ClientSize = new System.Drawing.Size(
-                      DrawArea.Width+60, DrawArea.Height+56);
+                      DrawArea.Width-198, DrawArea.Height-175);
         this.Load += new System.EventHandler(this.Form1_Load);
         this.Closed += new System.EventHandler(this.Form1_Closed);
         this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
         this.MouseClick += Mouse_Click;
-        Width = DrawArea.Width + 115;
-        Height = DrawArea.Height + 100;
+        
         this.ResumeLayout(false);
     }
     // form load event

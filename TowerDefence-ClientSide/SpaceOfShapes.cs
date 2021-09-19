@@ -22,7 +22,7 @@ class SpaceOfShapes : StartDraw
 
     HubConnection connection;
     Player playerType;
-    public SpaceOfShapes(Player playerType) : base(Color.Cyan, "Demo C# 1 kursas",
+    public SpaceOfShapes(Player playerType) : base(Color.Cyan, playerType.ToString(),
         1000, 700, "Clear", "Grid", "Draw", "MoveAll", "Stop", "Print", "ColorUp", "ColorNear")
     {
         this.playerType = playerType;
@@ -31,12 +31,12 @@ class SpaceOfShapes : StartDraw
     private void startSignalR()
     {
         connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:53353/GameServer")
+                .WithUrl("https://localhost:5001/GameHub")
                 .Build();
-        connection.On<string, string>("ReceiveMessage", (user, message) =>
+        connection.On<string, string, List<String>>("ReceiveMessage", (user, function, args) =>
         {
             Graphics gr = Graphics.FromImage(DrawArea);
-            switch (message.ToLower())
+            switch (function.ToLower())
             {
                 case "clear":
                     ClearArea();
@@ -47,7 +47,7 @@ class SpaceOfShapes : StartDraw
                 case "draw":
                     DrawAll(gr);
                     break;
-                case "moveAll":
+                case "moveall":
                     if (shapes.Count == 0)
                     {
                         DrawAll(gr);
@@ -62,17 +62,21 @@ class SpaceOfShapes : StartDraw
                 case "print":
                     Trial2();
                     break;
-                case "colorUp":
+                case "colorup":
                     ColorHigher(gr);
                     break;
-                case "colorNear":
+                case "colornear":
                     DrawLineBetweenNearest(gr, new Pen(Color.Blue, 2));
+                    break;
+                case "explotion":
+                    Explotion(int.Parse(args[0]), int.Parse(args[1]), 8F, 25f, Color.Red, 2F);
                     break;
                 default:
                     break;
             }
             Refresh();
         });
+        connection.StartAsync();
     }
     protected override void physicsTimer_Tick(object sender, EventArgs e)
     {
@@ -133,43 +137,44 @@ class SpaceOfShapes : StartDraw
     }
     protected override void btn_Click(object sender, EventArgs e)
     {
-        Graphics gr = Graphics.FromImage(DrawArea);
-        switch ((sender as Button).Name)
-        {
-            case "Clear":
-                ClearArea();
-                break;
-            case "Grid":
-                DrawGrid(gr);
-                break;
-            case "Draw":
-                DrawAll(gr);
-                break;
-            case "MoveAll":
-                if(shapes.Count ==0)
-                {
-                    DrawAll(gr);
-                    ClearArea();
-                }
-                MoveStartMulti();
-                break;
-            case "Stop":
-                physicsTimer.Enabled = false;
-                graphicalTimer.Enabled = false;
-                break;
-            case "Print":
-                Trial2();
-                break;
-            case "ColorUp":
-                ColorHigher(gr);
-                break;
-            case "ColorNear":
-                DrawLineBetweenNearest(gr, new Pen(Color.Blue, 2));
-                break;
-            default:
-                break;
-        }
-        Refresh();
+        connection.SendAsync("SendMessage", "player1", (sender as Button).Name, new string[] { });
+        //Graphics gr = Graphics.FromImage(DrawArea);
+        //switch ((sender as Button).Name)
+        //{
+        //    case "Clear":
+        //        ClearArea();
+        //        break;
+        //    case "Grid":
+        //        DrawGrid(gr);
+        //        break;
+        //    case "Draw":
+        //        DrawAll(gr);
+        //        break;
+        //    case "MoveAll":
+        //        if(shapes.Count ==0)
+        //        {
+        //            DrawAll(gr);
+        //            ClearArea();
+        //        }
+        //        MoveStartMulti();
+        //        break;
+        //    case "Stop":
+        //        physicsTimer.Enabled = false;
+        //        graphicalTimer.Enabled = false;
+        //        break;
+        //    case "Print":
+        //        Trial2();
+        //        break;
+        //    case "ColorUp":
+        //        ColorHigher(gr);
+        //        break;
+        //    case "ColorNear":
+        //        DrawLineBetweenNearest(gr, new Pen(Color.Blue, 2));
+        //        break;
+        //    default:
+        //        break;
+        //}
+        //Refresh();
     }
 
     string[] dataOfShapes = // demonstraciniai pavyzdžiai
@@ -342,7 +347,8 @@ class SpaceOfShapes : StartDraw
     }
     protected override void Mouse_Click(object sender, MouseEventArgs e)
     {
-        Explotion(e.X, e.Y, 8F, 25f, Color.Red, 2F);
+        connection.SendAsync("SendMessage", "player1", "explotion", new string[] { e.X.ToString(), e.Y.ToString() });
+        //Explotion(e.X, e.Y, 8F, 25f, Color.Red, 2F);
     }
     public void SpeedDecay(float strenth)
     {
