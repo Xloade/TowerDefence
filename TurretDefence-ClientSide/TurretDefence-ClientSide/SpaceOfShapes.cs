@@ -5,15 +5,75 @@ using static System.Console;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 
+using Microsoft.AspNetCore.SignalR.Client;
+
+enum Player
+{
+    PLAYER1,
+    PLAYER2
+}
+
 class SpaceOfShapes : StartDraw
 {
     List<Shape> shapes = new List<Shape>();
     private int gridSize = 50;
     List<Circle> explotionCircles = new List<Circle>();
     float explotionSpeed = 30f;
-    public SpaceOfShapes() : base(Color.Cyan, "Demo C# 1 kursas",
+
+    HubConnection connection;
+    Player playerType;
+    public SpaceOfShapes(Player playerType) : base(Color.Cyan, "Demo C# 1 kursas",
         1000, 700, "Clear", "Grid", "Draw", "MoveAll", "Stop", "Print", "ColorUp", "ColorNear")
-    { }
+    {
+        this.playerType = playerType;
+        startSignalR();
+    }
+    private void startSignalR()
+    {
+        connection = new HubConnectionBuilder()
+                .WithUrl("http://localhost:53353/GameServer")
+                .Build();
+        connection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+            Graphics gr = Graphics.FromImage(DrawArea);
+            switch (message.ToLower())
+            {
+                case "clear":
+                    ClearArea();
+                    break;
+                case "grid":
+                    DrawGrid(gr);
+                    break;
+                case "draw":
+                    DrawAll(gr);
+                    break;
+                case "moveAll":
+                    if (shapes.Count == 0)
+                    {
+                        DrawAll(gr);
+                        ClearArea();
+                    }
+                    MoveStartMulti();
+                    break;
+                case "stop":
+                    physicsTimer.Enabled = false;
+                    graphicalTimer.Enabled = false;
+                    break;
+                case "print":
+                    Trial2();
+                    break;
+                case "colorUp":
+                    ColorHigher(gr);
+                    break;
+                case "colorNear":
+                    DrawLineBetweenNearest(gr, new Pen(Color.Blue, 2));
+                    break;
+                default:
+                    break;
+            }
+            Refresh();
+        });
+    }
     protected override void physicsTimer_Tick(object sender, EventArgs e)
     {
         Console.WriteLine($"{shapes[4].StepY}");

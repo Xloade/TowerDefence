@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace TurretDefence_ClientSide
 {
@@ -29,14 +30,9 @@ namespace TurretDefence_ClientSide
         {
             ConnectToServer(Player.PLAYER2);
         }
-        enum Player
-        {
-            PLAYER1,
-            PLAYER2
-        }
         private void ConnectToServer(Player player)
         {
-            SpaceOfShapes form = new SpaceOfShapes();
+            SpaceOfShapes form = new SpaceOfShapes(player);
             form.Show();
         }
     }
