@@ -11,4 +11,12 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TowerDefence-SharedContent\TowerDefence-SharedContent.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Sprites\" />
+  </ItemGroup>
+
 </Project>

@@ -5,9 +5,4 @@
     <RootNamespace>TowerDefence_SharedContent</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\TowerDefence-ClientSide\TowerDefence-ClientSide.csproj" />
-    <ProjectReference Include="..\TowerDefence-ServerSide\TowerDefence-ServerSide.csproj" />
-  </ItemGroup>
-
 </Project>
