@@ -6,7 +6,6 @@ public abstract class Window : Form
 {
     protected Bitmap DrawArea;
     protected Color bgColor = Color.Yellow;
-    protected Timer physicsTimer { get; private set;}
     protected Timer graphicalTimer { get; private set; }
     private System.ComponentModel.IContainer components = null;
 
@@ -55,10 +54,6 @@ public abstract class Window : Form
         this.graphicalTimer.Enabled = false;
         this.graphicalTimer.Interval = 16;
         this.graphicalTimer.Tick += new System.EventHandler(this.graphicalTimer_Tick);
-        this.physicsTimer = new System.Windows.Forms.Timer(this.components);
-        this.physicsTimer.Enabled = false;
-        this.physicsTimer.Interval = 8;
-        this.physicsTimer.Tick += new System.EventHandler(this.physicsTimer_Tick);
 
         this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
         this.ClientSize = new System.Drawing.Size(

@@ -45,10 +45,6 @@ class GameWindow : Window
         });
         connection.StartAsync();
     }
-    protected override void physicsTimer_Tick(object sender, EventArgs e)
-    {
-        
-    }
     protected override void graphicalTimer_Tick(object sender, EventArgs e)
     {
         Refresh();
@@ -77,7 +73,6 @@ class GameWindow : Window
     protected override void OnFormClosing(FormClosingEventArgs e)
     {
         graphicalTimer.Stop();
-        physicsTimer.Stop();
         connection.StopAsync();
         base.OnFormClosing(e);
     }
