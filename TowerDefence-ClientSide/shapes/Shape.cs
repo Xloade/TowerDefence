@@ -22,12 +22,6 @@ abstract class Shape
         CenterX = x;
         CenterY = y;
     }
-
-    public override string ToString()
-    {
-        string tn = this.GetType().Name;  // sužinome išvestinio tipo vardą
-        return $"{tn,-10} {Code,-4} x={CenterX,3} y={CenterY,3} area={Area(),6:f1}";
-    }
     public abstract void Draw(Graphics gr); 
     // piešimas vykdomas išvestinėse klasėse
 
