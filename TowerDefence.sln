@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TowerDefence-ServerSide", "TowerDefence-ServerSide\TowerDefence-ServerSide.csproj", "{47FBBBF9-D539-4624-81A9-E49F8A03BE05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TowerDefence-ServerSide", "TowerDefence-ServerSide\TowerDefence-ServerSide.csproj", "{47FBBBF9-D539-4624-81A9-E49F8A03BE05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TowerDefence-ClientSide", "TowerDefence-ClientSide\TowerDefence-ClientSide.csproj", "{0BC7B7D8-6B2A-4EEF-B8F0-B160659459BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TowerDefence-ClientSide", "TowerDefence-ClientSide\TowerDefence-ClientSide.csproj", "{0BC7B7D8-6B2A-4EEF-B8F0-B160659459BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TowerDefence-SharedContent", "TowerDefence-SharedContent\TowerDefence-SharedContent.csproj", "{AD8CEA27-5675-4B53-885E-C75C9E2F8855}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{47FBBBF9-D539-4624-81A9-E49F8A03BE05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -44,5 +43,23 @@ Global
 		{0BC7B7D8-6B2A-4EEF-B8F0-B160659459BF}.Release|x64.Build.0 = Release|Any CPU
 		{0BC7B7D8-6B2A-4EEF-B8F0-B160659459BF}.Release|x86.ActiveCfg = Release|Any CPU
 		{0BC7B7D8-6B2A-4EEF-B8F0-B160659459BF}.Release|x86.Build.0 = Release|Any CPU
+		{AD8CEA27-5675-4B53-885E-C75C9E2F8855}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD8CEA27-5675-4B53-885E-C75C9E2F8855}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD8CEA27-5675-4B53-885E-C75C9E2F8855}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AD8CEA27-5675-4B53-885E-C75C9E2F8855}.Debug|x64.Build.0 = Debug|Any CPU
+		{AD8CEA27-5675-4B53-885E-C75C9E2F8855}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AD8CEA27-5675-4B53-885E-C75C9E2F8855}.Debug|x86.Build.0 = Debug|Any CPU
+		{AD8CEA27-5675-4B53-885E-C75C9E2F8855}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD8CEA27-5675-4B53-885E-C75C9E2F8855}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD8CEA27-5675-4B53-885E-C75C9E2F8855}.Release|x64.ActiveCfg = Release|Any CPU
+		{AD8CEA27-5675-4B53-885E-C75C9E2F8855}.Release|x64.Build.0 = Release|Any CPU
+		{AD8CEA27-5675-4B53-885E-C75C9E2F8855}.Release|x86.ActiveCfg = Release|Any CPU
+		{AD8CEA27-5675-4B53-885E-C75C9E2F8855}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8C88076D-F5AC-4343-BD09-43BD0C40F1B1}
 	EndGlobalSection
 EndGlobal
