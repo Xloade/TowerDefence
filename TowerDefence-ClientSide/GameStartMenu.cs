@@ -32,7 +32,7 @@ namespace TowerDefence_ClientSide
         }
         private void ConnectToServer(Player player)
         {
-            SpaceOfShapes form = new SpaceOfShapes(player);
+            GameWindow form = new GameWindow(player);
             form.Show();
         }
     }

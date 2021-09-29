@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-public abstract class StartDraw : Form
+public abstract class Window : Form
 {
     protected Bitmap DrawArea;
     protected Color bgColor = Color.Yellow;
@@ -10,7 +10,7 @@ public abstract class StartDraw : Form
     protected Timer graphicalTimer { get; private set; }
     private System.ComponentModel.IContainer components = null;
 
-    public StartDraw(params string[] btnNames) : base()
+    public Window(params string[] btnNames) : base()
     {
         DrawArea = new Bitmap(600, 400,
              System.Drawing.Imaging.PixelFormat.Format24bppRgb);
@@ -18,7 +18,7 @@ public abstract class StartDraw : Form
         this.Text = "KTU IF 2018";
         InitializeComponent();
     }
-    public StartDraw(Color bgColor, string title,
+    public Window(Color bgColor, string title,
                      int width, int height,
                     params string[] btnNames) : base()
     {

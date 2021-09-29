@@ -13,7 +13,7 @@ enum Player
     PLAYER2
 }
 
-class SpaceOfShapes : StartDraw
+class GameWindow : Window
 {
     List<Shape> shapes = new List<Shape>();
     private int gridSize = 50;
@@ -22,7 +22,7 @@ class SpaceOfShapes : StartDraw
 
     HubConnection connection;
     Player playerType;
-    public SpaceOfShapes(Player playerType) : base(Color.Cyan, playerType.ToString(),
+    public GameWindow(Player playerType) : base(Color.Cyan, playerType.ToString(),
         1000, 700, "Clear", "Grid", "Draw", "MoveAll", "Stop", "Print", "ColorUp", "ColorNear")
     {
         this.playerType = playerType;
