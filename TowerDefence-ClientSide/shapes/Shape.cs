@@ -1,40 +1,35 @@
 ﻿using System;
 using System.Drawing;
 
-abstract class Shape
+class Shape
 {
-    public string Code { get; }
     public float CenterX { get; set; }
     public float CenterY { get; set; }
+    public float Width { get; set; }
+    public float Height { get; set; }
 
+    public Image sprite;
+
+    public Shape(Point center, float width, float height, Image sprite) : this(center)
+    {
+        Width = width;
+        Height = height;
+        this.sprite = sprite;
+    }
 
     public Shape()
     {
     }
-    public Shape(string code, float x, float y)
+    public Shape(Point center)
     {
-        Code = code;
-        CenterX = x;
-        CenterY = y;
+        CenterX = center.X;
+        CenterY = center.Y;
     }
-    public Shape(float x, float y)
+    public virtual void Draw(Graphics gr)
     {
-        CenterX = x;
-        CenterY = y;
+        gr.DrawImage(sprite, CenterX - (Width/2), CenterY - (Height / 2), Width, Height);
     }
-    public abstract void Draw(Graphics gr); 
     // piešimas vykdomas išvestinėse klasėse
 
-    static private readonly char[] separators = { ' ', ',', ';', ':' };
 
-    // skaičiuoja atstumą nuo figūros centro iki taško, panaudojant Pitagoro teoremą
-    public float Distance(float x, float y)
-    {
-        return (float)(Math.Sqrt(Math.Pow(x - CenterX, 2) + Math.Pow(y - CenterY, 2)));
-    }
-    // skaičiuoja atstumą iki kitos figūros centro, panaudojant esamą metodą
-    public float Distance(Shape shape)
-    {
-        return Distance(shape.CenterX, shape.CenterY);
-    }
 }
