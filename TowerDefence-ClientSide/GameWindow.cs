@@ -20,7 +20,7 @@ class GameWindow : Window
     HubConnection connection;
     Player playerType;
     public GameWindow(Player playerType) : base(Color.Cyan, playerType.ToString(),
-        1000, 700, "Clear", "Grid", "Draw", "MoveAll", "Stop", "Print", "ColorUp", "ColorNear")
+        1000, 700, "Buy soldier")
     {
         this.playerType = playerType;
         startSignalR();
@@ -63,7 +63,15 @@ class GameWindow : Window
 
     protected override void btn_Click(object sender, EventArgs e)
     {
-        connection.SendAsync("SendMessage", playerType.ToString(), (sender as Button).Name, new string[] { });
+        switch (((Button)sender).Name)
+        {
+            case "Buy soldier":
+                connection.SendAsync("buySoldier", playerType);
+                break;
+            default:
+                break;
+        }
+        // connection.SendAsync("SendMessage", playerType.ToString(), (sender as Button).Name, new string[] { });
     }
  
     protected override void Mouse_Click(object sender, MouseEventArgs e)
