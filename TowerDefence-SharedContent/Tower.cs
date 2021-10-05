@@ -14,5 +14,10 @@ namespace TowerDefence_SharedContent
         public int[] Power { get; set; }
         public double[] RateOfFire { get; set; }
         public Bitmap Sprite { get; set; }
+
+        public Tower()
+        {
+            Coordinates = new Point(80, 80);
+        }
     }
 }

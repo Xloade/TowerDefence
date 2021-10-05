@@ -34,5 +34,16 @@ namespace TowerDefence_ServerSide
             JObject mapJson = (JObject)JToken.FromObject(map);
             await Clients.All.SendAsync("ReceiveMessage", mapJson.ToString());
         }
+
+        public async Task buyTower(PlayerType playerType)
+        {
+            Map map = MapSingleton.getMap();
+            Console.WriteLine($"{playerType.ToString()}: buyTower");           
+            map.GetPlayer(playerType).towers.Add(new Tower());
+
+            JObject mapJson = (JObject)JToken.FromObject(map);
+            await Clients.All.SendAsync("ReceiveMessage", mapJson.ToString());
+        }
+
     }
 }

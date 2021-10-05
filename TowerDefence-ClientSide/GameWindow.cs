@@ -23,7 +23,7 @@ class GameWindow : Window
     Map map;
 
     public GameWindow(Player playerType) : base(Color.Cyan, playerType.ToString(),
-        1000, 700, "Buy soldier")
+        1000, 700, "Buy soldier", "buy tower")
     {
         this.playerType = playerType;
         startSignalR();
@@ -36,7 +36,11 @@ class GameWindow : Window
         map.GetPlayer(PlayerType.PLAYER1).soldiers.ForEach((soldier) =>
         {
             shapes.Add(new Shape(soldier.Coordinates, 100,100, Image.FromFile(@"../../../Sprites/soldier(Blue).png")));
-        });
+        });/*
+        map.GetPlayer(PlayerType.PLAYER1).towers.ForEach((tower) =>
+        {
+            shapes.Add(new Shape(tower.Coordinates, 100, 100, Image.FromFile(@"../../../Sprites/tower(Blue).png")));
+        });*/
         Refresh();
     }
 
@@ -74,6 +78,9 @@ class GameWindow : Window
         {
             case "Buy soldier":
                 connection.SendAsync("buySoldier", playerType);
+                break;
+            case "Buy tower":
+                connection.SendAsync("buyTower", playerType);
                 break;
             default:
                 break;
