@@ -12,12 +12,13 @@ namespace TowerDefence_SharedContent
         public int[] BuyPrice { get; set; }
         public double Speed { get; set; }
         public double[] Hitpoints { get; set; }
-
         public Point Coordinates { get; set; }
+        public string Sprite { get; set; }
 
         public Soldier()
         {
             Coordinates = new Point(0, 450);
+            Sprite = @"../../../Sprites/soldier(Blue).png";
         }
     }
 }

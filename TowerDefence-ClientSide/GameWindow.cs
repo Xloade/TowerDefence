@@ -16,6 +16,10 @@ enum Player
 
 class GameWindow : Window
 {
+    private const string BUTTON_BUY_SOLDIER = "Buy soldier";
+    private const string BUTTON_BUY_TOWER = "Buy tower";
+    private const string SERVER_URL = "https://localhost:5001/GameHub";
+
     List<Shape> shapes = new List<Shape>();
 
     HubConnection connection;
@@ -23,7 +27,7 @@ class GameWindow : Window
     Map map;
 
     public GameWindow(Player playerType) : base(Color.Cyan, playerType.ToString(),
-        1000, 700, "Buy soldier", "buy tower")
+        1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER)
     {
         this.playerType = playerType;
         startSignalR();
@@ -33,22 +37,31 @@ class GameWindow : Window
     {
         this.map = map;
         shapes = new List<Shape>();
-        map.GetPlayer(PlayerType.PLAYER1).soldiers.ForEach((soldier) =>
-        {
-            shapes.Add(new Shape(soldier.Coordinates, 100,100, Image.FromFile(@"../../../Sprites/soldier(Blue).png")));
-        });/*
-        map.GetPlayer(PlayerType.PLAYER1).towers.ForEach((tower) =>
-        {
-            shapes.Add(new Shape(tower.Coordinates, 100, 100, Image.FromFile(@"../../../Sprites/tower(Blue).png")));
-        });*/
+
+        updateSoldiers(map.GetPlayer(PlayerType.PLAYER1).soldiers);
+        updateTowers(map.GetPlayer(PlayerType.PLAYER1).towers);
         Refresh();
+    }
+
+    private void updateSoldiers(List<Soldier> soldiers)
+    {
+        soldiers.ForEach((soldier) =>
+        {
+            shapes.Add(new Shape(soldier.Coordinates, 100, 100, Image.FromFile(soldier.Sprite)));
+        });
+    }
+
+    private void updateTowers(List<Tower> towers)
+    {
+        towers.ForEach((tower) =>
+        {
+            shapes.Add(new Shape(tower.Coordinates, 100, 100, Image.FromFile(tower.Sprite)));
+        });
     }
 
     private void startSignalR()
     {
-        connection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:5001/GameHub")
-                .Build();
+        connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();
         connection.On<string>("ReceiveMessage", (updatedMapJson) =>
         {
             Map updatedMap = JsonConvert.DeserializeObject<Map>(updatedMapJson);
@@ -56,6 +69,7 @@ class GameWindow : Window
         });
         connection.StartAsync();
     }
+
     protected override void graphicalTimer_Tick(object sender, EventArgs e)
     {
         Refresh();
@@ -76,10 +90,10 @@ class GameWindow : Window
     {
         switch (((Button)sender).Name)
         {
-            case "Buy soldier":
+            case BUTTON_BUY_SOLDIER:
                 connection.SendAsync("buySoldier", playerType);
                 break;
-            case "Buy tower":
+            case BUTTON_BUY_TOWER:
                 connection.SendAsync("buyTower", playerType);
                 break;
             default:
