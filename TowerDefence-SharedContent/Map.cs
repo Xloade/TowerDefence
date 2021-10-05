@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TowerDefence_SharedContent
 {
-    class Map
+    public class Map
     {
         Player player1;
         Player player2;

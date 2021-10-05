@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TowerDefence_SharedContent
 {
-    class Tower
+    public class Tower
     {
         public int Level { get; set; }
         public int[] Price  { get; set; }

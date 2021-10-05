@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TowerDefence_SharedContent
 {
-    class Player
+    public class Player
     {
         public int Hitpoints { get; set; }
         public int TowerCurrency { get; set; }

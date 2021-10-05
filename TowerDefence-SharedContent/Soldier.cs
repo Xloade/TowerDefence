@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TowerDefence_SharedContent
 {
-    class Soldier
+    public class Soldier
     {
         public int Level { get; set; }
         public int[] UpgradePrice { get; set; }
