@@ -4,8 +4,9 @@ using System.Windows.Forms;
 using static System.Console;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
-
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.SignalR.Client;
+using TowerDefence_SharedContent;
 
 enum Player
 {
@@ -19,29 +20,35 @@ class GameWindow : Window
 
     HubConnection connection;
     Player playerType;
+    Map map;
+
     public GameWindow(Player playerType) : base(Color.Cyan, playerType.ToString(),
         1000, 700, "Buy soldier")
     {
         this.playerType = playerType;
         startSignalR();
     }
+    
+    private void updateMap(Map map)
+    {
+        this.map = map;
+        shapes = new List<Shape>();
+        map.GetPlayer(PlayerType.PLAYER1).soldiers.ForEach((soldier) =>
+        {
+            shapes.Add(new Shape(soldier.Coordinates, 100,100, Image.FromFile(@"../../../Sprites/soldier(Blue).png")));
+        });
+        Refresh();
+    }
+
     private void startSignalR()
     {
         connection = new HubConnectionBuilder()
                 .WithUrl("https://localhost:5001/GameHub")
                 .Build();
-        connection.On<string, string, List<String>>("ReceiveMessage", (user, function, args) =>
+        connection.On<string>("ReceiveMessage", (updatedMapJson) =>
         {
-            Graphics gr = Graphics.FromImage(DrawArea);
-            switch (function.ToLower())
-            {
-                case "clear":
-                    ClearArea();
-                    break;
-                default:
-                    break;
-            }
-            Refresh();
+            Map updatedMap = JsonConvert.DeserializeObject<Map>(updatedMapJson);
+            updateMap(updatedMap);
         });
         connection.StartAsync();
     }
