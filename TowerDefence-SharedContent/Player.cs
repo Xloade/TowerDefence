@@ -4,6 +4,12 @@ using System.Text;
 
 namespace TowerDefence_SharedContent
 {
+    public enum PlayerType
+    {
+        PLAYER1,
+        PLAYER2
+    }
+
     public class Player
     {
         public int Hitpoints { get; set; }
