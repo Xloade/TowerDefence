@@ -38,31 +38,28 @@ namespace TowerDefence_ServerSide
         }
         private void AddSoldierMovement()
         {
-            timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
-            {
+            timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) => {
                 var player1TSoldiers = map.GetPlayer(PlayerType.PLAYER1).soldiers;
                 for (int i = 0; i < player1TSoldiers.Count; i++)
                 {
-                    var soldier = player1TSoldiers[i];
-                    soldier.Coordinates = new System.Drawing.Point((int)(soldier.Coordinates.X + soldier.Speed), soldier.Coordinates.Y);
+                    var tower = player1TSoldiers[i];
+                    tower.Coordinates = new System.Drawing.Point((int)(tower.Coordinates.X + tower.Speed), tower.Coordinates.Y);
                     //deletes soldier when out of bounds
-                    if (soldier.Coordinates.X > 1100)
+                    if (tower.Coordinates.X > 1100)
                     {
-                        player1TSoldiers.Remove(soldier);
+                        player1TSoldiers.Remove(tower);
                         i--;
                     }
                 }
-
                 var player2TSoldiers = map.GetPlayer(PlayerType.PLAYER2).soldiers;
                 for (int i = 0; i < player2TSoldiers.Count; i++)
                 {
-                    var soldier = player2TSoldiers[i];
-                    soldier.Coordinates = new System.Drawing.Point((int)(soldier.Coordinates.X + soldier.Speed), soldier.Coordinates.Y);
+                    var tower = player2TSoldiers[i];
+                    tower.Coordinates = new System.Drawing.Point((int)(tower.Coordinates.X - tower.Speed), tower.Coordinates.Y);
                     //deletes soldier when out of bounds
-
-                    if (soldier.Coordinates.X < -100)
+                    if (tower.Coordinates.X < -100)
                     {
-                        player2TSoldiers.Remove(soldier);
+                        player2TSoldiers.Remove(tower);
                         i--;
                     }
                 }
@@ -92,13 +89,13 @@ namespace TowerDefence_ServerSide
                     for (int i = 0; i < tower.Bullets.Count; i++)
                     {
                         var bullet = tower.Bullets[i];
-                        bullet.Coordinates = new System.Drawing.Point((int)(bullet.Coordinates.X + 15), bullet.Coordinates.Y);
+                        bullet.Coordinates = new System.Drawing.Point((int)(bullet.Coordinates.X + 10), bullet.Coordinates.Y);
                         //deletes soldier when out of bounds
-                        if (bullet.Coordinates.X > 1100)
-                        {
-                            tower.Bullets.Remove(bullet);
-                            i--;
-                        }
+                        //if (bullet.Coordinates.X > 1100)
+                        //{
+                        //    tower.Bullets.Remove(bullet);
+                        //    i--;
+                        //}
                     }
                 });
             };
@@ -113,16 +110,29 @@ namespace TowerDefence_ServerSide
                 if (CanShoot(soldier.Coordinates, tower.Coordinates, tower.Range[tower.Level]))
                 {
                     Shoot(tower);
-                    //soldiers.Remove(soldier);
-                    //tower.Level++;
-                    //i--;
+                    
                 }
+                if(tower.Bullets.Count > 0)
+                {
+                    if (CanDestroy(soldier.Coordinates, tower.Bullets[0].Coordinates))
+                    {
+                        tower.Bullets.Clear();
+                        soldiers.Remove(soldier);
+                        tower.Level++;
+                        i--;
+                    }
+                }            
             }
         }
 
         private bool CanShoot(Point soldierCoordinates, Point towerCoordinates, int range)
         {
             return Math.Abs(soldierCoordinates.X - towerCoordinates.X) == range;
+        }
+
+        private bool CanDestroy(Point soldierCoordinates, Point bulletCoordinates)
+        {
+            return soldierCoordinates.X == bulletCoordinates.X;
         }
 
         private void Shoot(Tower tower)
