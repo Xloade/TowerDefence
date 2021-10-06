@@ -15,10 +15,10 @@ namespace TowerDefence_SharedContent
         public double[] RateOfFire { get; set; }
         public string Sprite { get; set; }
 
-        public Tower()
+        public Tower(PlayerType type)
         {
             Coordinates = new Point(200, 450);
-            Sprite = @"../../../Sprites/tower(Blue).png";
+            Sprite = SpritePaths.getTower(type);
         }
     }
 }

@@ -15,10 +15,10 @@ namespace TowerDefence_SharedContent
         public Point Coordinates { get; set; }
         public string Sprite { get; set; }
 
-        public Soldier()
+        public Soldier(PlayerType type)
         {
             Coordinates = new Point(0, 450);
-            Sprite = @"../../../Sprites/soldier(Blue).png";
+            Sprite = SpritePaths.getSoldier(type);
         }
     }
 }
