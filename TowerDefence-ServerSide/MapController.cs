@@ -88,6 +88,11 @@ namespace TowerDefence_ServerSide
                     {
                         var bullet = tower.Bullets[i];
                         bullet.Coordinates = new System.Drawing.Point((int)(bullet.Coordinates.X + bullet.Speed), bullet.Coordinates.Y);
+                        if (bullet.Coordinates.X > 1100)
+                        {
+                            tower.Bullets.Remove(bullet);
+                            i--;
+                        }
                     }
                 });
                 var towersPlayer2 = map.GetPlayer(PlayerType.PLAYER2).towers;
@@ -97,6 +102,11 @@ namespace TowerDefence_ServerSide
                     {
                         var bullet = tower.Bullets[i];
                         bullet.Coordinates = new System.Drawing.Point((int)(bullet.Coordinates.X - bullet.Speed), bullet.Coordinates.Y);
+                        if (bullet.Coordinates.X < -100)
+                        {
+                            tower.Bullets.Remove(bullet);
+                            i--;
+                        }
                     }
                 });                          
             };
