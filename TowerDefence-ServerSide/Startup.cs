@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TowerDefence_SharedContent;
+using Microsoft.AspNetCore.SignalR;
 
 namespace TowerDefence_ServerSide
 {
@@ -42,6 +44,12 @@ namespace TowerDefence_ServerSide
 
             app.UseAuthorization();
 
+
+            var map = MapSingleton.getMap();
+            var hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
+            map.addTimerEvent(async(Object source, System.Timers.ElapsedEventArgs e) => {
+                await hubContext.Clients.All.SendAsync("ReceiveMessage", map.ToJson());
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<GameHub>("/GameHub");

@@ -29,7 +29,6 @@ namespace TowerDefence_ServerSide
             Map map = MapSingleton.getMap();
             Console.WriteLine($"{playerType.ToString()}: buySoldier");
             map.addSoldier(playerType);
-            await Clients.All.SendAsync("ReceiveMessage", map.ToJson());
         }
 
         public async Task buyTower(PlayerType playerType)
@@ -37,7 +36,6 @@ namespace TowerDefence_ServerSide
             Map map = MapSingleton.getMap();
             Console.WriteLine($"{playerType.ToString()}: buyTower");
             map.addTower(playerType);        
-            await Clients.All.SendAsync("ReceiveMessage", map.ToJson());
         }        
     }
 }
