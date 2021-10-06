@@ -43,7 +43,6 @@ namespace TowerDefence_ServerSide
                 {
                     var soldier = soldiersPlayer1[i];
                     soldier.Coordinates = new System.Drawing.Point((int)(soldier.Coordinates.X + soldier.Speed), soldier.Coordinates.Y);
-                    //deletes soldier when out of bounds
                     if (soldier.Coordinates.X > 1100)
                     {
                         soldiersPlayer1.Remove(soldier);
@@ -55,7 +54,6 @@ namespace TowerDefence_ServerSide
                 {
                     var soldier = soldiersPlayer2[i];
                     soldier.Coordinates = new System.Drawing.Point((int)(soldier.Coordinates.X - soldier.Speed), soldier.Coordinates.Y);
-                    //deletes soldier when out of bounds
                     if (soldier.Coordinates.X < -100)
                     {
                         soldiersPlayer2.Remove(soldier);
