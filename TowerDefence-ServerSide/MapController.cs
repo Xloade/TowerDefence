@@ -13,7 +13,7 @@ namespace TowerDefence_ServerSide
         public Map map { get; set; }
         IHubContext<GameHub> hubContext;
         public Timer timer = new Timer();
-        public static double timerSpeed = 16; //~60times per second
+        public static double timerSpeed = 36; //~30times per second
         public MapController(IHubContext<GameHub> hubContext)
         {
             map = new Map();
@@ -33,9 +33,30 @@ namespace TowerDefence_ServerSide
         private void AddSoldierMovement()
         {
             timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) => {
-                map.GetPlayer(PlayerType.PLAYER1).soldiers.ForEach((tower)=> {
-                    tower.Coordinates = new System.Drawing.Point((int)(tower.Speed + tower.Coordinates.X), tower.Coordinates.Y);
-                });
+                var player1TSoldiers = map.GetPlayer(PlayerType.PLAYER1).soldiers;
+                for (int i = 0; i < player1TSoldiers.Count; i++)
+                {
+                    var tower = player1TSoldiers[i];
+                    tower.Coordinates = new System.Drawing.Point((int)(tower.Coordinates.X + tower.Speed), tower.Coordinates.Y);
+                    //deletes soldier when out of bounds
+                    if (tower.Coordinates.X > 1100)
+                    {
+                        player1TSoldiers.Remove(tower);
+                        i--;
+                    }
+                }
+                var player2TSoldiers = map.GetPlayer(PlayerType.PLAYER2).soldiers;
+                for (int i = 0; i < player2TSoldiers.Count; i++)
+                {
+                    var tower = player2TSoldiers[i];
+                    tower.Coordinates = new System.Drawing.Point((int)(tower.Coordinates.X - tower.Speed), tower.Coordinates.Y);
+                    //deletes soldier when out of bounds
+                    if (tower.Coordinates.X < -100)
+                    {
+                        player2TSoldiers.Remove(tower);
+                        i--;
+                    }
+                }
             };
         }
     }

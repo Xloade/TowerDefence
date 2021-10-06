@@ -39,18 +39,18 @@ class GameWindow : Window
         this.map = map;
         shapes = new List<Shape>();
 
-        updateSoldiers(map.GetPlayer(PlayerType.PLAYER1).soldiers);
+        updateSoldiers(map.GetPlayer(PlayerType.PLAYER1).soldiers, 90);
         updateTowers(map.GetPlayer(PlayerType.PLAYER1).towers);
-        updateSoldiers(map.GetPlayer(PlayerType.PLAYER2).soldiers);
+        updateSoldiers(map.GetPlayer(PlayerType.PLAYER2).soldiers, -90);
         updateTowers(map.GetPlayer(PlayerType.PLAYER2).towers);
         Refresh();
     }
-
-    private void updateSoldiers(List<Soldier> soldiers)
+    //rotation temporary
+    private void updateSoldiers(List<Soldier> soldiers, float rotation)
     {
         soldiers.ForEach((soldier) =>
         {
-            shapes.Add(new Shape(soldier.Coordinates, 100, 100, Image.FromFile(soldier.Sprite)));
+            shapes.Add(new Shape(soldier.Coordinates, 100, 100, rotation, Image.FromFile(soldier.Sprite)));
         });
     }
 
