@@ -40,9 +40,9 @@ class GameWindow : Window
         shapes = new List<Shape>();
 
         updateSoldiers(map.GetPlayer(PlayerType.PLAYER1).soldiers, 90);
-        updateTowers(map.GetPlayer(PlayerType.PLAYER1).towers);
+        updateTowers(map.GetPlayer(PlayerType.PLAYER1).towers, 90);
         updateSoldiers(map.GetPlayer(PlayerType.PLAYER2).soldiers, -90);
-        updateTowers(map.GetPlayer(PlayerType.PLAYER2).towers);
+        updateTowers(map.GetPlayer(PlayerType.PLAYER2).towers, -90);
         Refresh();
     }
     //rotation temporary
@@ -54,12 +54,22 @@ class GameWindow : Window
         });
     }
 
-    private void updateTowers(List<Tower> towers)
+    private void updateTowers(List<Tower> towers, float rotation)
     {
         towers.ForEach((tower) =>
         {
-            shapes.Add(new Shape(tower.Coordinates, 100, 100, Image.FromFile(tower.Sprite)));
+            shapes.Add(new Shape(tower.Coordinates, 100, 100, rotation, Image.FromFile(tower.Sprite)));
+
+            updateBullets(tower.Bullets, 90);
         });
+    }
+
+    private void updateBullets(List<Bullet> bullets, float rotation)
+    {
+        bullets.ForEach((bullet) =>
+        {
+            shapes.Add(new Shape(bullet.Coordinates, 50, 50, rotation, Image.FromFile(bullet.Sprite)));
+        });    
     }
 
     private void startSignalR()

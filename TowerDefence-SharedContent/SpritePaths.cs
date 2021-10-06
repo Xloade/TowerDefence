@@ -15,5 +15,10 @@ namespace TowerDefence_SharedContent
         {
             return type == PlayerType.PLAYER1 ? @"../../../Sprites/soldier(Blue).png" : @"../../../Sprites/soldier(Red).png";
         }
+
+        public static string getBullet()
+        {
+            return @"../../../Sprites/bullet.png";
+        }
     }
 }
