@@ -28,11 +28,16 @@ namespace TowerDefence_ServerSide
         {
             Map map = MapSingleton.getMap();
             Console.WriteLine($"{playerType.ToString()}: buySoldier");
-            Player player = map.GetPlayer(playerType);
-            map.GetPlayer(playerType).soldiers.Add(new Soldier());
-
-            JObject mapJson = (JObject)JToken.FromObject(map);
-            await Clients.All.SendAsync("ReceiveMessage", mapJson.ToString());
+            map.addSoldier(playerType);
+            await Clients.All.SendAsync("ReceiveMessage", map.ToJson());
         }
+
+        public async Task buyTower(PlayerType playerType)
+        {
+            Map map = MapSingleton.getMap();
+            Console.WriteLine($"{playerType.ToString()}: buyTower");
+            map.addTower(playerType);        
+            await Clients.All.SendAsync("ReceiveMessage", map.ToJson());
+        }        
     }
 }

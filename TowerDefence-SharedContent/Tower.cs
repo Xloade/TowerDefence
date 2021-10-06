@@ -13,6 +13,12 @@ namespace TowerDefence_SharedContent
         public double[] Range { get; set; }
         public int[] Power { get; set; }
         public double[] RateOfFire { get; set; }
-        public Bitmap Sprite { get; set; }
+        public string Sprite { get; set; }
+
+        public Tower()
+        {
+            Coordinates = new Point(200, 450);
+            Sprite = @"../../../Sprites/tower(Blue).png";
+        }
     }
 }

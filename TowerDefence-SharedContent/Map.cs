@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,6 +26,16 @@ namespace TowerDefence_SharedContent
         {
             JObject mapJson = (JObject)JToken.FromObject(this);
             return mapJson.ToString();
+        }
+
+        public void addSoldier(PlayerType playerType)
+        {
+            GetPlayer(playerType).soldiers.Add(new Soldier());
+        }
+
+        public void addTower(PlayerType playerType)
+        {
+            GetPlayer(playerType).towers.Add(new Tower());
         }
     }
 }
