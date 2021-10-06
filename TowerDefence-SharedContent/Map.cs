@@ -3,7 +3,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Timers;
 
 namespace TowerDefence_SharedContent
 {
@@ -11,20 +10,17 @@ namespace TowerDefence_SharedContent
     {
         public Player player1;
         public Player player2;
-        public Timer timer = new Timer();
-        public static double timerSpeed = 16; //~60times per second
 
         public Map()
         {
             player1 = new Player();
             player2 = new Player();
-            timer.Interval = timerSpeed;
-            timer.Start();
+            AddSoldierMovement();
         }
 
-        public void addTimerEvent(ElapsedEventHandler handler)
+        private void AddSoldierMovement()
         {
-            timer.Elapsed += handler;
+
         }
 
         public Player GetPlayer(PlayerType type)

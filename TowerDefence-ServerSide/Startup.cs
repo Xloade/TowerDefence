@@ -44,12 +44,8 @@ namespace TowerDefence_ServerSide
 
             app.UseAuthorization();
 
-
-            var map = MapSingleton.getMap();
             var hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
-            map.addTimerEvent(async(Object source, System.Timers.ElapsedEventArgs e) => {
-                await hubContext.Clients.All.SendAsync("ReceiveMessage", map.ToJson());
-            });
+            MapControllerSingleton.setMapController(new MapController(hubContext));
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<GameHub>("/GameHub");

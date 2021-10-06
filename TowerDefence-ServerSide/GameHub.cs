@@ -26,16 +26,17 @@ namespace TowerDefence_ServerSide
 
         public async Task buySoldier(PlayerType playerType)
         {
-            Map map = MapSingleton.getMap();
+            MapController mapController = MapControllerSingleton.getMapController();
+            mapController.map.addSoldier(playerType);
             Console.WriteLine($"{playerType.ToString()}: buySoldier");
-            map.addSoldier(playerType);
         }
 
         public async Task buyTower(PlayerType playerType)
         {
-            Map map = MapSingleton.getMap();
+            MapController mapController = MapControllerSingleton.getMapController();
+            mapController.map.addTower(playerType);
             Console.WriteLine($"{playerType.ToString()}: buyTower");
-            map.addTower(playerType);        
+                    
         }        
     }
 }
