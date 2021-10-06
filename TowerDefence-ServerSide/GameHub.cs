@@ -37,6 +37,13 @@ namespace TowerDefence_ServerSide
             mapController.map.addTower(playerType);
             Console.WriteLine($"{playerType.ToString()}: buyTower");
                     
-        }        
+        }
+        public async Task restartGame()
+        {
+            MapController mapController = MapControllerSingleton.getMapController();
+            mapController.map = new Map();
+            Console.WriteLine($"restartGame");
+
+        }
     }
 }

@@ -18,6 +18,7 @@ class GameWindow : Window
 {
     private const string BUTTON_BUY_SOLDIER = "Buy soldier";
     private const string BUTTON_BUY_TOWER = "Buy tower";
+    private const string BUTTON_RESTART_GAME = "Restart game";
     private const string SERVER_URL = "https://localhost:5001/GameHub";
 
     List<Shape> shapes = new List<Shape>();
@@ -27,7 +28,7 @@ class GameWindow : Window
     Map map;
 
     public GameWindow(Player playerType) : base(Color.Cyan, playerType.ToString(),
-        1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER)
+        1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME)
     {
         this.playerType = playerType;
         startSignalR();
@@ -97,6 +98,9 @@ class GameWindow : Window
                 break;
             case BUTTON_BUY_TOWER:
                 connection.SendAsync("buyTower", playerType);
+                break;
+            case BUTTON_RESTART_GAME:
+                connection.SendAsync("restartGame");
                 break;
             default:
                 break;
