@@ -43,5 +43,14 @@ namespace TowerDefence_SharedContent
         {
             GetPlayer(playerType).towers.Add(new Tower(playerType));
         }
+
+        public void deleteTower(PlayerType playerType)
+        {
+            var towers = GetPlayer(playerType).towers;
+            towers.ForEach((tower) =>
+            {
+                towers.Remove(tower);
+            });
+        }
     }
 }
