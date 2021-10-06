@@ -37,6 +37,10 @@ class GameWindow : Window
         {
             shapes.Add(new Shape(soldier.Coordinates, 100,100, Image.FromFile(@"../../../Sprites/soldier(Blue).png")));
         });
+        map.GetPlayer(PlayerType.PLAYER2).soldiers.ForEach((soldier) =>
+        {
+            shapes.Add(new Shape(soldier.Coordinates, 100, 100, Image.FromFile(@"../../../Sprites/soldier(Red).png")));
+        });
         Refresh();
     }
 
