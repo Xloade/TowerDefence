@@ -26,8 +26,7 @@ namespace TowerDefence_ServerSide
             AddTowerScan(PlayerType.PLAYER1, PlayerType.PLAYER2);
             AddTowerScan(PlayerType.PLAYER2, PlayerType.PLAYER1);
 
-            AddBulletScan(PlayerType.PLAYER1);
-
+            AddBulletMovement();
         }
         private void AddMapSend()
         {
@@ -39,27 +38,27 @@ namespace TowerDefence_ServerSide
         private void AddSoldierMovement()
         {
             timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) => {
-                var player1TSoldiers = map.GetPlayer(PlayerType.PLAYER1).soldiers;
-                for (int i = 0; i < player1TSoldiers.Count; i++)
+                var soldiersPlayer1 = map.GetPlayer(PlayerType.PLAYER1).soldiers;
+                for (int i = 0; i < soldiersPlayer1.Count; i++)
                 {
-                    var tower = player1TSoldiers[i];
-                    tower.Coordinates = new System.Drawing.Point((int)(tower.Coordinates.X + tower.Speed), tower.Coordinates.Y);
+                    var soldier = soldiersPlayer1[i];
+                    soldier.Coordinates = new System.Drawing.Point((int)(soldier.Coordinates.X + soldier.Speed), soldier.Coordinates.Y);
                     //deletes soldier when out of bounds
-                    if (tower.Coordinates.X > 1100)
+                    if (soldier.Coordinates.X > 1100)
                     {
-                        player1TSoldiers.Remove(tower);
+                        soldiersPlayer1.Remove(soldier);
                         i--;
-                    }
+                    }                                                        
                 }
-                var player2TSoldiers = map.GetPlayer(PlayerType.PLAYER2).soldiers;
-                for (int i = 0; i < player2TSoldiers.Count; i++)
+                var soldiersPlayer2 = map.GetPlayer(PlayerType.PLAYER2).soldiers;
+                for (int i = 0; i < soldiersPlayer2.Count; i++)
                 {
-                    var tower = player2TSoldiers[i];
-                    tower.Coordinates = new System.Drawing.Point((int)(tower.Coordinates.X - tower.Speed), tower.Coordinates.Y);
+                    var soldier = soldiersPlayer2[i];
+                    soldier.Coordinates = new System.Drawing.Point((int)(soldier.Coordinates.X - soldier.Speed), soldier.Coordinates.Y);
                     //deletes soldier when out of bounds
-                    if (tower.Coordinates.X < -100)
+                    if (soldier.Coordinates.X < -100)
                     {
-                        player2TSoldiers.Remove(tower);
+                        soldiersPlayer2.Remove(soldier);
                         i--;
                     }
                 }
@@ -79,25 +78,27 @@ namespace TowerDefence_ServerSide
             };
         }
 
-        private void AddBulletScan(PlayerType playerType)
+        private void AddBulletMovement()
         {
-            timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
-            {
-                var towers = map.GetPlayer(playerType).towers;
-                towers.ForEach((tower) =>
+            timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) => {
+                var towersPlayer1 = map.GetPlayer(PlayerType.PLAYER1).towers;
+                towersPlayer1.ForEach((tower) =>
                 {
                     for (int i = 0; i < tower.Bullets.Count; i++)
                     {
                         var bullet = tower.Bullets[i];
-                        bullet.Coordinates = new System.Drawing.Point((int)(bullet.Coordinates.X + 10), bullet.Coordinates.Y);
-                        //deletes soldier when out of bounds
-                        //if (bullet.Coordinates.X > 1100)
-                        //{
-                        //    tower.Bullets.Remove(bullet);
-                        //    i--;
-                        //}
+                        bullet.Coordinates = new System.Drawing.Point((int)(bullet.Coordinates.X + bullet.Speed), bullet.Coordinates.Y);
                     }
                 });
+                var towersPlayer2 = map.GetPlayer(PlayerType.PLAYER2).towers;
+                towersPlayer2.ForEach((tower) =>
+                {
+                    for (int i = 0; i < tower.Bullets.Count; i++)
+                    {
+                        var bullet = tower.Bullets[i];
+                        bullet.Coordinates = new System.Drawing.Point((int)(bullet.Coordinates.X - bullet.Speed), bullet.Coordinates.Y);
+                    }
+                });                          
             };
         }
 
@@ -107,7 +108,7 @@ namespace TowerDefence_ServerSide
             {
                 var soldier = soldiers[i];
 
-                if (CanShoot(soldier.Coordinates, tower.Coordinates, tower.Range[tower.Level]))
+                if (CanShoot(soldier.Coordinates, tower.Coordinates, tower.Range[2]))
                 {
                     Shoot(tower);
                     
@@ -117,8 +118,7 @@ namespace TowerDefence_ServerSide
                     if (CanDestroy(soldier.Coordinates, tower.Bullets[0].Coordinates))
                     {
                         tower.Bullets.Clear();
-                        soldiers.Remove(soldier);
-                        tower.Level++;
+                        soldiers.Remove(soldier);                        
                         i--;
                     }
                 }            

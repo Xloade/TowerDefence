@@ -19,8 +19,8 @@ namespace TowerDefence_SharedContent
         public Tower(PlayerType type)
         {
             Level = 0;
-            Range = new int[] { 100, 200, 300, 350};
-            Coordinates = new Point(200, 450);
+            Range = new int[] { 100, 200, 300};
+            Coordinates = type == PlayerType.PLAYER1 ? new Point(200, 450) : new Point(800, 450);
             Sprite = SpritePaths.getTower(type);
             Bullets = new List<Bullet>();
             //Bullets.Add(new Bullet(Coordinates));
