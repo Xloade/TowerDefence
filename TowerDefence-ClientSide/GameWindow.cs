@@ -40,6 +40,8 @@ class GameWindow : Window
 
         updateSoldiers(map.GetPlayer(PlayerType.PLAYER1).soldiers);
         updateTowers(map.GetPlayer(PlayerType.PLAYER1).towers);
+        updateSoldiers(map.GetPlayer(PlayerType.PLAYER2).soldiers);
+        updateTowers(map.GetPlayer(PlayerType.PLAYER2).towers);
         Refresh();
     }
 
@@ -57,11 +59,6 @@ class GameWindow : Window
         {
             shapes.Add(new Shape(tower.Coordinates, 100, 100, Image.FromFile(tower.Sprite)));
         });
-        map.GetPlayer(PlayerType.PLAYER2).soldiers.ForEach((soldier) =>
-        {
-            shapes.Add(new Shape(soldier.Coordinates, 100, 100, Image.FromFile(@"../../../Sprites/soldier(Red).png")));
-        });
-        Refresh();
     }
 
     private void startSignalR()
