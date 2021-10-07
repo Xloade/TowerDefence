@@ -26,7 +26,7 @@ namespace TowerDefence_ServerSide
             AddTowerScan(PlayerType.PLAYER1, PlayerType.PLAYER2);
             AddTowerScan(PlayerType.PLAYER2, PlayerType.PLAYER1);
 
-            AddBulletMovement();
+            AddBulletMovement();          
         }
         private void AddMapSend()
         {
@@ -146,6 +146,6 @@ namespace TowerDefence_ServerSide
         private void Shoot(Tower tower)
         {
             tower.Bullets.Add(new Bullet(tower.Coordinates));
-        }
+        }        
     }
 }

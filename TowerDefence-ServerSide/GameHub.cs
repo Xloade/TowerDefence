@@ -43,7 +43,14 @@ namespace TowerDefence_ServerSide
             MapController mapController = MapControllerSingleton.getMapController();
             mapController.map = new Map();
             Console.WriteLine($"restartGame");
+        }
+        public async Task deleteTower(PlayerType playerType)
+        {
+            MapController mapController = MapControllerSingleton.getMapController();
+            mapController.map.deleteTower(playerType);
+            Console.WriteLine($"{playerType.ToString()}: deleteTower");
 
         }
+
     }
 }
