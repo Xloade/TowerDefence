@@ -15,13 +15,8 @@ namespace TowerDefence_SharedContent
         {
             player1 = new Player();
             player2 = new Player();
-            AddSoldierMovement();
         }
 
-        private void AddSoldierMovement()
-        {
-
-        }
 
         public Player GetPlayer(PlayerType type)
         {
