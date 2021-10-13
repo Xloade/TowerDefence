@@ -35,7 +35,7 @@ namespace TowerDefence_ServerSide
                 await hubContext.Clients.All.SendAsync("ReceiveMessage", map.ToJson());
             };
         }
-        private void AddSoldierMovement()
+        public void AddSoldierMovement()
         {
             timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) => {
                 var soldiersPlayer1 = map.GetPlayer(PlayerType.PLAYER1).soldiers;
@@ -63,7 +63,7 @@ namespace TowerDefence_ServerSide
             };
         }
 
-        private void AddTowerScan(PlayerType player1, PlayerType player2)
+        public void AddTowerScan(PlayerType player1, PlayerType player2)
         {
             timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
             {
@@ -76,7 +76,7 @@ namespace TowerDefence_ServerSide
             };
         }
 
-        private void AddBulletMovement()
+        public void AddBulletMovement()
         {
             timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) => {
                 var towersPlayer1 = map.GetPlayer(PlayerType.PLAYER1).towers;
@@ -110,7 +110,7 @@ namespace TowerDefence_ServerSide
             };
         }
 
-        private void ScanAndShoot(Tower tower, List<Soldier> soldiers)
+        public void ScanAndShoot(Tower tower, List<Soldier> soldiers)
         {
             for (int i = 0; i < soldiers.Count; i++)
             {
@@ -133,7 +133,7 @@ namespace TowerDefence_ServerSide
             }
         }
 
-        private bool CanShoot(Point soldierCoordinates, Point towerCoordinates, int range)
+        public bool CanShoot(Point soldierCoordinates, Point towerCoordinates, int range)
         {
             return Math.Abs(soldierCoordinates.X - towerCoordinates.X) == range;
         }
@@ -143,7 +143,7 @@ namespace TowerDefence_ServerSide
             return soldierCoordinates.X == bulletCoordinates.X;
         }
 
-        private void Shoot(Tower tower)
+        public void Shoot(Tower tower)
         {
             tower.Bullets.Add(new Bullet(tower.Coordinates));
         }        
