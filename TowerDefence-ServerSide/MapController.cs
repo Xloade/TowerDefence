@@ -138,7 +138,7 @@ namespace TowerDefence_ServerSide
             return Math.Abs(soldierCoordinates.X - towerCoordinates.X) == range;
         }
 
-        private bool CanDestroy(Point soldierCoordinates, Point bulletCoordinates)
+        public bool CanDestroy(Point soldierCoordinates, Point bulletCoordinates)
         {
             return soldierCoordinates.X == bulletCoordinates.X;
         }
