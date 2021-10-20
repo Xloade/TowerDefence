@@ -9,42 +9,31 @@ namespace TowerDefence_ServerSide
 {
     public class GameHub : Hub
     {
-        public async Task SendMessage(string user, string function, string[] args)
+        public void createMap(String MapType)
         {
-            string argString ="";
-            foreach(string arg in args)
-            {
-                argString += arg + ", ";
-            }
-            if(argString != "")
-            {
-                argString = argString.Substring(0, argString.Length - 2);
-            }
-            Console.WriteLine($"{user}: {function}({argString})");
-            await Clients.All.SendAsync("ReceiveMessage", user, function, args);
+            MapControllerSingleton.createMap(MapType);
         }
-
-        public async Task buySoldier(PlayerType playerType)
+        public void buySoldier(PlayerType playerType)
         {
             MapController mapController = MapControllerSingleton.getMapController();
             mapController.map.addSoldier(playerType);
             Console.WriteLine($"{playerType.ToString()}: buySoldier");
         }
 
-        public async Task buyTower(PlayerType playerType)
+        public void buyTower(PlayerType playerType)
         {
             MapController mapController = MapControllerSingleton.getMapController();
             mapController.map.addTower(playerType);
             Console.WriteLine($"{playerType.ToString()}: buyTower");
                     
         }
-        public async Task restartGame()
+        public void restartGame()
         {
             MapController mapController = MapControllerSingleton.getMapController();
-            mapController.map = new Map();
+            mapController.restartMap();
             Console.WriteLine($"restartGame");
         }
-        public async Task deleteTower(PlayerType playerType)
+        public void deleteTower(PlayerType playerType)
         {
             MapController mapController = MapControllerSingleton.getMapController();
             mapController.map.deleteTower(playerType);
