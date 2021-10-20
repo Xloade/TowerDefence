@@ -18,7 +18,8 @@ namespace TowerDefence_ServerSide.Tests
         private void Setup()
         {
             var gameHub = new Mock<IHubContext<GameHub>>();
-            mapController = new MapController(gameHub.Object);
+            MapFactory factory = new MapFactory();
+            mapController = new MapController(gameHub.Object, factory.CreateAutumnMap());
             var map = new Mock<MapController>();
         }
 
