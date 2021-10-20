@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using static System.Console;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using Newtonsoft.Json;
@@ -28,11 +27,11 @@ class GameWindow : Window
     Player playerType;
     Map map;
 
-    public GameWindow(Player playerType) : base(Color.Cyan, playerType.ToString(),
+    public GameWindow(Player playerType, String mapType) : base(Color.Cyan, playerType.ToString(),
         1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER)
     {
         this.playerType = playerType;
-        startSignalR();
+        startSignalR(mapType);
     }
     
     private void updateMap(Map map)
@@ -44,10 +43,15 @@ class GameWindow : Window
         updateTowers(map.GetPlayer(PlayerType.PLAYER1).towers, 90, PlayerType.PLAYER1);
         updateSoldiers(map.GetPlayer(PlayerType.PLAYER2).soldiers, -90);
         updateTowers(map.GetPlayer(PlayerType.PLAYER2).towers, -90, PlayerType.PLAYER2);
+        updateMapColor(map.mapColor);
    
         Refresh();
     }
     //rotation temporary
+    private void updateMapColor(Color color)
+    {
+        this.bgColor = color;
+    }
     private void updateSoldiers(List<Soldier> soldiers, float rotation)
     {
         soldiers.ForEach((soldier) =>
@@ -74,7 +78,7 @@ class GameWindow : Window
         });    
     }
 
-    private void startSignalR()
+    private void startSignalR(String mapType)
     {
         connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();
         connection.On<string>("ReceiveMessage", (updatedMapJson) =>
@@ -83,6 +87,7 @@ class GameWindow : Window
             updateMap(updatedMap);
         });
         connection.StartAsync();
+        connection.SendAsync("createMap", mapType);
     }
 
     protected override void graphicalTimer_Tick(object sender, EventArgs e)
@@ -92,8 +97,8 @@ class GameWindow : Window
     protected override void Form1_Paint(object sender, PaintEventArgs e)
     {
         Graphics gr = e.Graphics;
+        gr.FillRectangle(new SolidBrush(bgColor), 0, 0, DrawArea.Width, DrawArea.Height);
         gr.SmoothingMode = SmoothingMode.AntiAlias;
-        gr.DrawImage(DrawArea, 0, 0, DrawArea.Width, DrawArea.Height);
         foreach (Shape shape in shapes)
         {
             shape.Draw(gr);

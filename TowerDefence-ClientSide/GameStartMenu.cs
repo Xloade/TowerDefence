@@ -18,22 +18,34 @@ namespace TowerDefence_ClientSide
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ConnectToServer(Player.PLAYER1);
+            if(comboBox1.SelectedItem == null)
+            {
+                ConnectToServer(Player.PLAYER1, "NotCelected");
+            }
+            else
+            {
+                ConnectToServer(Player.PLAYER1, comboBox1.SelectedItem.ToString());
+            }
+            
         }
 
         private void GameStartMenu_Load(object sender, EventArgs e)
         {
-
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ConnectToServer(Player.PLAYER2);
+            ConnectToServer(Player.PLAYER2, comboBox1.SelectedItem.ToString());
         }
-        private void ConnectToServer(Player player)
+        private void ConnectToServer(Player player, String mapType)
         {
-            GameWindow form = new GameWindow(player);
+            GameWindow form = new GameWindow(player, mapType);
             form.Show();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
