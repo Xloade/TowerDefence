@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.AspNetCore.SignalR.Client;
+using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
@@ -18,7 +19,7 @@ namespace TowerDefence_ClientSide
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ConnectToServer(Player.PLAYER1);
+            ConnectToServer(PlayerType.PLAYER1);
         }
 
         private void GameStartMenu_Load(object sender, EventArgs e)
@@ -28,9 +29,9 @@ namespace TowerDefence_ClientSide
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ConnectToServer(Player.PLAYER2);
+            ConnectToServer(PlayerType.PLAYER2);
         }
-        private void ConnectToServer(Player player)
+        private void ConnectToServer(PlayerType player)
         {
             GameWindow form = new GameWindow(player);
             form.Show();

@@ -7,16 +7,19 @@ using System.Drawing.Drawing2D;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.SignalR.Client;
 using TowerDefence_SharedContent;
+using TowerDefence_SharedContent.Towers;
+using TowerDefence_SharedContent.Soldiers;
 
-enum Player
-{
-    PLAYER1,
-    PLAYER2
-}
+//enum Player
+//{
+//    PLAYER1,
+//    PLAYER2
+//}
 
 class GameWindow : Window
 {
-    private const string BUTTON_BUY_SOLDIER = "Buy soldier";
+    private const string BUTTON_BUY_SLOW_SOLDIER = "Buy slow soldier";
+    private const string BUTTON_BUY_FAST_SOLDIER = "Buy fast soldier";
     private const string BUTTON_BUY_TOWER = "Buy tower";
     private const string BUTTON_RESTART_GAME = "Restart game";
     private const string BUTTON_DELETE_TOWER = "Delete tower";
@@ -25,11 +28,10 @@ class GameWindow : Window
     List<Shape> shapes = new List<Shape>();
 
     HubConnection connection;
-    Player playerType;
-    Map map;
+    PlayerType playerType;
 
-    public GameWindow(Player playerType) : base(Color.Cyan, playerType.ToString(),
-        1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER)
+    public GameWindow(PlayerType playerType) : base(Color.Cyan, playerType.ToString(),
+        1000, 700, BUTTON_BUY_SLOW_SOLDIER, BUTTON_BUY_FAST_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER)
     {
         this.playerType = playerType;
         startSignalR();
@@ -37,13 +39,23 @@ class GameWindow : Window
     
     private void updateMap(Map map)
     {
-        this.map = map;
         shapes = new List<Shape>();
 
-        updateSoldiers(map.GetPlayer(PlayerType.PLAYER1).soldiers, 90);
-        updateTowers(map.GetPlayer(PlayerType.PLAYER1).towers, 90, PlayerType.PLAYER1);
-        updateSoldiers(map.GetPlayer(PlayerType.PLAYER2).soldiers, -90);
-        updateTowers(map.GetPlayer(PlayerType.PLAYER2).towers, -90, PlayerType.PLAYER2);
+        map.GetPlayer(playerType).soldiers.ForEach(soldier =>
+        {
+            if(playerType == PlayerType.PLAYER1)
+            {
+                updateSoldiers(map.GetPlayer(playerType).soldiers, 90);
+            } else
+            {
+                updateSoldiers(map.GetPlayer(playerType).soldiers, -90);
+            }
+        });
+
+        //updateSoldiers(map.GetPlayer(PlayerType.PLAYER1).soldiers, 90);
+        //updateTowers(map.GetPlayer(PlayerType.PLAYER1).towers, 90, PlayerType.PLAYER1);
+        //updateSoldiers(map.GetPlayer(PlayerType.PLAYER2).soldiers, -90);
+        //updateTowers(map.GetPlayer(PlayerType.PLAYER2).towers, -90, PlayerType.PLAYER2);
    
         Refresh();
     }
@@ -83,6 +95,8 @@ class GameWindow : Window
             updateMap(updatedMap);
         });
         connection.StartAsync();
+
+        connection.SendAsync("addPlayer", playerType);
     }
 
     protected override void graphicalTimer_Tick(object sender, EventArgs e)
@@ -105,8 +119,11 @@ class GameWindow : Window
     {
         switch (((Button)sender).Name)
         {
-            case BUTTON_BUY_SOLDIER:
-                connection.SendAsync("buySoldier", playerType);
+            case BUTTON_BUY_SLOW_SOLDIER:
+                connection.SendAsync("buySlowSoldier", playerType);
+                break;
+            case BUTTON_BUY_FAST_SOLDIER:
+                connection.SendAsync("buyFastSoldier", playerType);
                 break;
             case BUTTON_BUY_TOWER:
                 connection.SendAsync("buyTower", playerType);
