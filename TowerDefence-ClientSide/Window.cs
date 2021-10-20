@@ -66,10 +66,8 @@ public abstract class Window : Form
         this.ResumeLayout(false);
     }
     // form load event
-    private void Form1_Load(object sender, System.EventArgs e)
+    private  void Form1_Load(object sender, System.EventArgs e)
     {
-        Graphics gr = Graphics.FromImage(DrawArea);
-        gr.Clear(bgColor);
         this.SetStyle(
             ControlStyles.AllPaintingInWmPaint |
             ControlStyles.UserPaint |
