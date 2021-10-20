@@ -13,9 +13,9 @@ namespace TowerDefence_ServerSide
         IHubContext<GameHub> hubContext;
         public Timer timer = new Timer();
         public static double timerSpeed = 36; //~30times per second
-        public MapController(IHubContext<GameHub> hubContext)
+        public MapController(IHubContext<GameHub> hubContext, Map map)
         {
-            map = new Map();
+            this.map = map;
             this.hubContext = hubContext;
             timer.Interval = timerSpeed;
             timer.Start();
@@ -146,6 +146,10 @@ namespace TowerDefence_ServerSide
         public void Shoot(Tower tower)
         {
             tower.Bullets.Add(new Bullet(tower.Coordinates));
-        }        
+        }   
+        public void restartMap()
+        {
+            //todo
+        }
     }
 }

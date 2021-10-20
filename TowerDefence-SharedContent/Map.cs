@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
 
 namespace TowerDefence_SharedContent
 {
@@ -10,6 +11,7 @@ namespace TowerDefence_SharedContent
     {
         public Player player1;
         public Player player2;
+        public Color mapColor;
 
         public Map()
         {
