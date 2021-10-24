@@ -10,13 +10,34 @@ namespace TowerDefence_ServerSide
     public class MapController
     {
         public Map map { get; set; }
-        IHubContext<GameHub> hubContext;
+        static IHubContext<GameHub> hubContext;
         public Timer timer = new Timer();
         public static double timerSpeed = 36; //~30times per second
-        public MapController(IHubContext<GameHub> hubContext, Map map)
+
+        private static MapController instance;
+
+        public static void setIHubContext(IHubContext<GameHub> context)
+        {
+            hubContext = context;
+        }
+
+        public static MapController getInstance(){
+            lock(instance){
+                if(instance == null){
+                    throw new Exception("instance not yet created");
+                }
+                return instance;
+            };
+        }
+        public static void createInstance(string mapType){
+            if (instance != null) return;
+            MapFactory factory = new MapFactory();
+            Map map = factory.CreateMap(mapType);
+            instance = new MapController(map);
+        }
+        public MapController(Map map)
         {
             this.map = map;
-            this.hubContext = hubContext;
             timer.Interval = timerSpeed;
             timer.Start();
 
