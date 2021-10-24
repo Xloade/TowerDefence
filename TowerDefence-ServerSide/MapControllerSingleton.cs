@@ -19,25 +19,7 @@ namespace TowerDefence_ServerSide
         {
             if (mapController != null) return;
             MapFactory factory = new MapFactory();
-            Map map;
-            switch (mapType)
-            {
-                case "Summer":
-                    map = factory.CreateSummerMap();
-                    break;
-                case "Spring":
-                    map = factory.CreateSpringMap();
-                    break;
-                case "Winter":
-                    map = factory.CreateWinterMap();
-                    break;
-                case "Autumn":
-                    map = factory.CreateAutumnMap();
-                    break;
-                default:
-                    map = factory.CreateAutumnMap();
-                    break;
-            }
+            Map map = factory.CreateMap(mapType);
             mapController = new MapController(GameHubContext, map);
         }
         public static MapController getMapController()
