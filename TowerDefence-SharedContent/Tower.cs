@@ -25,5 +25,10 @@ namespace TowerDefence_SharedContent
             Bullets = new List<Bullet>();
             //Bullets.Add(new Bullet(Coordinates));
         }
+
+        public void Shoot()
+        {
+            Bullets.Add(new Bullet(Coordinates));
+        }
     }
 }

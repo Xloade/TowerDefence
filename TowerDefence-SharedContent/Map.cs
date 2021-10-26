@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using TowerDefence_SharedContent.Observers;
 
 namespace TowerDefence_SharedContent
 {
@@ -31,23 +32,23 @@ namespace TowerDefence_SharedContent
             return mapJson.ToString();
         }
 
-        public void addSoldier(PlayerType playerType)
+        private void addSoldier(PlayerType playerType)
         {
             GetPlayer(playerType).soldiers.Add(new Soldier(playerType));
         }
 
-        public void addTower(PlayerType playerType)
+        private void addTower(PlayerType playerType)
         {
             GetPlayer(playerType).towers.Add(new Tower(playerType));
         }
 
-        public void deleteTower(PlayerType playerType)
+        private void deleteTower(PlayerType playerType)
         {
             var towers = GetPlayer(playerType).towers;
             towers.ForEach((tower) =>
             {
                 towers.Remove(tower);
             });
-        }
+        }        
     }
 }

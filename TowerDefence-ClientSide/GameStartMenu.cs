@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.AspNetCore.SignalR.Client;
+using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
@@ -20,11 +21,11 @@ namespace TowerDefence_ClientSide
         {
             if(comboBox1.SelectedItem == null)
             {
-                ConnectToServer(Player.PLAYER1, "NotCelected");
+                ConnectToServer(PlayerType.PLAYER1, "NotCelected");
             }
             else
             {
-                ConnectToServer(Player.PLAYER1, comboBox1.SelectedItem.ToString());
+                ConnectToServer(PlayerType.PLAYER1, comboBox1.SelectedItem.ToString());
             }
             
         }
@@ -35,9 +36,9 @@ namespace TowerDefence_ClientSide
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ConnectToServer(Player.PLAYER2, comboBox1.SelectedItem.ToString());
+            ConnectToServer(PlayerType.PLAYER2, comboBox1.SelectedItem.ToString());
         }
-        private void ConnectToServer(Player player, String mapType)
+        private void ConnectToServer(PlayerType player, String mapType)
         {
             GameWindow form = new GameWindow(player, mapType);
             form.Show();

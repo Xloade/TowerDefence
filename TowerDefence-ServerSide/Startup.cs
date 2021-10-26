@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TowerDefence_SharedContent;
 using Microsoft.AspNetCore.SignalR;
+using TowerDefence_ServerSide.Singleton;
 
 namespace TowerDefence_ServerSide
 {
@@ -45,7 +46,7 @@ namespace TowerDefence_ServerSide
             app.UseAuthorization();
 
             var hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
-            MapControllerSingleton.setIHubContext(hubContext);
+            PlayerSingleton.InitPlayerSingleton(hubContext);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<GameHub>("/GameHub");

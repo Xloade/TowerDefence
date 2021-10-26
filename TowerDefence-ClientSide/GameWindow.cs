@@ -6,12 +6,7 @@ using System.Drawing.Drawing2D;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.SignalR.Client;
 using TowerDefence_SharedContent;
-
-enum Player
-{
-    PLAYER1,
-    PLAYER2
-}
+using TowerDefence_SharedContent.Commands;
 
 class GameWindow : Window
 {
@@ -22,42 +17,31 @@ class GameWindow : Window
     private const string SERVER_URL = "https://localhost:5001/GameHub";
 
     List<Shape> shapes = new List<Shape>();
+    private List<Soldier> soldiers = new List<Soldier>();
 
     HubConnection connection;
-    Player playerType;
-    Map map;
+    PlayerType playerType;
 
-    public GameWindow(Player playerType, String mapType) : base(Color.Cyan, playerType.ToString(),
+    public GameWindow(PlayerType playerType, String mapType) : base(Color.Cyan, playerType.ToString(),
         1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER)
     {
         this.playerType = playerType;
         startSignalR(mapType);
     }
-    
-    private void updateMap(Map map)
-    {
-        this.map = map;
-        shapes = new List<Shape>();
 
-        updateSoldiers(map.GetPlayer(PlayerType.PLAYER1).soldiers, 90);
-        updateTowers(map.GetPlayer(PlayerType.PLAYER1).towers, 90, PlayerType.PLAYER1);
-        updateSoldiers(map.GetPlayer(PlayerType.PLAYER2).soldiers, -90);
-        updateTowers(map.GetPlayer(PlayerType.PLAYER2).towers, -90, PlayerType.PLAYER2);
-        updateMapColor(map.mapColor);
-   
-        Refresh();
-    }
-    //rotation temporary
     private void updateMapColor(Color color)
     {
         this.bgColor = color;
     }
-    private void updateSoldiers(List<Soldier> soldiers, float rotation)
+    private void updateSoldiers(float rotation)
     {
+        shapes = new List<Shape>();
+
         soldiers.ForEach((soldier) =>
         {
             shapes.Add(new Shape(soldier.Coordinates, 100, 100, rotation, Image.FromFile(soldier.Sprite)));
         });
+        Refresh();
     }
 
     private void updateTowers(List<Tower> towers, float rotation, PlayerType type)
@@ -81,13 +65,27 @@ class GameWindow : Window
     private void startSignalR(String mapType)
     {
         connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();
-        connection.On<string>("ReceiveMessage", (updatedMapJson) =>
-        {
-            Map updatedMap = JsonConvert.DeserializeObject<Map>(updatedMapJson);
-            updateMap(updatedMap);
-        });
+        ReceiveSoldierUpdates();
+
         connection.StartAsync();
-        connection.SendAsync("createMap", mapType);
+
+        CreatePlayer(playerType);
+    }
+
+    private void ReceiveSoldierUpdates()
+    {
+        connection.On<PlayerType, string>(SoldierCommand.CoordinatesChanged.ToString(), (playerType, updatedSoldierList) =>
+        {
+            List<Soldier> updatedSoldiers = JsonConvert.DeserializeObject<List<Soldier>>(updatedSoldierList);
+            soldiers = updatedSoldiers;
+
+            updateSoldiers(playerType == PlayerType.PLAYER1 ? 90 : -90);
+        });
+    }
+
+    private void CreatePlayer(PlayerType playerType)
+    {
+        connection.SendAsync("createPlayer", playerType);
     }
 
     protected override void graphicalTimer_Tick(object sender, EventArgs e)
@@ -103,7 +101,13 @@ class GameWindow : Window
         {
             shape.Draw(gr);
         }
-        //gr.Dispose();
+    }
+
+    private void AddSoldier()
+    {
+        var soldier = new Soldier(playerType);
+        soldier.NotifyServer(connection, "buySoldier");
+        soldiers.Add(soldier);
     }
 
     protected override void btn_Click(object sender, EventArgs e)
@@ -111,31 +115,29 @@ class GameWindow : Window
         switch (((Button)sender).Name)
         {
             case BUTTON_BUY_SOLDIER:
-                connection.SendAsync("buySoldier", playerType);
+                AddSoldier();
                 break;
-            case BUTTON_BUY_TOWER:
-                connection.SendAsync("buyTower", playerType);
-                break;
-            case BUTTON_DELETE_TOWER:
-                connection.SendAsync("deleteTower", playerType);
-                break;
-            case BUTTON_RESTART_GAME:
-                connection.SendAsync("restartGame");
-                break;
+            //case BUTTON_BUY_TOWER:
+            //    mapNotifier.SendPlayerAction("buyTower", playerType);
+            //    //connection.SendAsync("buyTower", playerType);
+            //    break;
+            //case BUTTON_DELETE_TOWER:
+            //    mapNotifier.SendPlayerAction("deleteTower", playerType);
+            //    //connection.SendAsync("deleteTower", playerType);
+            //    break;
+            //case BUTTON_RESTART_GAME:
+            //    mapNotifier.SendPlayerAction("restartGame", playerType);
+            //    //connection.SendAsync("restartGame");
+            //    break;
             default:
                 break;
         }
-        // connection.SendAsync("SendMessage", playerType.ToString(), (sender as Button).Name, new string[] { });
     }
  
-    protected override void Mouse_Click(object sender, MouseEventArgs e)
-    {
-        connection.SendAsync("SendMessage", playerType.ToString(), "explotion", new string[] { e.X.ToString(), e.Y.ToString() });
-    }
     protected override void OnFormClosing(FormClosingEventArgs e)
     {
         graphicalTimer.Stop();
-        connection.StopAsync();
+        connection.StartAsync();
         base.OnFormClosing(e);
     }
 }

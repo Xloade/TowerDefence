@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TowerDefence_SharedContent;
+using TowerDefence_SharedContent.Observers;
 
 namespace TowerDefence_ServerSide
 {
-    public class MapControllerSingleton
+    public class MapControllerSingleton : IMapObserver
     {
         static MapController mapController;
         static IHubContext<GameHub> GameHubContext;
@@ -44,5 +45,15 @@ namespace TowerDefence_ServerSide
         {
             return mapController;
         }
+
+        public async void UpdateClient(Map map)
+        {
+            await GameHubContext.Clients.All.SendAsync("ReceiveMessage", map.ToJson());
+        }
+
+        public void NotifyServer(string message)
+        {
+            
+        }        
     }
 }

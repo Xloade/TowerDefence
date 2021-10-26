@@ -4,110 +4,110 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Timers;
 using TowerDefence_SharedContent;
+using TowerDefence_SharedContent.Observers;
 
 namespace TowerDefence_ServerSide
 {
     public class MapController
     {
+        List<ISoldierObserver> playerSoldierObservers = new List<ISoldierObserver>();
+        IMapObserver mapObserver { get; set; }
         public Map map { get; set; }
-        IHubContext<GameHub> hubContext;
+        //IHubContext<GameHub> hubContext;
         public Timer timer = new Timer();
         public static double timerSpeed = 36; //~30times per second
         public MapController(IHubContext<GameHub> hubContext, Map map)
         {
             this.map = map;
-            this.hubContext = hubContext;
+            //this.hubContext = hubContext;
             timer.Interval = timerSpeed;
             timer.Start();
 
-            AddMapSend();
-            AddSoldierMovement();
-
-            AddTowerScan(PlayerType.PLAYER1, PlayerType.PLAYER2);
-            AddTowerScan(PlayerType.PLAYER2, PlayerType.PLAYER1);
-
-            AddBulletMovement();          
+            Loop();
+            //AddMapSend();                  
         }
-        private void AddMapSend()
-        {
-            timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
-            {
-                await hubContext.Clients.All.SendAsync("ReceiveMessage", map.ToJson());
-            };
-        }
-        public void AddSoldierMovement()
+
+        private void Loop()
         {
             timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) => {
-                var soldiersPlayer1 = map.GetPlayer(PlayerType.PLAYER1).soldiers;
-                for (int i = 0; i < soldiersPlayer1.Count; i++)
-                {
-                    var soldier = soldiersPlayer1[i];
-                    soldier.Coordinates = new System.Drawing.Point((int)(soldier.Coordinates.X + soldier.Speed), soldier.Coordinates.Y);
-                    if (soldier.Coordinates.X > 1100)
-                    {
-                        soldiersPlayer1.Remove(soldier);
-                        i--;
-                    }                                                        
-                }
-                var soldiersPlayer2 = map.GetPlayer(PlayerType.PLAYER2).soldiers;
-                for (int i = 0; i < soldiersPlayer2.Count; i++)
-                {
-                    var soldier = soldiersPlayer2[i];
-                    soldier.Coordinates = new System.Drawing.Point((int)(soldier.Coordinates.X - soldier.Speed), soldier.Coordinates.Y);
-                    if (soldier.Coordinates.X < -100)
-                    {
-                        soldiersPlayer2.Remove(soldier);
-                        i--;
-                    }
-                }
+                AddSoldierMovement();
+
+                AddTowerScan(PlayerType.PLAYER1, PlayerType.PLAYER2);
+                AddTowerScan(PlayerType.PLAYER2, PlayerType.PLAYER1);
+
+                AddBulletMovement();
             };
+        }
+        //private void AddMapSend()
+        //{
+        //    timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
+        //    {
+        //        await hubContext.Clients.All.SendAsync("ReceiveMessage", map.ToJson());
+        //    };
+        //}
+        public void AddSoldierMovement()
+        {
+            var soldiersPlayer1 = map.GetPlayer(PlayerType.PLAYER1).soldiers;
+            soldiersPlayer1.ForEach(soldier =>
+            {
+                //soldier.Move(PlayerType.PLAYER1);
+                if (soldier.Coordinates.X > 1100)
+                {
+                    soldiersPlayer1.Remove(soldier);
+                }
+                NotifyAll();
+            });
+            var soldiersPlayer2 = map.GetPlayer(PlayerType.PLAYER2).soldiers;
+            soldiersPlayer1.ForEach(soldier =>
+            {
+                //soldier.Move(PlayerType.PLAYER2);
+                if (soldier.Coordinates.X < -100)
+                {
+                    soldiersPlayer1.Remove(soldier);
+                }
+                NotifyAll();
+            });
         }
 
         public void AddTowerScan(PlayerType player1, PlayerType player2)
         {
-            timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
+            var soldiers = map.GetPlayer(player1).soldiers;
+            var towers = map.GetPlayer(player2).towers;
+            towers.ForEach((tower) =>
             {
-                var soldiers = map.GetPlayer(player1).soldiers;
-                var towers = map.GetPlayer(player2).towers;
-                towers.ForEach((tower) =>
-                {
-                    ScanAndShoot(tower, soldiers);
-                });
-            };
+                ScanAndShoot(tower, soldiers);
+                NotifyAll();
+            });
         }
 
         public void AddBulletMovement()
         {
-            timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) => {
-                var towersPlayer1 = map.GetPlayer(PlayerType.PLAYER1).towers;
-                towersPlayer1.ForEach((tower) =>
+            var towersPlayer1 = map.GetPlayer(PlayerType.PLAYER1).towers;
+            towersPlayer1.ForEach((tower) =>
+            {
+                tower.Bullets.ForEach(bullet =>
                 {
-                    for (int i = 0; i < tower.Bullets.Count; i++)
+                    bullet.Fly(PlayerType.PLAYER1);
+                    if (bullet.Coordinates.X > 1100)
                     {
-                        var bullet = tower.Bullets[i];
-                        bullet.Coordinates = new System.Drawing.Point((int)(bullet.Coordinates.X + bullet.Speed), bullet.Coordinates.Y);
-                        if (bullet.Coordinates.X > 1100)
-                        {
-                            tower.Bullets.Remove(bullet);
-                            i--;
-                        }
+                        tower.Bullets.Remove(bullet);
                     }
+                    NotifyAll();
                 });
-                var towersPlayer2 = map.GetPlayer(PlayerType.PLAYER2).towers;
-                towersPlayer2.ForEach((tower) =>
+            });
+            var towersPlayer2 = map.GetPlayer(PlayerType.PLAYER2).towers;
+            towersPlayer2.ForEach((tower) =>
+            {
+                tower.Bullets.ForEach(bullet =>
                 {
-                    for (int i = 0; i < tower.Bullets.Count; i++)
+                    bullet.Fly(PlayerType.PLAYER2);
+                    if (bullet.Coordinates.X < -100)
                     {
-                        var bullet = tower.Bullets[i];
-                        bullet.Coordinates = new System.Drawing.Point((int)(bullet.Coordinates.X - bullet.Speed), bullet.Coordinates.Y);
-                        if (bullet.Coordinates.X < -100)
-                        {
-                            tower.Bullets.Remove(bullet);
-                            i--;
-                        }
+                        tower.Bullets.Remove(bullet);
                     }
-                });                          
-            };
+                    NotifyAll();
+                });
+            });
         }
 
         public void ScanAndShoot(Tower tower, List<Soldier> soldiers)
@@ -118,8 +118,7 @@ namespace TowerDefence_ServerSide
 
                 if (CanShoot(soldier.Coordinates, tower.Coordinates, tower.Range[2]))
                 {
-                    Shoot(tower);
-                    
+                    tower.Shoot();                  
                 }
                 if(tower.Bullets.Count > 0)
                 {
@@ -142,14 +141,15 @@ namespace TowerDefence_ServerSide
         {
             return soldierCoordinates.X == bulletCoordinates.X;
         }
-
-        public void Shoot(Tower tower)
-        {
-            tower.Bullets.Add(new Bullet(tower.Coordinates));
-        }   
+  
         public void restartMap()
         {
             //todo
+        }
+      
+        public void NotifyAll()
+        {
+            mapObserver.UpdateClient(map);
         }
     }
 }
