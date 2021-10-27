@@ -19,6 +19,7 @@ class GameWindow : Window
     private const string BUTTON_BUY_TOWER = "Buy tower";
     private const string BUTTON_RESTART_GAME = "Restart game";
     private const string BUTTON_DELETE_TOWER = "Delete tower";
+    private const string BUTTON_UPGRADE_SOLDIER = "Upgrade soldier";
     private const string SERVER_URL = "https://localhost:5001/GameHub";
 
     List<Shape> shapes = new List<Shape>();
@@ -28,7 +29,7 @@ class GameWindow : Window
     Map map;
 
     public GameWindow(Player playerType, String mapType) : base(Color.Cyan, playerType.ToString(),
-        1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER)
+        1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
     {
         this.playerType = playerType;
         startSignalR(mapType);
@@ -118,6 +119,9 @@ class GameWindow : Window
                 break;
             case BUTTON_DELETE_TOWER:
                 connection.SendAsync("deleteTower", playerType);
+                break;
+            case BUTTON_UPGRADE_SOLDIER:
+                connection.SendAsync("upgradeSoldier", playerType);
                 break;
             case BUTTON_RESTART_GAME:
                 connection.SendAsync("restartGame");
