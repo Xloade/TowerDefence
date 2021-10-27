@@ -33,7 +33,7 @@ namespace TowerDefence_SharedContent
 
         public void addSoldier(PlayerType playerType)
         {
-            GetPlayer(playerType).soldiers.Add(new Soldier(playerType));
+            GetPlayer(playerType).soldiers.Add(new Soldier(playerType, 1));
         }
 
         public void addTower(PlayerType playerType)
@@ -48,6 +48,11 @@ namespace TowerDefence_SharedContent
             {
                 towers.Remove(tower);
             });
+        }
+
+        public void upgradeSoldier(PlayerType playerType, int level)
+        {
+            GetPlayer(playerType).soldiers.Add(new Soldier(playerType, level));
         }
     }
 }

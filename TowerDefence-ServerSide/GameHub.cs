@@ -41,5 +41,11 @@ namespace TowerDefence_ServerSide
 
         }
 
+        public void upgradeSoldier(PlayerType playerType)
+        {
+            MapController mapController = MapController.getInstance();
+            mapController.map.upgradeSoldier(playerType, 2);
+            Console.WriteLine($"{playerType.ToString()}: upgradeSoldier");
+        }
     }
 }

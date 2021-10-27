@@ -63,7 +63,7 @@ namespace TowerDefence_ServerSide
                 for (int i = 0; i < soldiersPlayer1.Count; i++)
                 {
                     var soldier = soldiersPlayer1[i];
-                    soldier.Coordinates = new System.Drawing.Point((int)(soldier.Coordinates.X + soldier.Speed), soldier.Coordinates.Y);
+                    soldier.Coordinates = new System.Drawing.Point((int)(soldier.Coordinates.X + soldier.Speed * soldier.Level), soldier.Coordinates.Y);
                     if (soldier.Coordinates.X > 1100)
                     {
                         soldiersPlayer1.Remove(soldier);
@@ -74,7 +74,7 @@ namespace TowerDefence_ServerSide
                 for (int i = 0; i < soldiersPlayer2.Count; i++)
                 {
                     var soldier = soldiersPlayer2[i];
-                    soldier.Coordinates = new System.Drawing.Point((int)(soldier.Coordinates.X - soldier.Speed), soldier.Coordinates.Y);
+                    soldier.Coordinates = new System.Drawing.Point((int)(soldier.Coordinates.X - soldier.Speed * soldier.Level), soldier.Coordinates.Y);
                     if (soldier.Coordinates.X < -100)
                     {
                         soldiersPlayer2.Remove(soldier);

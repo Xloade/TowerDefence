@@ -15,12 +15,13 @@ namespace TowerDefence_SharedContent
         public Point Coordinates { get; set; }
         public string Sprite { get; set; }
 
-        public Soldier(PlayerType type)
+        public Soldier(PlayerType type, int level)
         {
 
             Coordinates = type==PlayerType.PLAYER1 ? new Point(0, 450) : new Point(1000, 450);
             Sprite = SpritePaths.getSoldier(type);
             Speed = 5;
+            Level = level;
         }
     }
 }
