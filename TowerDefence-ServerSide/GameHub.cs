@@ -29,8 +29,7 @@ namespace TowerDefence_ServerSide
         }
         public void restartGame()
         {
-            MapController mapController = MapController.getInstance();
-            mapController.restartMap();
+            MapController.restartInstance();
             Console.WriteLine($"restartGame");
         }
         public void deleteTower(PlayerType playerType)
