@@ -22,18 +22,32 @@ namespace TowerDefence_ServerSide
         }
 
         public static MapController getInstance(){
-            lock(instance){
-                if(instance == null){
-                    throw new Exception("instance not yet created");
-                }
-                return instance;
-            };
+            try
+            {
+                lock (instance)
+                {
+                    return instance;
+                };
+            }
+            catch(ArgumentNullException e)
+            {
+                throw new Exception("instance not yet created");
+            }
         }
         public static void createInstance(string mapType){
             if (instance != null) return;
             MapFactory factory = new MapFactory();
             Map map = factory.CreateMap(mapType);
             instance = new MapController(map);
+        }
+        public static void removeInstance()
+        {
+            instance = null;
+        }
+        public static void restartInstance()
+        {
+            MapController.removeInstance();
+            MapController.createInstance("Summer");
         }
         public MapController(Map map)
         {
@@ -168,9 +182,5 @@ namespace TowerDefence_ServerSide
         {
             tower.Bullets.Add(new Bullet(tower.Coordinates));
         }   
-        public void restartMap()
-        {
-            //todo
-        }
     }
 }
