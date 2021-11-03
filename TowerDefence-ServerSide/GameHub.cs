@@ -7,11 +7,14 @@ using Newtonsoft.Json.Linq;
 using TowerDefence_SharedContent.Observers;
 using System.Collections.Generic;
 using TowerDefence_ServerSide.Singleton;
+using System.Timers;
 
 namespace TowerDefence_ServerSide
 {
     public class GameHub : Hub
     {
+        public Timer timer = new Timer();
+        public static double timerSpeed = 36; //~30times per second
 
         public void createMap(String MapType)
         {
@@ -21,6 +24,10 @@ namespace TowerDefence_ServerSide
         public void createPlayer(PlayerType playerType)
         {
             PlayerSingleton.AddPlayer(playerType);
+            if(PlayerSingleton.GetPlayers().Count == 1)
+            {
+                OnFrameTick();
+            }           
         }
         public void buySoldier(PlayerType playerType, string soldierJson)
         {
@@ -32,6 +39,22 @@ namespace TowerDefence_ServerSide
             //UpdateMap(UpdateMessage.BuySoldier, playerType);
             //MapControllerSingleton.Update(map);
             Console.WriteLine($"{playerType.ToString()}: buySoldier");
+        }
+
+        public void OnFrameTick()
+        {
+            timer.Interval = timerSpeed;
+            timer.Start();
+            timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
+            {
+                if (PlayerSingleton.GetPlayers().Count > 0)
+                {
+                    PlayerSingleton.GetPlayers().ForEach(player =>
+                    {
+                        player.soldierController.OnFrameTick();
+                    });
+                }                
+            };                    
         }
 
         //public void buyTower(PlayerType playerType)

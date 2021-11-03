@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using TowerDefence_ServerSide.Controllers;
 using TowerDefence_SharedContent;
 
@@ -12,6 +13,9 @@ namespace TowerDefence_ServerSide.Singleton
     {
         static List<PlayerController> players;
         static IHubContext<GameHub> gameHubContext;
+
+        public Timer timer = new Timer();
+        public static double timerSpeed = 36; //~30times per second
 
         public static void InitPlayerSingleton(IHubContext<GameHub> context)
         {
@@ -32,6 +36,6 @@ namespace TowerDefence_ServerSide.Singleton
         public static List<PlayerController> GetPlayers()
         {
             return players;
-        }
+        }      
     }
 }

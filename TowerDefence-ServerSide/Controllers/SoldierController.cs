@@ -16,10 +16,10 @@ namespace TowerDefence_ServerSide.Controllers
     {
         PlayerType playerType;
         IHubContext<GameHub> hubContext;
-        List<ISoldierObserver> soldierObservers;
+        List<ISoldierObserver> soldierObservers; 
 
-        public Timer timer = new Timer();
-        public static double timerSpeed = 36; //~30times per second
+       // public Timer timer = new Timer();
+        //public static double timerSpeed = 36; //~30times per second
 
         public SoldierController(IHubContext<GameHub> hubContext, PlayerType playerType)
         {
@@ -27,9 +27,9 @@ namespace TowerDefence_ServerSide.Controllers
             this.playerType = playerType;
             soldierObservers = new List<ISoldierObserver>();
 
-            timer.Interval = timerSpeed;
-            timer.Start();
-            LoopMovement();
+            //timer.Interval = timerSpeed;
+            //timer.Start();
+            //LoopMovement();
         }
 
         public void Attach(Soldier soldier)
@@ -44,28 +44,44 @@ namespace TowerDefence_ServerSide.Controllers
 
         public async void NotifyAll()
         {
-            await hubContext.Clients.All.SendAsync(SoldierCommand.CoordinatesChanged.ToString(), playerType, GetSerializedSoldiers());            
+            var command = playerType == PlayerType.PLAYER1 ? SoldierCommand.Player1SoldierCoordinatesChanged.ToString() : SoldierCommand.Player2SoldierCoordinatesChanged.ToString();
+            await hubContext.Clients.All.SendAsync(command, playerType, GetSerializedSoldiers());            
         }
 
-        private void LoopMovement()
-        {
-            timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) => {
-                for(int i = 0; i < soldierObservers.Count; i++)
-                {
-                    soldierObservers[i].Move();
-                    if (soldierObservers[i].IsOutOfMap())
-                    {
-                        Deattach(soldierObservers[i]);
-                        i--;
-                    }
-                    NotifyAll();
-                }
-            };        
-        }
+        //private void LoopMovement()
+        //{
+        //    timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
+        //    {
+        //        for (int i = 0; i < soldierObservers.Count; i++)
+        //        {
+        //            soldierObservers[i].Move();
+        //            if (soldierObservers[i].IsOutOfMap())
+        //            {
+        //                Deattach(soldierObservers[i]);
+        //                i--;
+        //            }
+        //            NotifyAll();
+        //        }
+        //    };
+        //}
 
         private string GetSerializedSoldiers()
         {
             return JsonConvert.SerializeObject(soldierObservers.ConvertAll(soldier => (Soldier)soldier));
+        }
+
+        public void OnFrameTick()
+        {
+            for (int i = 0; i < soldierObservers.Count; i++)
+            {
+                soldierObservers[i].Move();
+                if (soldierObservers[i].IsOutOfMap())
+                {
+                    Deattach(soldierObservers[i]);
+                    i--;
+                }
+                NotifyAll();
+            }
         }
     }
 }

@@ -74,12 +74,20 @@ class GameWindow : Window
 
     private void ReceiveSoldierUpdates()
     {
-        connection.On<PlayerType, string>(SoldierCommand.CoordinatesChanged.ToString(), (playerType, updatedSoldierList) =>
+        connection.On<PlayerType, string>(SoldierCommand.Player1SoldierCoordinatesChanged.ToString(), (playerType, updatedSoldierList) =>
         {
             List<Soldier> updatedSoldiers = JsonConvert.DeserializeObject<List<Soldier>>(updatedSoldierList);
             soldiers = updatedSoldiers;
 
-            updateSoldiers(playerType == PlayerType.PLAYER1 ? 90 : -90);
+            updateSoldiers(90);
+        });
+
+        connection.On<PlayerType, string>(SoldierCommand.Player2SoldierCoordinatesChanged.ToString(), (playerType, updatedSoldierList) =>
+        {
+            List<Soldier> updatedSoldiers = JsonConvert.DeserializeObject<List<Soldier>>(updatedSoldierList);
+            soldiers = updatedSoldiers;
+
+            updateSoldiers(-90);
         });
     }
 

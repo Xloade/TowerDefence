@@ -7,6 +7,7 @@ namespace TowerDefence_SharedContent.Commands
 {
     public enum SoldierCommand
     {
-        CoordinatesChanged
+        Player1SoldierCoordinatesChanged,
+        Player2SoldierCoordinatesChanged
     }
 }
