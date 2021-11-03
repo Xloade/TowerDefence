@@ -23,11 +23,11 @@ namespace TowerDefence_ServerSide
 
         public void createPlayer(PlayerType playerType)
         {
-            PlayerSingleton.AddPlayer(playerType);
-            if(PlayerSingleton.GetPlayers().Count == 1)
+            if(PlayerSingleton.GetPlayers().Count == 0)
             {
-                OnFrameTick();
-            }           
+                startTimer();
+            }
+            PlayerSingleton.AddPlayer(playerType);          
         }
         public void buySoldier(PlayerType playerType, string soldierJson)
         {
@@ -41,20 +41,32 @@ namespace TowerDefence_ServerSide
             Console.WriteLine($"{playerType.ToString()}: buySoldier");
         }
 
-        public void OnFrameTick()
+        //public void moveSoldier(PlayerType playerType, int position, string soldierJson)
+        //{
+        //    PlayerSingleton.GetPlayer(playerType).soldierController
+        //        .Update(JsonConvert.DeserializeObject<Soldier>(soldierJson), position);
+        //    Console.WriteLine($"{playerType.ToString()}: moveSoldier");
+        //}
+
+        //public void removeSoldier(PlayerType playerType, string soldierJson)
+        //{
+        //    PlayerSingleton.GetPlayer(playerType).soldierController
+        //        .Deattach(JsonConvert.DeserializeObject<Soldier>(soldierJson));
+        //    Console.WriteLine($"{playerType.ToString()}: removeSoldier");
+        //}
+
+        public void startTimer()
         {
-            timer.Interval = timerSpeed;
-            timer.Start();
             timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
             {
-                if (PlayerSingleton.GetPlayers().Count > 0)
+                if(PlayerSingleton.GetPlayers().Count > 0)
                 {
                     PlayerSingleton.GetPlayers().ForEach(player =>
                     {
-                        player.soldierController.OnFrameTick();
+                        player.soldierController.onTick();
                     });
-                }                
-            };                    
+                }               
+            };
         }
 
         //public void buyTower(PlayerType playerType)
@@ -63,7 +75,7 @@ namespace TowerDefence_ServerSide
         //    //MapController mapController = MapControllerSingleton.getMapController();
         //    //mapController.map.addTower(playerType);
         //    Console.WriteLine($"{playerType.ToString()}: buyTower");
-                    
+
         //}
         //public void restartGame()
         //{

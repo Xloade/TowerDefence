@@ -34,7 +34,7 @@ namespace TowerDefence_SharedContent
 
         private void addSoldier(PlayerType playerType)
         {
-            GetPlayer(playerType).soldiers.Add(new Soldier(playerType));
+            GetPlayer(playerType).soldiers.Add(new Soldier(playerType, 1));
         }
 
         private void addTower(PlayerType playerType)

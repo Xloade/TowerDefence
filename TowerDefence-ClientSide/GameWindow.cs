@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Drawing;
-using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.SignalR.Client;
 using TowerDefence_SharedContent;
 using TowerDefence_SharedContent.Commands;
+using System.Timers;
+using System.Windows.Forms;
+using System.ComponentModel;
 
 class GameWindow : Window
 {
@@ -19,15 +21,22 @@ class GameWindow : Window
     List<Shape> shapes = new List<Shape>();
     private List<Soldier> soldiers = new List<Soldier>();
 
+    public System.Timers.Timer timer = new System.Timers.Timer();
+    public static int timerSpeed = 36; //~30times per second
+
     HubConnection connection;
     PlayerType playerType;
+
+    BackgroundWorker worker;
+
+    bool proceed = false;
 
     public GameWindow(PlayerType playerType, String mapType) : base(Color.Cyan, playerType.ToString(),
         1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER)
     {
         this.playerType = playerType;
         startSignalR(mapType);
-    }
+    }    
 
     private void updateMapColor(Color color)
     {
@@ -113,9 +122,8 @@ class GameWindow : Window
 
     private void AddSoldier()
     {
-        var soldier = new Soldier(playerType);
+        var soldier = new Soldier(playerType, soldiers.Count);
         soldier.NotifyServer(connection, "buySoldier");
-        soldiers.Add(soldier);
     }
 
     protected override void btn_Click(object sender, EventArgs e)
@@ -142,7 +150,7 @@ class GameWindow : Window
         }
     }
  
-    protected override void OnFormClosing(FormClosingEventArgs e)
+    protected override void OnFormClosing(System.Windows.Forms.FormClosingEventArgs e)
     {
         graphicalTimer.Stop();
         connection.StartAsync();

@@ -18,13 +18,15 @@ namespace TowerDefence_SharedContent
         public double[] Hitpoints { get; set; }
         public Point Coordinates { get; set; }
         public string Sprite { get; set; }
+        public int position { get; set; }
 
-        public Soldier(PlayerType type)
+        public Soldier(PlayerType type, int position)
         {
             PlayerType = type;
             Coordinates = type==PlayerType.PLAYER1 ? new Point(0, 450) : new Point(1000, 450);
             Sprite = SpritePaths.getSoldier(type);
             Speed = 5;
+            this.position = position;
         }
 
         public void Move()
@@ -37,7 +39,12 @@ namespace TowerDefence_SharedContent
                 case PlayerType.PLAYER2:
                     Coordinates = new Point((int)(Coordinates.X - Speed), Coordinates.Y);
                     break;
-            }            
+            }
+        }
+
+        public void Remove(HubConnection connection, string message)
+        {
+            NotifyServer(connection, message);
         }
 
         public bool IsOutOfMap()
@@ -61,7 +68,18 @@ namespace TowerDefence_SharedContent
 
         public void NotifyServer(HubConnection connection, string message)
         {
-            connection.SendAsync(message, PlayerType, ToJson());
+            switch(message)
+            {
+                case "buySoldier":
+                    connection.SendAsync(message, PlayerType, ToJson());
+                    break;
+                case "moveSoldier":
+                    connection.SendAsync(message, PlayerType, position, ToJson());
+                    break;
+                case "removeSoldier":
+                    connection.SendAsync(message, PlayerType, ToJson());
+                    break;
+            }            
         }
     }
 }
