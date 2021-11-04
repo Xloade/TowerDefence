@@ -25,5 +25,56 @@ namespace TowerDefence_SharedContent
             Bullets = new List<Bullet>();
             //Bullets.Add(new Bullet(Coordinates));
         }
+
+        public void MoveBullets(PlayerType type)
+        {
+            for (int i = 0; i < Bullets.Count; i++)
+            {
+                Bullets[i].MoveForward(type);
+                if (Bullets[i].IsOutOfMap(type))
+                {
+                    Bullets.Remove(Bullets[i]);
+                    i--;
+                }
+            }
+        }
+
+        public void Scan(List<Soldier> soldiers)
+        {
+            for (int i = 0; i < soldiers.Count; i++)
+            {
+                var soldier = soldiers[i];
+
+                if (CanShoot(soldier.Coordinates, this.Coordinates, this.Range[2]))
+                {
+                    Shoot();
+
+                }
+                if (this.Bullets.Count > 0)
+                {
+                    if (CanDestroy(soldier.Coordinates, this.Bullets[0].Coordinates))
+                    {
+                        this.Bullets.Clear();
+                        soldiers.Remove(soldier);
+                        i--;
+                    }
+                }
+            }
+        }
+
+        public bool CanShoot(Point soldierCoordinates, Point towerCoordinates, int range)
+        {
+            return Math.Abs(soldierCoordinates.X - towerCoordinates.X) == range;
+        }
+
+        public void Shoot()
+        {
+            Bullets.Add(new Bullet(this.Coordinates));
+        }
+
+        public bool CanDestroy(Point soldierCoordinates, Point bulletCoordinates)
+        {
+            return soldierCoordinates.X == bulletCoordinates.X;
+        }
     }
 }

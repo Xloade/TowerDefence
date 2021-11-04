@@ -23,5 +23,33 @@ namespace TowerDefence_SharedContent
             Speed = 5;
             Level = level;
         }
+
+        public void MoveForward(PlayerType playerType)
+        {
+            switch(playerType)
+            {
+                case PlayerType.PLAYER1:
+                    Coordinates = new System.Drawing.Point((int)(Coordinates.X + Speed * Level), Coordinates.Y);
+                    break;
+                case PlayerType.PLAYER2:
+                    Coordinates = new System.Drawing.Point((int)(Coordinates.X - Speed * Level), Coordinates.Y);
+                    break;
+                default:
+                    break;
+            }            
+        }
+
+        public bool IsOutOfMap(PlayerType playerType)
+        {
+            switch(playerType)
+            {
+                case PlayerType.PLAYER1:
+                    return Coordinates.X > 1100;
+                case PlayerType.PLAYER2:              
+                    return Coordinates.X < -100;
+                default:
+                    return false;
+            }
+        }       
     }
 }

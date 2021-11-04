@@ -7,22 +7,31 @@ using System.Drawing;
 
 namespace TowerDefence_SharedContent
 {
-    public class Map
+    public class Map : IMapObserver
     {
-        public Player player1;
-        public Player player2;
         public Color mapColor;
+
+        public List<Player> players;
 
         public Map()
         {
-            player1 = new Player();
-            player2 = new Player();
+            players = new List<Player>();
+        }
+
+        public void AddPlayer(PlayerType playerType)
+        {
+            players.Add(new Player(playerType));
         }
 
 
         public Player GetPlayer(PlayerType type)
         {
-            return type == PlayerType.PLAYER1 ? player1 : player2;
+            return players.Find(player => player.PlayerType == type);
+        }
+
+        public Player GetPlayerEnemy(PlayerType type)
+        {
+            return players.Find(player => player.PlayerType != type);
         }
 
         public string ToJson()
@@ -31,25 +40,45 @@ namespace TowerDefence_SharedContent
             return mapJson.ToString();
         }
 
-        public void addSoldier(PlayerType playerType)
+        public void AddSoldier(Soldier soldier, PlayerType playerType)
         {
-            GetPlayer(playerType).soldiers.Add(new Soldier(playerType, 1));
+            foreach(Player player in players)
+            {
+                if(player.PlayerType == playerType)
+                {
+                    player.soldiers.Add(soldier);
+                }
+            }
         }
 
-        public void addTower(PlayerType playerType)
+        public void AddTower(Tower tower, PlayerType playerType)
         {
-            GetPlayer(playerType).towers.Add(new Tower(playerType));
+            foreach (Player player in players)
+            {
+                if (player.PlayerType == playerType)
+                {
+                    player.towers.Add(tower);
+                }
+            }
         }
 
-        public void deleteTower(PlayerType playerType)
+        public void UpdateSoldierMovement()
         {
-            var towers = GetPlayer(playerType).towers;
-            towers.Clear();
+            foreach(Player player in players)
+            {
+                player.UpdateSoldierMovement();
+            }
         }
 
-        public void upgradeSoldier(PlayerType playerType, int level)
+        public void UpdateTowerActivity()
         {
-            GetPlayer(playerType).soldiers.Add(new Soldier(playerType, level));
+            if(players.Count > 1)
+            {
+                foreach (Player player in players)
+                {
+                    player.UpdateTowerActivity(GetPlayerEnemy(player.PlayerType).soldiers);
+                }
+            }           
         }
     }
 }

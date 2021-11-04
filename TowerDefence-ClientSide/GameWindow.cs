@@ -7,12 +7,6 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.SignalR.Client;
 using TowerDefence_SharedContent;
 
-enum Player
-{
-    PLAYER1,
-    PLAYER2
-}
-
 class GameWindow : Window
 {
     private const string BUTTON_BUY_SOLDIER = "Buy soldier";
@@ -25,10 +19,9 @@ class GameWindow : Window
     List<Shape> shapes = new List<Shape>();
 
     HubConnection connection;
-    Player playerType;
-    Map map;
+    private PlayerType playerType;
 
-    public GameWindow(Player playerType, String mapType) : base(Color.Cyan, playerType.ToString(),
+    public GameWindow(PlayerType playerType, String mapType) : base(Color.Cyan, playerType.ToString(),
         1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
     {
         this.playerType = playerType;
@@ -37,17 +30,24 @@ class GameWindow : Window
     
     private void updateMap(Map map)
     {
-        this.map = map;
         shapes = new List<Shape>();
 
-        updateSoldiers(map.GetPlayer(PlayerType.PLAYER1).soldiers, 90);
-        updateTowers(map.GetPlayer(PlayerType.PLAYER1).towers, 90, PlayerType.PLAYER1);
-        updateSoldiers(map.GetPlayer(PlayerType.PLAYER2).soldiers, -90);
-        updateTowers(map.GetPlayer(PlayerType.PLAYER2).towers, -90, PlayerType.PLAYER2);
         updateMapColor(map.mapColor);
+
+        foreach(Player player in map.players)
+        {
+            updateSoldiers(player.soldiers, GetRotation(player.PlayerType));
+            updateTowers(player.towers, player.PlayerType);
+        }
    
         Refresh();
+    }   
+    
+    private int GetRotation(PlayerType playerType)
+    {
+        return playerType == PlayerType.PLAYER1 ? 90 : -90;
     }
+
     //rotation temporary
     private void updateMapColor(Color color)
     {
@@ -61,13 +61,13 @@ class GameWindow : Window
         });
     }
 
-    private void updateTowers(List<Tower> towers, float rotation, PlayerType type)
+    private void updateTowers(List<Tower> towers, PlayerType playerType)
     {
         towers.ForEach((tower) =>
         {
-            shapes.Add(new Shape(tower.Coordinates, 100, 100, rotation, Image.FromFile(tower.Sprite)));
+            shapes.Add(new Shape(tower.Coordinates, 100, 100, GetRotation(playerType), Image.FromFile(tower.Sprite)));
 
-            updateBullets(tower.Bullets, type == PlayerType.PLAYER1 ? 90 : -90);
+            updateBullets(tower.Bullets, GetRotation(playerType));
         });
     }
 
@@ -89,6 +89,7 @@ class GameWindow : Window
         });
         connection.StartAsync();
         connection.SendAsync("createMap", mapType);
+        connection.SendAsync("addPlayer", playerType);
     }
 
     protected override void graphicalTimer_Tick(object sender, EventArgs e)
@@ -104,7 +105,6 @@ class GameWindow : Window
         {
             shape.Draw(gr);
         }
-        //gr.Dispose();
     }
 
     protected override void btn_Click(object sender, EventArgs e)
@@ -129,7 +129,6 @@ class GameWindow : Window
             default:
                 break;
         }
-        // connection.SendAsync("SendMessage", playerType.ToString(), (sender as Button).Name, new string[] { });
     }
  
     protected override void Mouse_Click(object sender, MouseEventArgs e)
