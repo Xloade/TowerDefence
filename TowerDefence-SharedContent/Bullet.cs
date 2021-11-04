@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TowerDefence_SharedContent
 {
-    public class Bullet
+    public class Bullet : IMove
     {
         public Point Coordinates { get; set; }
         public string Sprite { get; set; }
