@@ -10,6 +10,7 @@ public abstract class Window : Form
     private System.ComponentModel.IContainer components = null;
 
     protected ComboBox towerSelectionBox;
+    protected ComboBox soldierSelectionBox;
 
     public Window(params string[] btnNames) : base()
     {
@@ -52,6 +53,14 @@ public abstract class Window : Form
                 towerSelectionBox.DropDownClosed += new EventHandler(tower_selection_click);
                 this.Controls.Add(towerSelectionBox);
                 towerSelectionBox.Visible = false;
+            } else if(name.Equals("Buy soldier"))
+            {
+                soldierSelectionBox = new ComboBox();
+                soldierSelectionBox.Location = new Point(btnX, DrawArea.Height - 220);
+                soldierSelectionBox.Items.AddRange(new string[] { "Hitpoints", "Speed" });
+                soldierSelectionBox.DropDownClosed += new EventHandler(soldier_selection_click);
+                this.Controls.Add(soldierSelectionBox);
+                soldierSelectionBox.Visible = false;
             }
             btnX += margin + btnWidth;
         }
@@ -102,7 +111,7 @@ public abstract class Window : Form
     protected abstract void btn_Click(object sender, System.EventArgs e);
 
     protected abstract void tower_selection_click(object sender, System.EventArgs e);
-
+    protected abstract void soldier_selection_click(object sender, System.EventArgs e);
     protected virtual void Mouse_Click(object sender, MouseEventArgs e) { }
     protected virtual void graphicalTimer_Tick(object sender, System.EventArgs e) { }
     protected virtual void physicsTimer_Tick(object sender, System.EventArgs e) { }
