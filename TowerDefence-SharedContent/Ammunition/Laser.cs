@@ -20,8 +20,8 @@ namespace TowerDefence_SharedContent
             Coordinates = towerCoordinates;
             Sprite = SpritePaths.getBullet();
             Speed = 5;
-            Width = 400;
-            Height = 50;
+            Width = 50;
+            Height = 700;
             AmmunitionType = ammunitionType;
         }
 

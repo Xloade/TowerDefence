@@ -54,12 +54,6 @@ namespace TowerDefence_SharedContent
                 var towers = new List<Tower>();
                 foreach (JToken tower in towersJson)
                 {
-                    var ammunitionJson = tower["Ammunition"].Children();
-                    var ammunition = new List<ShootAlgorithm>();
-                    foreach(JToken amm in ammunitionJson)
-                    {
-                        ammunition.Add(ParseAmmunition(amm));
-                    }
                     towers.Add(ParseTower(tower));
                 }
 
@@ -70,15 +64,30 @@ namespace TowerDefence_SharedContent
         }
         public Tower ParseTower(JToken token)
         {
-            var type = token["TowerType"].ToObject<TowerType>();
-            switch (type)
+            var level = token["Level"].ToObject<int>();
+            var price = token["Price"].ToObject<int[]>();
+            var coordinates = token["Coordinates"].ToObject<Point>();
+            var range = token["Range"].ToObject<int[]>();
+            var power = token["Power"].ToObject<int[]>();
+            var rateOfFire = token["RateOfFire"].ToObject<double[]>();
+            var sprite = token["Sprite"].ToObject<string>();
+            var ammunitionJson = token["Ammunition"].Children();
+            var towerType = token["TowerType"].ToObject<TowerType>();
+
+            var ammunition = new List<ShootAlgorithm>();
+            foreach (JToken amm in ammunitionJson)
+            {
+                ammunition.Add(ParseAmmunition(amm));
+            }            
+
+            switch (towerType)
             {
                 case TowerType.Minigun:
-                    return JsonConvert.DeserializeObject<MiniGunTower>(token.ToString());
+                    return new MiniGunTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType);
                 case TowerType.Rocket:
-                    return JsonConvert.DeserializeObject<RocketTower>(token.ToString());
+                    return new RocketTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType);
                 case TowerType.Laser:
-                    return JsonConvert.DeserializeObject<LaserTower>(token.ToString());
+                    return new LaserTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType);
                 default:
                     return null;
             }
