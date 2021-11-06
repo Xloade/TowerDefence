@@ -20,24 +20,14 @@ namespace TowerDefence_SharedContent
             Coordinates = towerCoordinates;
             Sprite = SpritePaths.getBullet();
             Speed = 5;
-            Width = 50;
-            Height = 50;
+            Width = 500;
+            Height = 500;
             AmmunitionType = ammunitionType;
         }
 
         public override void MoveForward(PlayerType playerType)
         {
-            switch (playerType)
-            {
-                case PlayerType.PLAYER1:
-                    Coordinates = new System.Drawing.Point((int)(Coordinates.X + Speed), Coordinates.Y);
-                    break;
-                case PlayerType.PLAYER2:
-                    Coordinates = new System.Drawing.Point((int)(Coordinates.X - Speed), Coordinates.Y);
-                    break;
-                default:
-                    break;
-            }
+            // rocket doesn't move
         }
 
     }

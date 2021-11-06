@@ -78,9 +78,7 @@ namespace TowerDefence_SharedContent
             foreach (JToken amm in ammunitionJson)
             {
                 ammunition.Add(ParseAmmunition(amm));
-            }
-
-            
+            }            
 
             switch (towerType)
             {
