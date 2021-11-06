@@ -9,6 +9,7 @@ using TowerDefence_SharedContent.Towers;
 using TowerDefence_SharedContent;
 using TowerDefence_SharedContent.Soldiers;
 using Newtonsoft.Json.Linq;
+using TowerDefence_ClientSide;
 
 class GameWindow : Window
 {
@@ -23,6 +24,7 @@ class GameWindow : Window
 
     HubConnection connection;
     private PlayerType playerType;
+    private Stats stats;
 
     public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
         1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
@@ -32,8 +34,9 @@ class GameWindow : Window
         MapParser.CreateInstance();
     }
     
-    private void updateMap(Map map)
+    private void updateMap(Map map) 
     {
+        this.stats = new PlayerStats(map.GetPlayer(playerType));
         shapes = new List<Shape>();
 
         updateMapColor(map.backgroundImageDir);
@@ -210,5 +213,55 @@ class GameWindow : Window
             default:
                 break;
         }
-    }   
+    }
+
+    protected override void status_selection_click(object sender, EventArgs e)
+    {
+        ComboBox comboBox = (ComboBox)sender;
+        if(comboBox.SelectedItem != null)
+        {
+            switch(comboBox.SelectedItem.ToString())
+            {
+                case "All":
+                    int[] playerStats = stats.Show();
+
+                    LifePointsText.Text = $"Lifepoints: {playerStats[0]}";
+                    LifePointsText.Visible = true;
+
+                    TowerCurrencyText.Text = $"Tower Currency: {playerStats[1]}";
+                    TowerCurrencyText.Visible = true;
+
+                    SoldierCurrencyText.Text = $"Soldier Currency: {playerStats[2]}";                                      
+                    SoldierCurrencyText.Visible = true;
+                    break;
+                case "Lifepoints":
+                    int lifepoints = stats.ShowParameter(PlayerStatsShowStatus.Lifepoints);
+
+                    LifePointsText.Text = $"Lifepoints: {lifepoints}";
+                    LifePointsText.Visible = true;
+
+                    TowerCurrencyText.Visible = false;
+                    SoldierCurrencyText.Visible = false;
+                    break;
+                case "Tower Currency":
+                    int towerCurrency = stats.ShowParameter(PlayerStatsShowStatus.TowerCurrency);
+
+                    TowerCurrencyText.Text = $"Tower Currency: {towerCurrency}";
+
+                    LifePointsText.Visible = false;
+                    TowerCurrencyText.Visible = true;
+                    SoldierCurrencyText.Visible = false;
+                    break;
+                case "Soldier Currency":
+                    int soldierCurrency = stats.ShowParameter(PlayerStatsShowStatus.SoldierCurrency);
+
+                    SoldierCurrencyText.Text = $"Soldier Currency: {soldierCurrency}";
+
+                    LifePointsText.Visible = false;
+                    TowerCurrencyText.Visible = false;
+                    SoldierCurrencyText.Visible = true;
+                    break;
+            }
+        }
+    }
 }

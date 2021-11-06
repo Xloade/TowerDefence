@@ -79,9 +79,7 @@ namespace TowerDefence_SharedContent
             {
                 ammunition.Add(ParseAmmunition(amm));
             }
-
-            
-
+          
             switch (towerType)
             {
                 case TowerType.Minigun:

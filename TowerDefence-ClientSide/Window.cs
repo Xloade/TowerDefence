@@ -13,6 +13,13 @@ public abstract class Window : Form
     protected ComboBox towerSelectionBox;
     protected ComboBox soldierSelectionBox;
 
+    private string[] statusNames = new string[] { "Lifepoints", "Tower Currency", "Soldier Currency" };
+
+    protected Label LifePointsText;
+    protected Label TowerCurrencyText;
+    protected Label SoldierCurrencyText;
+    protected ComboBox StatusSelectionBox;
+
     public Window(params string[] btnNames) : base()
     {
         DrawArea = new Bitmap(600, 400,
@@ -31,9 +38,55 @@ public abstract class Window : Form
         DrawArea = new Bitmap(width, height,
              System.Drawing.Imaging.PixelFormat.Format24bppRgb);
         createButtonsLine(btnNames);
+        createStatusLine();
         this.Text = title;
         InitializeComponent();
     }
+
+    private void createStatusLine()
+    {
+        int margin = 20;
+        int x = margin;
+        foreach(var name in statusNames)
+        {
+            switch(name)
+            {
+                case "Lifepoints":
+                    LifePointsText = new Label();
+                    x += margin + SetText(LifePointsText, name, x);
+                    break;
+                case "Tower Currency":
+                    TowerCurrencyText = new Label();
+                    x += margin + SetText(TowerCurrencyText, name, x);
+                    break;
+                case "Soldier Currency":
+                    SoldierCurrencyText = new Label();
+                    x += margin + SetText(SoldierCurrencyText, name, x);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        StatusSelectionBox = new ComboBox();
+        StatusSelectionBox.Location = new Point(x, DrawArea.Height - 700);
+        StatusSelectionBox.Items.AddRange(new string[] { "All", "Lifepoints", "Tower Currency", "Soldier Currency" });
+        StatusSelectionBox.DropDownClosed += new EventHandler(status_selection_click);
+        StatusSelectionBox.SelectedIndex = 0;
+        this.Controls.Add(StatusSelectionBox);
+    }
+
+    private int SetText(Label textBox, string name, int x)
+    {
+        textBox.Text = name;
+        textBox.ForeColor = Color.Black;
+        int textWidth = name.Length * 10 + 4;
+        textBox.Location = new Point(x, DrawArea.Height - 700);
+        textBox.Size = new Size(textWidth, 20);
+        this.Controls.Add(textBox);
+        return textWidth;
+    }
+
     private void createButtonsLine(params string[] btnNames)
     {
         int margin = 20;
@@ -115,6 +168,8 @@ public abstract class Window : Form
 
     protected abstract void tower_selection_click(object sender, System.EventArgs e);
     protected abstract void soldier_selection_click(object sender, System.EventArgs e);
+
+    protected abstract void status_selection_click(object sender, System.EventArgs e);
     protected virtual void Mouse_Click(object sender, MouseEventArgs e) { }
     protected virtual void graphicalTimer_Tick(object sender, System.EventArgs e) { }
     protected virtual void physicsTimer_Tick(object sender, System.EventArgs e) { }
