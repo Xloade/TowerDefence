@@ -11,7 +11,7 @@ namespace TowerDefence_SharedContent
 {
     public class Map : IMapObserver
     {
-        public Color mapColor;
+        public string backgroundImageDir;
 
         public List<Player> players;
 

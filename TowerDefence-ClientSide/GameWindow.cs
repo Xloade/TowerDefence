@@ -24,7 +24,7 @@ class GameWindow : Window
     HubConnection connection;
     private PlayerType playerType;
 
-    public GameWindow(PlayerType playerType, String mapType) : base(Color.Cyan, playerType.ToString(),
+    public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
         1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
     {
         this.playerType = playerType;
@@ -36,7 +36,7 @@ class GameWindow : Window
     {
         shapes = new List<Shape>();
 
-        updateMapColor(map.mapColor);
+        updateMapColor(map.backgroundImageDir);
 
         foreach(Player player in map.players)
         {
@@ -53,9 +53,10 @@ class GameWindow : Window
     }
 
     //rotation temporary
-    private void updateMapColor(Color color)
+    private void updateMapColor(string image)
     {
-        this.bgColor = color;
+
+        this.bgImage = Image.FromFile(image);
     }
     private void updateSoldiers(List<Soldier> soldiers, float rotation)
     {
@@ -103,7 +104,7 @@ class GameWindow : Window
     protected override void Form1_Paint(object sender, PaintEventArgs e)
     {
         Graphics gr = e.Graphics;
-        gr.FillRectangle(new SolidBrush(bgColor), 0, 0, DrawArea.Width, DrawArea.Height);
+        gr.DrawImage(bgImage, 0, 0, DrawArea.Width, DrawArea.Height);
         gr.SmoothingMode = SmoothingMode.AntiAlias;
         foreach (Shape shape in shapes)
         {

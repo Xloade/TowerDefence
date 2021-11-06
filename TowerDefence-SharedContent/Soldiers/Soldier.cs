@@ -18,7 +18,7 @@ namespace TowerDefence_SharedContent.Soldiers
 
         public Soldier(PlayerType playerType, SoldierType soldierType, int level)
         {
-            Coordinates = playerType == PlayerType.PLAYER1 ? new Point(0, 450) : new Point(1000, 450);
+            Coordinates = playerType == PlayerType.PLAYER1 ? new Point(0, 350) : new Point(1000, 350);
             Sprite = SpritePaths.getSoldier(playerType, soldierType);
             Speed = 5;
             Level = level;

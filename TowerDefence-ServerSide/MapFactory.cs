@@ -12,25 +12,25 @@ namespace TowerDefence_ServerSide
         private Map CreateSummerMap()
         {
             Map map = new Map();
-            map.mapColor = Color.Green;
+            map.backgroundImageDir = SpritePaths.getMap("Summer");
             return map;
         }
         private Map CreateSpringMap()
         {
             Map map = new Map();
-            map.mapColor = Color.GreenYellow;
+            map.backgroundImageDir = SpritePaths.getMap("Spring");
             return map;
         }
         private Map CreateWinterMap()
         {
             Map map = new Map();
-            map.mapColor = Color.LightCyan;
+            map.backgroundImageDir = SpritePaths.getMap("Winter");
             return map;
         }
         private Map CreateAutumnMap()
         {
             Map map = new Map();
-            map.mapColor = Color.OrangeRed;
+            map.backgroundImageDir = SpritePaths.getMap("Autumn");
             return map;
         }
 

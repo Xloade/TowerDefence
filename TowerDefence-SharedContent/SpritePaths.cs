@@ -8,16 +8,17 @@ namespace TowerDefence_SharedContent
 {
     public static class SpritePaths
     {
+        readonly public static string dir = "../../../Sprites";
         public static string getTower(PlayerType playerType, TowerType towerType)
         {
             switch(towerType)
             {
                 case TowerType.Minigun:
-                    return playerType == PlayerType.PLAYER1 ? "../../../Sprites/bulletTower(Blue).png" : "../../../Sprites/bulletTower(Red).png";
+                    return playerType == PlayerType.PLAYER1 ? $"{dir}/bulletTower(Blue).png" : $"{dir}/bulletTower(Red).png";
                 case TowerType.Rocket:
-                    return playerType == PlayerType.PLAYER1 ? "../../../Sprites/rocketTower(Blue).png" : "../../../Sprites/rocketTower(Red).png";
+                    return playerType == PlayerType.PLAYER1 ? $"{dir}/rocketTower(Blue).png" : $"{dir}/rocketTower(Red).png";
                 case TowerType.Laser:
-                    return playerType == PlayerType.PLAYER1 ? "../../../Sprites/laserTower(Blue).png" : "../../../Sprites/laserTower(Red).png";
+                    return playerType == PlayerType.PLAYER1 ? $"{dir}/laserTower(Blue).png" : $"{dir}/laserTower(Red).png";
                 default:
                     return "";
             }
@@ -28,9 +29,9 @@ namespace TowerDefence_SharedContent
             switch(soldierType)
             {
                 case SoldierType.Hitpoints:
-                    return playerType == PlayerType.PLAYER1 ? @"../../../Sprites/hpSoldier(Blue).png" : @"../../../Sprites/hpSoldier(Red).png";
+                    return playerType == PlayerType.PLAYER1 ? $"{dir}/hpSoldier(Blue).png" : $"{dir}/hpSoldier(Red).png";
                 case SoldierType.Speed:
-                    return playerType == PlayerType.PLAYER1 ? @"../../../Sprites/speedSoldier(Blue).png" : @"../../../Sprites/speedSoldier(Red).png";
+                    return playerType == PlayerType.PLAYER1 ? $"{dir}/speedSoldier(Blue).png" : $"{dir}/speedSoldier(Red).png";
                 default:
                     return "";
             }           
@@ -38,7 +39,12 @@ namespace TowerDefence_SharedContent
 
         public static string getBullet()
         {
-            return @"../../../Sprites/bullet.png";
+            return $"{dir}/bullet.png";
+        }
+
+        public static string getMap(String mapType)
+        {
+            return $"{dir}/{mapType}Map.png";
         }
     }
 }
