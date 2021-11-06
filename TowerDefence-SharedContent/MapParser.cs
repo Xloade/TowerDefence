@@ -37,10 +37,9 @@ namespace TowerDefence_SharedContent
         public Map Parse(string json)
         {
             var result = JObject.Parse(json);
-            var color = result["mapColor"].ToObject<Color>();
             var players = result["players"].Children();
             Map map = new Map();
-            map.mapColor = color;
+            map.backgroundImageDir = result["backgroundImageDir"].ToObject<string>();
 
             foreach (JToken player in players)
             {

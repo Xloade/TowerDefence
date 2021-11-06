@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using TowerDefence_SharedContent;
 
 public abstract class Window : Form
 {
     protected Bitmap DrawArea;
-    protected Color bgColor = Color.Yellow;
+    protected Image bgImage;
     protected Timer graphicalTimer { get; private set; }
     private System.ComponentModel.IContainer components = null;
 
@@ -15,15 +16,17 @@ public abstract class Window : Form
     {
         DrawArea = new Bitmap(600, 400,
              System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+        bgImage = new Bitmap(1000, 700,
+             System.Drawing.Imaging.PixelFormat.Format24bppRgb);
         createButtonsLine(btnNames);
         this.Text = "KTU IF 2018";
         InitializeComponent();
     }
-    public Window(Color bgColor, string title,
+    public Window(string bgImagePath, string title,
                      int width, int height,
                     params string[] btnNames) : base()
     {
-        this.bgColor = bgColor;
+        this.bgImage = Image.FromFile(SpritePaths.getMap("Summer"));
         DrawArea = new Bitmap(width, height,
              System.Drawing.Imaging.PixelFormat.Format24bppRgb);
         createButtonsLine(btnNames);
@@ -110,7 +113,6 @@ public abstract class Window : Form
     protected void ClearArea()
     {
         Graphics gr = Graphics.FromImage(DrawArea);
-        gr.Clear(bgColor);
         gr.Dispose();
     }
 }
