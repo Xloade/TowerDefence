@@ -39,7 +39,7 @@ class Shape
 
         using (Graphics grImage = Graphics.FromImage(bmp))
         {
-            grImage.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            grImage.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             grImage.TranslateTransform((float)bmp.Width / 2, (float)bmp.Height / 2);
             //Rotate.        
             grImage.RotateTransform(Rotation);
