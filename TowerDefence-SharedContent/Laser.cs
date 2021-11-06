@@ -6,7 +6,7 @@ using TowerDefence_SharedContent.Towers;
 
 namespace TowerDefence_SharedContent
 {
-    public class Bullet : ShootAlgorithm, IMove
+    public class Laser : ShootAlgorithm, IMove
     {
         public override Point Coordinates { get; set; }
         public override string Sprite { get; set; }
@@ -15,15 +15,16 @@ namespace TowerDefence_SharedContent
         public override int Height { get; set; }
         public override AmmunitionType AmmunitionType { get; set; }
 
-        public Bullet(Point towerCoordinates, AmmunitionType ammunitionType) : base(towerCoordinates, ammunitionType)
+        public Laser(Point towerCoordinates, AmmunitionType ammunitionType) : base(towerCoordinates, ammunitionType)
         {
             Coordinates = towerCoordinates;
             Sprite = SpritePaths.getBullet();
             Speed = 5;
-            Width = 50;
+            Width = 400;
             Height = 50;
             AmmunitionType = ammunitionType;
         }
+
         public override void MoveForward(PlayerType playerType)
         {
             switch (playerType)

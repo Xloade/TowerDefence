@@ -51,7 +51,7 @@ namespace TowerDefence_SharedContent
         {
             foreach(Tower tower in towers)
             {
-                tower.MoveBullets(PlayerType);
+                tower.MoveAmmunition(PlayerType);
                 tower.Scan(enemySoldiers);
             }
         }
