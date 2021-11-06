@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Timers;
 using TowerDefence_SharedContent;
+using TowerDefence_SharedContent.Soldiers;
+using TowerDefence_SharedContent.Towers;
 
 namespace TowerDefence_ServerSide
 {
@@ -52,7 +53,16 @@ namespace TowerDefence_ServerSide
             timer.Interval = timerSpeed;
             timer.Start();
 
-            Notify();      
+            SendMapUpdates();     
+        }
+
+        public void SendMapUpdates()
+        {
+            timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
+            {
+                Notify();
+                await hubContext.Clients.All.SendAsync("ReceiveMessage", mapObservers[0].ToJson());
+            };
         }
 
         public void AddSoldier(Soldier soldier, PlayerType playerType)
@@ -82,12 +92,8 @@ namespace TowerDefence_ServerSide
 
         public void Notify()
         {
-            timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
-            {
-                mapObservers[0].UpdateSoldierMovement();
-                mapObservers[0].UpdateTowerActivity();
-                await hubContext.Clients.All.SendAsync("ReceiveMessage", mapObservers[0].ToJson());
-            };
+            mapObservers[0].UpdateSoldierMovement();
+            mapObservers[0].UpdateTowerActivity();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TowerDefence_SharedContent.Soldiers;
+using TowerDefence_SharedContent.Towers;
 
 namespace TowerDefence_SharedContent
 {
@@ -20,6 +22,16 @@ namespace TowerDefence_SharedContent
             soldiers = new List<Soldier>();
             towers = new List<Tower>();
             this.PlayerType = playerType;
+        }
+
+        public Player(int hitpoints, int towerCurrency, int soldierCurrency, PlayerType playerType, List<Soldier> soldiers, List<Tower> towers)
+        {
+            Hitpoints = hitpoints;
+            TowerCurrency = towerCurrency;
+            SoldierCurrency = soldierCurrency;
+            PlayerType = playerType;
+            this.soldiers = soldiers;
+            this.towers = towers;
         }
 
         public void UpdateSoldierMovement()

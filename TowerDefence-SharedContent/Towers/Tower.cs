@@ -2,28 +2,29 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using TowerDefence_SharedContent.Soldiers;
 
-namespace TowerDefence_SharedContent
+namespace TowerDefence_SharedContent.Towers
 {
-    public class Tower
+    public abstract class Tower
     {
-        public int Level { get; set; }
-        public int[] Price  { get; set; }
-        public Point Coordinates { get; set; }
-        public int[] Range { get; set; }
-        public int[] Power { get; set; }
-        public double[] RateOfFire { get; set; }
-        public string Sprite { get; set; }
-        public List<Bullet> Bullets { get; set; }
+        public abstract int Level { get; set; }
+        public abstract int[] Price  { get; set; }
+        public abstract Point Coordinates { get; set; }
+        public abstract int[] Range { get; set; }
+        public abstract int[] Power { get; set; }
+        public abstract double[] RateOfFire { get; set; }
+        public abstract string Sprite { get; set; }
+        public abstract List<Bullet> Bullets { get; set; }
+        public abstract TowerType TowerType { get; set; }
 
-        public Tower(PlayerType type)
+        public Tower(PlayerType type, TowerType towerType)
         {
             Level = 0;
-            Range = new int[] { 100, 200, 300};
             Coordinates = type == PlayerType.PLAYER1 ? new Point(200, 450) : new Point(800, 450);
             Sprite = SpritePaths.getTower(type);
             Bullets = new List<Bullet>();
-            //Bullets.Add(new Bullet(Coordinates));
+            TowerType = towerType;
         }
 
         public void MoveBullets(PlayerType type)
@@ -45,7 +46,7 @@ namespace TowerDefence_SharedContent
             {
                 var soldier = soldiers[i];
 
-                if (CanShoot(soldier.Coordinates, this.Coordinates, this.Range[2]))
+                if (CanShoot(soldier.Coordinates, this.Coordinates))
                 {
                     Shoot();
 
@@ -62,9 +63,9 @@ namespace TowerDefence_SharedContent
             }
         }
 
-        public bool CanShoot(Point soldierCoordinates, Point towerCoordinates, int range)
+        public bool CanShoot(Point soldierCoordinates, Point towerCoordinates)
         {
-            return Math.Abs(soldierCoordinates.X - towerCoordinates.X) == range;
+            return Math.Abs(soldierCoordinates.X - towerCoordinates.X) == Range[Level];
         }
 
         public void Shoot()

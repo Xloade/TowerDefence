@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
-namespace TowerDefence_SharedContent
+namespace TowerDefence_SharedContent.Soldiers
 {
     public class Soldier : IMove
     {
