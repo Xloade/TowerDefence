@@ -9,6 +9,8 @@ public abstract class Window : Form
     protected Timer graphicalTimer { get; private set; }
     private System.ComponentModel.IContainer components = null;
 
+    protected ComboBox towerSelectionBox;
+
     public Window(params string[] btnNames) : base()
     {
         DrawArea = new Bitmap(600, 400,
@@ -42,6 +44,15 @@ public abstract class Window : Form
             btn.Size = new Size(btnWidth, 20);
             btn.Click += new EventHandler(btn_Click);
             this.Controls.Add(btn);
+            if(name.Equals("Buy tower"))
+            {
+                towerSelectionBox = new ComboBox();
+                towerSelectionBox.Location = new Point(btnX, DrawArea.Height - 220);
+                towerSelectionBox.Items.AddRange(new string[] { "Minigun", "Rocket", "Laser"});
+                towerSelectionBox.DropDownClosed += new EventHandler(tower_selection_click);
+                this.Controls.Add(towerSelectionBox);
+                towerSelectionBox.Visible = false;
+            }
             btnX += margin + btnWidth;
         }
     }
@@ -89,6 +100,8 @@ public abstract class Window : Form
     //}
 
     protected abstract void btn_Click(object sender, System.EventArgs e);
+
+    protected abstract void tower_selection_click(object sender, System.EventArgs e);
 
     protected virtual void Mouse_Click(object sender, MouseEventArgs e) { }
     protected virtual void graphicalTimer_Tick(object sender, System.EventArgs e) { }

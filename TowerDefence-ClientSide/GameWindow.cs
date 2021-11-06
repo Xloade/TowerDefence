@@ -5,7 +5,10 @@ using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.SignalR.Client;
+using TowerDefence_SharedContent.Towers;
 using TowerDefence_SharedContent;
+using TowerDefence_SharedContent.Soldiers;
+using Newtonsoft.Json.Linq;
 
 class GameWindow : Window
 {
@@ -26,6 +29,7 @@ class GameWindow : Window
     {
         this.playerType = playerType;
         startSignalR(mapType);
+        MapParser.CreateInstance();
     }
     
     private void updateMap(Map map)
@@ -84,8 +88,8 @@ class GameWindow : Window
         connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();
         connection.On<string>("ReceiveMessage", (updatedMapJson) =>
         {
-            Map updatedMap = JsonConvert.DeserializeObject<Map>(updatedMapJson);
-            updateMap(updatedMap);
+            MapParser mapParser = MapParser.getInstance();
+            updateMap(mapParser.Parse(updatedMapJson));
         });
         connection.StartAsync();
         connection.SendAsync("createMap", mapType);
@@ -115,7 +119,7 @@ class GameWindow : Window
                 connection.SendAsync("buySoldier", playerType);
                 break;
             case BUTTON_BUY_TOWER:
-                connection.SendAsync("buyTower", playerType);
+                OpenTowerSelection();
                 break;
             case BUTTON_DELETE_TOWER:
                 connection.SendAsync("deleteTower", playerType);
@@ -130,6 +134,12 @@ class GameWindow : Window
                 break;
         }
     }
+
+    private void OpenTowerSelection()
+    {
+        towerSelectionBox.Visible = true;
+        towerSelectionBox.DroppedDown = true;
+    }
  
     protected override void Mouse_Click(object sender, MouseEventArgs e)
     {
@@ -140,5 +150,30 @@ class GameWindow : Window
         graphicalTimer.Stop();
         connection.StopAsync();
         base.OnFormClosing(e);
+    }
+
+    protected override void tower_selection_click(object sender, EventArgs e)
+    {
+        ComboBox comboBox = (ComboBox)sender;
+        BuyTower(comboBox.SelectedItem.ToString());
+        comboBox.Visible = false;
+    }
+    
+    private void BuyTower(string name)
+    {
+        switch(name)
+        {
+            case "Minigun":
+                connection.SendAsync("buyTower", playerType, TowerType.Minigun);
+                break;
+            case "Laser":
+                connection.SendAsync("buyTower", playerType, TowerType.Laser);
+                break;
+            case "Rocket":
+                connection.SendAsync("buyTower", playerType, TowerType.Rocket);
+                break;
+            default:
+                break;
+        }
     }
 }
