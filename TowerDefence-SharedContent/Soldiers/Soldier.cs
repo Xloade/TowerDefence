@@ -16,10 +16,10 @@ namespace TowerDefence_SharedContent.Soldiers
         public string Sprite { get; set; }
         public SoldierType SoldierType { get; set; }
 
-        public Soldier(PlayerType type, SoldierType soldierType, int level)
+        public Soldier(PlayerType playerType, SoldierType soldierType, int level)
         {
-            Coordinates = type == PlayerType.PLAYER1 ? new Point(0, 450) : new Point(1000, 450);
-            Sprite = SpritePaths.getSoldier(type);
+            Coordinates = playerType == PlayerType.PLAYER1 ? new Point(0, 450) : new Point(1000, 450);
+            Sprite = SpritePaths.getSoldier(playerType, soldierType);
             Speed = 5;
             Level = level;
             SoldierType = soldierType;
