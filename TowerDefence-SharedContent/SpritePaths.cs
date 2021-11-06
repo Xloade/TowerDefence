@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_SharedContent.Towers;
 
 namespace TowerDefence_SharedContent
@@ -23,9 +24,17 @@ namespace TowerDefence_SharedContent
             }
         }
 
-        public static string getSoldier(PlayerType type)
+        public static string getSoldier(PlayerType playerType, SoldierType soldierType)
         {
-            return type == PlayerType.PLAYER1 ? $"{dir}/soldier(Blue).png" : $"{dir}/soldier(Red).png";
+            switch(soldierType)
+            {
+                case SoldierType.Hitpoints:
+                    return playerType == PlayerType.PLAYER1 ? $"{dir}/hpSoldier(Blue).png" : $"{dir}/hpSoldier(Red).png";
+                case SoldierType.Speed:
+                    return playerType == PlayerType.PLAYER1 ? $"{dir}/speedSoldier(Blue).png" : $"{dir}/speedSoldier(Red).png";
+                default:
+                    return "";
+            }           
         }
 
         public static string getBullet()

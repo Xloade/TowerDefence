@@ -15,26 +15,26 @@ namespace TowerDefence_SharedContent.Towers
         public abstract int[] Power { get; set; }
         public abstract double[] RateOfFire { get; set; }
         public abstract string Sprite { get; set; }
-        public abstract List<Bullet> Bullets { get; set; }
+        public abstract List<ShootAlgorithm> Ammunition { get; set; }
         public abstract TowerType TowerType { get; set; }
 
         public Tower(PlayerType playerType, TowerType towerType)
         {
             Level = 0;
             Coordinates = playerType == PlayerType.PLAYER1 ? new Point(200, 450) : new Point(800, 450);
-            Bullets = new List<Bullet>();
+            Ammunition = new List<ShootAlgorithm>();
             TowerType = towerType;
             Sprite = SpritePaths.getTower(playerType, towerType);
         }
 
-        public void MoveBullets(PlayerType type)
+        public void MoveAmmunition(PlayerType type)
         {
-            for (int i = 0; i < Bullets.Count; i++)
+            for (int i = 0; i < Ammunition.Count; i++)
             {
-                Bullets[i].MoveForward(type);
-                if (Bullets[i].IsOutOfMap(type))
+                Ammunition[i].MoveForward(type);
+                if (Ammunition[i].IsOutOfMap(type))
                 {
-                    Bullets.Remove(Bullets[i]);
+                    Ammunition.Remove(Ammunition[i]);
                     i--;
                 }
             }
@@ -51,11 +51,11 @@ namespace TowerDefence_SharedContent.Towers
                     Shoot();
 
                 }
-                if (this.Bullets.Count > 0)
+                if (this.Ammunition.Count > 0)
                 {
-                    if (CanDestroy(soldier.Coordinates, this.Bullets[0].Coordinates))
+                    if (CanDestroy(soldier.Coordinates, this.Ammunition[0].Coordinates))
                     {
-                        this.Bullets.Clear();
+                        this.Ammunition.Clear();
                         soldiers.Remove(soldier);
                         i--;
                     }
@@ -70,12 +70,18 @@ namespace TowerDefence_SharedContent.Towers
 
         public void Shoot()
         {
-            Bullets.Add(new Bullet(this.Coordinates));
+            GameElementFactory ammunitionFactory = new AmmunitionFactory();
+            if (this is MiniGunTower)
+                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Bullet));
+            else if (this is RocketTower)
+                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Rocket));
+            else if  (this is LaserTower)
+                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Laser));
         }
 
-        public bool CanDestroy(Point soldierCoordinates, Point bulletCoordinates)
+        public bool CanDestroy(Point soldierCoordinates, Point ammunitionCoordinates)
         {
-            return soldierCoordinates.X == bulletCoordinates.X;
+            return soldierCoordinates.X == ammunitionCoordinates.X;
         }
     }
 }
