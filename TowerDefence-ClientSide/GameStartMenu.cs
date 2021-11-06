@@ -36,7 +36,14 @@ namespace TowerDefence_ClientSide
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ConnectToServer(PlayerType.PLAYER2, comboBox1.SelectedItem.ToString());
+            if (comboBox1.SelectedItem == null)
+            {
+                ConnectToServer(PlayerType.PLAYER2, "NotSelected");
+            }
+            else
+            {
+                ConnectToServer(PlayerType.PLAYER2, comboBox1.SelectedItem.ToString());
+            }
         }
         private void ConnectToServer(PlayerType player, String mapType)
         {
