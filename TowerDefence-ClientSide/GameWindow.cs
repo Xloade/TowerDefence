@@ -116,7 +116,7 @@ class GameWindow : Window
         switch (((Button)sender).Name)
         {
             case BUTTON_BUY_SOLDIER:
-                connection.SendAsync("buySoldier", playerType);
+                OpenSoldierSelection();
                 break;
             case BUTTON_BUY_TOWER:
                 OpenTowerSelection();
@@ -140,7 +140,13 @@ class GameWindow : Window
         towerSelectionBox.Visible = true;
         towerSelectionBox.DroppedDown = true;
     }
- 
+
+    private void OpenSoldierSelection()
+    {
+        soldierSelectionBox.Visible = true;
+        soldierSelectionBox.DroppedDown = true;
+    }
+
     protected override void Mouse_Click(object sender, MouseEventArgs e)
     {
         connection.SendAsync("SendMessage", playerType.ToString(), "explotion", new string[] { e.X.ToString(), e.Y.ToString() });
@@ -155,10 +161,23 @@ class GameWindow : Window
     protected override void tower_selection_click(object sender, EventArgs e)
     {
         ComboBox comboBox = (ComboBox)sender;
-        BuyTower(comboBox.SelectedItem.ToString());
-        comboBox.Visible = false;
+        if(comboBox.SelectedItem != null)
+        {
+            BuyTower(comboBox.SelectedItem.ToString());
+            comboBox.Visible = false;
+        }    
     }
-    
+
+    protected override void soldier_selection_click(object sender, EventArgs e)
+    {
+        ComboBox comboBox = (ComboBox)sender;
+        if (comboBox.SelectedItem != null)
+        {
+            BuySoldier(comboBox.SelectedItem.ToString());
+            comboBox.Visible = false;
+        }
+    }
+
     private void BuyTower(string name)
     {
         switch(name)
@@ -176,4 +195,19 @@ class GameWindow : Window
                 break;
         }
     }
+
+    private void BuySoldier(string name)
+    {
+        switch (name)
+        {
+            case "Hitpoints":
+                connection.SendAsync("buySoldier", playerType, SoldierType.Hitpoints);
+                break;
+            case "Speed":
+                connection.SendAsync("buySoldier", playerType, SoldierType.Speed);
+                break;
+            default:
+                break;
+        }
+    }   
 }

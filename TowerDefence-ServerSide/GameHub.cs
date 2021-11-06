@@ -13,6 +13,8 @@ namespace TowerDefence_ServerSide
     {
         MapFactory mapFactory = new MapFactory();
         GameElementFactory towerFactory = new TowerFactory();
+        Barrack barrack = new Barrack();
+        SoldierBuilder builder;
         public void createMap(String MapType)
         {
             MapController.createInstance();
@@ -28,10 +30,10 @@ namespace TowerDefence_ServerSide
             mapController.AddPlayer(playerType);
         }
 
-        public void buySoldier(PlayerType playerType)
+        public void buySoldier(PlayerType playerType, SoldierType soldierType)
         {
             MapController mapController = MapController.getInstance();
-            mapController.AddSoldier(new Soldier(playerType, 1), playerType);
+            mapController.AddSoldier(TrainConcreteSoldier(playerType, soldierType), playerType);
             Console.WriteLine($"{playerType.ToString()}: buySoldier");
         }
 
@@ -59,6 +61,23 @@ namespace TowerDefence_ServerSide
             MapController mapController = MapController.getInstance();
            // mapController.map.upgradeSoldier(playerType, 2);
             Console.WriteLine($"{playerType.ToString()}: upgradeSoldier");
+        }
+
+        private Soldier TrainConcreteSoldier(PlayerType playerType, SoldierType soldierType)
+        {
+            switch(soldierType)
+            {
+                case SoldierType.Hitpoints:
+                    builder = new HitpointsSoldierBuilder(playerType, soldierType, 1);
+                    barrack.Train(builder, playerType);
+                    return builder.Soldier;
+                case SoldierType.Speed:
+                    builder = new SpeedSoldierBuilder(playerType, soldierType, 1);
+                    barrack.Train(builder, playerType);
+                    return builder.Soldier;
+                default:
+                    return null;
+            }
         }
     }
 }

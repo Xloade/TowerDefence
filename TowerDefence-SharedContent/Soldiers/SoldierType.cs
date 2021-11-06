@@ -4,7 +4,9 @@ using System.Text;
 
 namespace TowerDefence_SharedContent.Soldiers
 {
-    public class SoldierFactory
+    public enum SoldierType
     {
+        Hitpoints,
+        Speed
     }
 }

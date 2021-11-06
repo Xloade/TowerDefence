@@ -14,14 +14,15 @@ namespace TowerDefence_SharedContent.Soldiers
         public double[] Hitpoints { get; set; }
         public Point Coordinates { get; set; }
         public string Sprite { get; set; }
+        public SoldierType SoldierType { get; set; }
 
-        public Soldier(PlayerType type, int level)
+        public Soldier(PlayerType type, SoldierType soldierType, int level)
         {
-
-            Coordinates = type==PlayerType.PLAYER1 ? new Point(0, 450) : new Point(1000, 450);
+            Coordinates = type == PlayerType.PLAYER1 ? new Point(0, 450) : new Point(1000, 450);
             Sprite = SpritePaths.getSoldier(type);
             Speed = 5;
             Level = level;
+            SoldierType = soldierType;
         }
 
         public void MoveForward(PlayerType playerType)
