@@ -18,13 +18,13 @@ namespace TowerDefence_SharedContent.Towers
         public abstract List<Bullet> Bullets { get; set; }
         public abstract TowerType TowerType { get; set; }
 
-        public Tower(PlayerType type, TowerType towerType)
+        public Tower(PlayerType playerType, TowerType towerType)
         {
             Level = 0;
-            Coordinates = type == PlayerType.PLAYER1 ? new Point(200, 450) : new Point(800, 450);
-            Sprite = SpritePaths.getTower(type);
+            Coordinates = playerType == PlayerType.PLAYER1 ? new Point(200, 450) : new Point(800, 450);
             Bullets = new List<Bullet>();
             TowerType = towerType;
+            Sprite = SpritePaths.getTower(playerType, towerType);
         }
 
         public void MoveBullets(PlayerType type)
