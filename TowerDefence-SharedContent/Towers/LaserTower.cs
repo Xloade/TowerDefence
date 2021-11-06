@@ -25,5 +25,20 @@ namespace TowerDefence_SharedContent.Towers
             RateOfFire = new double[] { 1, 2, 3, };
             TowerType = towerType;
         }
+
+        public LaserTower(int level, int[] price, Point coordinates, int[] range, int[] power, double[] rateOfFire,
+            string sprite, List<ShootAlgorithm> ammunition, TowerType towerType) : base(level, price, coordinates, range, power, rateOfFire,
+            sprite, ammunition, towerType)
+        {
+            Level = level;
+            Price = price;
+            Coordinates = coordinates;
+            Range = range;
+            Power = power;
+            RateOfFire = rateOfFire;
+            Sprite = sprite;
+            Ammunition = ammunition;
+            TowerType = towerType;
+        }
     }
 }

@@ -27,6 +27,20 @@ namespace TowerDefence_SharedContent.Towers
             Sprite = SpritePaths.getTower(playerType, towerType);
         }
 
+        public Tower(int level, int[] price, Point coordinates, int[] range, int[]power, double[]rateOfFire,
+            string sprite, List<ShootAlgorithm> ammunition, TowerType towerType)
+        {
+            Level = level;
+            Price = price;
+            Coordinates = coordinates;
+            Range = range;
+            Power = power;
+            RateOfFire = rateOfFire;
+            Sprite = sprite;
+            Ammunition = ammunition;
+            TowerType = towerType;
+        }
+
         public void MoveAmmunition(PlayerType type)
         {
             for (int i = 0; i < Ammunition.Count; i++)
