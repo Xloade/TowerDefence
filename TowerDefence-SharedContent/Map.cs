@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using TowerDefence_SharedContent.Soldiers;
+using TowerDefence_SharedContent.Towers;
 
 namespace TowerDefence_SharedContent
 {

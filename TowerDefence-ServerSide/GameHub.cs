@@ -4,16 +4,19 @@ using System;
 using TowerDefence_SharedContent;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TowerDefence_SharedContent.Towers;
+using TowerDefence_SharedContent.Soldiers;
 
 namespace TowerDefence_ServerSide
 {
     public class GameHub : Hub
     {
-        MapFactory factory = new MapFactory();
+        MapFactory mapFactory = new MapFactory();
+        GameElementFactory towerFactory = new TowerFactory();
         public void createMap(String MapType)
         {
             MapController.createInstance();
-            Map map = factory.CreateMap(MapType);
+            Map map = mapFactory.CreateMap(MapType);
 
             MapController mapController = MapController.getInstance();
             mapController.Attach(map);
@@ -32,12 +35,11 @@ namespace TowerDefence_ServerSide
             Console.WriteLine($"{playerType.ToString()}: buySoldier");
         }
 
-        public void buyTower(PlayerType playerType)
+        public void buyTower(PlayerType playerType, TowerType towerType)
         {
             MapController mapController = MapController.getInstance();
-            mapController.AddTower(new Tower(playerType), playerType);
-            Console.WriteLine($"{playerType.ToString()}: buyTower");
-                    
+            mapController.AddTower(towerFactory.CreateTower(playerType, towerType), playerType);
+            Console.WriteLine($"{playerType.ToString()}: buyTower");                   
         }
         public void restartGame()
         {
