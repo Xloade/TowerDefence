@@ -14,7 +14,7 @@ namespace TowerDefence_SharedContent.Towers
         public override int[] Power { get; set; }
         public override double[] RateOfFire { get; set; }
         public override string Sprite { get; set; }
-        public override List<Bullet> Bullets { get; set; }
+        public override List<ShootAlgorithm> Ammunition { get; set; }
         public override TowerType TowerType { get; set; }
         public MiniGunTower(PlayerType playerType, TowerType towerType) : base(playerType, towerType)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace TowerDefence_SharedContent.Towers
@@ -15,6 +16,11 @@ namespace TowerDefence_SharedContent.Towers
                 TowerType.Laser => new LaserTower(playerType, towerType),
                 _ => null,
             };
+        }
+
+        public override ShootAlgorithm CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

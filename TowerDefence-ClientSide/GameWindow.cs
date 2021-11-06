@@ -71,15 +71,15 @@ class GameWindow : Window
         {
             shapes.Add(new Shape(tower.Coordinates, 100, 100, GetRotation(playerType), Image.FromFile(tower.Sprite)));
 
-            updateBullets(tower.Bullets, GetRotation(playerType));
+            updateAmmunition(tower.Ammunition, GetRotation(playerType));
         });
     }
 
-    private void updateBullets(List<Bullet> bullets, float rotation)
+    private void updateAmmunition(List<ShootAlgorithm> ammunition, float rotation)
     {
-        bullets.ForEach((bullet) =>
+        ammunition.ForEach((amm) =>
         {
-            shapes.Add(new Shape(bullet.Coordinates, 50, 50, rotation, Image.FromFile(bullet.Sprite)));
+            shapes.Add(new Shape(amm.Coordinates, amm.Width, amm.Height, rotation, Image.FromFile(amm.Sprite)));
         });    
     }
 
