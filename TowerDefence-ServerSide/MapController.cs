@@ -31,7 +31,7 @@ namespace TowerDefence_ServerSide
                     return instance;
                 };
             }
-            catch(ArgumentNullException e)
+            catch
             {
                 throw new Exception("instance not yet created");
             }
