@@ -11,7 +11,6 @@ namespace TowerDefence_SharedContent.Towers
         public override int[] Price { get; set; }
         public override Point Coordinates { get; set; }
         public override int[] Range { get; set; }
-        public override int[] Power { get; set; }
         public override double[] RateOfFire { get; set; }
         public override string Sprite { get; set; }
         public override List<ShootAlgorithm> Ammunition { get; set; }
@@ -21,8 +20,8 @@ namespace TowerDefence_SharedContent.Towers
         {
             Price = new int[] { 20, 30, 40 };
             Range = new int[] { 500, 600, 700 };
-            Power = new int[] { 25, 35, 45 };
-            RateOfFire = new double[] { 1, 2, 3, };
+            Power = new int[] { 2, 3, 5 };
+            RateOfFire = new double[] { 20, 20, 20, };
             TowerType = towerType;
         }
 

@@ -6,7 +6,7 @@ namespace TowerDefence_SharedContent.Soldiers
 {
     public enum SoldierType
     {
-        Hitpoints,
-        Speed
+        HitpointsSoldier,
+        SpeedSoldier
     }
 }

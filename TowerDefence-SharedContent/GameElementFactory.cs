@@ -9,6 +9,6 @@ namespace TowerDefence_SharedContent
     public abstract class GameElementFactory
     {
         public abstract Tower CreateTower(PlayerType playerType, TowerType towerType);
-        public abstract ShootAlgorithm CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType);
+        public abstract ShootAlgorithm CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType, int power);
     }
 }

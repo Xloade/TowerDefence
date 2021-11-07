@@ -11,7 +11,6 @@ namespace TowerDefence_SharedContent.Towers
         public override int[] Price { get; set; }
         public override Point Coordinates { get; set; }
         public override int[] Range { get; set; }
-        public override int[] Power { get; set; }
         public override double[] RateOfFire { get; set; }
         public override string Sprite { get; set; }
         public override List<ShootAlgorithm> Ammunition { get; set; }
@@ -19,9 +18,9 @@ namespace TowerDefence_SharedContent.Towers
         public MiniGunTower(PlayerType playerType, TowerType towerType) : base(playerType, towerType)
         {
             Price = new int[] { 20, 30, 40 };
-            Range = new int[] { 200, 300, 400 };
-            Power = new int[] { 25, 35, 45 };
-            RateOfFire = new double[] { 1, 2, 3, };
+            Range = new int[] { 400, 400, 400 };
+            Power = new int[] { 5, 10, 15 };
+            RateOfFire = new double[] { 10, 15, 20, };
             TowerType = towerType;
         }
 

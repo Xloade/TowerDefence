@@ -18,7 +18,7 @@ namespace TowerDefence_SharedContent.Towers
             };
         }
 
-        public override ShootAlgorithm CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType)
+        public override ShootAlgorithm CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType, int Power)
         {
             throw new NotImplementedException();
         }

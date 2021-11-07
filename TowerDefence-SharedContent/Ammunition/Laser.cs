@@ -11,8 +11,7 @@ namespace TowerDefence_SharedContent
         public override Point Coordinates { get; set; }
         public override int Speed { get; set; }
         public override AmmunitionType AmmunitionType { get; set; }
-
-        public Laser(Point towerCoordinates, AmmunitionType ammunitionType) : base(towerCoordinates, ammunitionType)
+        public Laser(Point towerCoordinates, AmmunitionType ammunitionType, int power) : base(towerCoordinates, ammunitionType, power)
         {
             Coordinates = towerCoordinates;
             Speed = 400;

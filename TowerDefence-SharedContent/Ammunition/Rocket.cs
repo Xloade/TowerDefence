@@ -12,7 +12,7 @@ namespace TowerDefence_SharedContent
         public override int Speed { get; set; }  
         public override AmmunitionType AmmunitionType { get; set; }
 
-        public Rocket(Point towerCoordinates, AmmunitionType ammunitionType) : base(towerCoordinates, ammunitionType)
+        public Rocket(Point towerCoordinates, AmmunitionType ammunitionType, int power) : base(towerCoordinates, ammunitionType, power)
         {
             Coordinates = towerCoordinates;
             Speed = 5;
