@@ -18,11 +18,19 @@ namespace TowerDefence_SharedContent
         public Laser(Point towerCoordinates, AmmunitionType ammunitionType) : base(towerCoordinates, ammunitionType)
         {
             Coordinates = towerCoordinates;
-            Sprite = SpritePaths.getBullet();
-            Speed = 5;
+            Sprite = SpritePaths.getLaser();
+            Speed = 400;
             Width = 50;
-            Height = 700;
+            Height = 1500;
             AmmunitionType = ammunitionType;
+        }
+
+        public override bool CanDestroy(Point soldierCoordinates, PlayerType playerType)
+        {
+            if (playerType == PlayerType.PLAYER1) 
+                return soldierCoordinates.X >= this.Coordinates.X && soldierCoordinates.X < 700;
+            else 
+                return soldierCoordinates.X <= this.Coordinates.X && soldierCoordinates.X > 200;
         }
 
         public override void MoveForward(PlayerType playerType)
@@ -30,10 +38,10 @@ namespace TowerDefence_SharedContent
             switch (playerType)
             {
                 case PlayerType.PLAYER1:
-                    Coordinates = new System.Drawing.Point((int)(Coordinates.X + Speed), Coordinates.Y);
+                    Coordinates = new System.Drawing.Point((int)(680), Coordinates.Y);
                     break;
                 case PlayerType.PLAYER2:
-                    Coordinates = new System.Drawing.Point((int)(Coordinates.X - Speed), Coordinates.Y);
+                    Coordinates = new System.Drawing.Point((int)(220), Coordinates.Y);
                     break;
                 default:
                     break;
