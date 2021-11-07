@@ -15,6 +15,7 @@ namespace TowerDefence_SharedContent.Towers
         public override string Sprite { get; set; }
         public override List<ShootAlgorithm> Ammunition { get; set; }
         public override TowerType TowerType { get; set; }
+        public override int ShootingCooldown { get; set; }
         public MiniGunTower(PlayerType playerType, TowerType towerType) : base(playerType, towerType)
         {
             Price = new int[] { 20, 30, 40 };
@@ -25,8 +26,8 @@ namespace TowerDefence_SharedContent.Towers
         }
 
         public MiniGunTower(int level, int[] price, Point coordinates, int[] range, int[] power, double[] rateOfFire,
-            string sprite, List<ShootAlgorithm> ammunition, TowerType towerType) : base(level, price, coordinates, range, power, rateOfFire,
-            sprite, ammunition, towerType)
+            string sprite, List<ShootAlgorithm> ammunition, TowerType towerType, int shootingCooldown) : base(level, price, coordinates, range, power, rateOfFire,
+            sprite, ammunition, towerType, shootingCooldown)
         {
             Level = level;
             Price = price;
@@ -37,6 +38,12 @@ namespace TowerDefence_SharedContent.Towers
             Sprite = sprite;
             Ammunition = ammunition;
             TowerType = towerType;
+            ShootingCooldown = shootingCooldown;
+        }
+
+        public override bool CanShoot(Point soldierCoordinates, Point towerCoordinates)
+        {
+            return Math.Sqrt(Math.Pow((soldierCoordinates.X - towerCoordinates.X), 2) + Math.Pow((soldierCoordinates.Y - towerCoordinates.Y), 2)) < Range[Level];
         }
     }
 }

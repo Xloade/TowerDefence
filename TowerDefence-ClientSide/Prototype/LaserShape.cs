@@ -18,7 +18,7 @@ namespace TowerDefence_ClientSide.Prototype
 
         public LaserShape(Point coordinates, float rotation) : base(coordinates, rotation)
         {
-            Coordinates = coordinates;
+            Coordinates = new Point(coordinates.X + Height, coordinates.Y);
             Sprite = SpritePaths.getLaser();
             Width = 50;
             Height = 500;

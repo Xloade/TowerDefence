@@ -19,8 +19,11 @@ namespace TowerDefence_SharedContent
         }
 
         public override bool CanDestroy(Point soldierCoordinates, PlayerType playerType)
-        {
-            return soldierCoordinates.X == this.Coordinates.X;
+        {            
+            if(playerType == PlayerType.PLAYER1)
+                return soldierCoordinates.X <= this.Coordinates.X;
+            else
+                return soldierCoordinates.X >= this.Coordinates.X;
         }
         public override void MoveForward(PlayerType playerType)
         {

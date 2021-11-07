@@ -73,6 +73,7 @@ namespace TowerDefence_SharedContent
             var sprite = token["Sprite"].ToObject<string>();
             var ammunitionJson = token["Ammunition"].Children();
             var towerType = token["TowerType"].ToObject<TowerType>();
+            var shootingCooldown = token["ShootingCooldown"].ToObject<int>();
 
             var ammunition = new List<ShootAlgorithm>();
             foreach (JToken amm in ammunitionJson)
@@ -83,11 +84,11 @@ namespace TowerDefence_SharedContent
             switch (towerType)
             {
                 case TowerType.Minigun:
-                    return new MiniGunTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType);
+                    return new MiniGunTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown);
                 case TowerType.Rocket:
-                    return new RocketTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType);
+                    return new RocketTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown);
                 case TowerType.Laser:
-                    return new LaserTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType);
+                    return new LaserTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown);
                 default:
                     return null;
             }
