@@ -17,7 +17,7 @@ namespace TowerDefence_SharedContent.Towers
         public abstract string Sprite { get; set; }
         public abstract List<ShootAlgorithm> Ammunition { get; set; }
         public abstract TowerType TowerType { get; set; }
-        public int ShootingCooldown { get; set; }
+        public abstract int ShootingCooldown { get; set; }
 
         public Tower(PlayerType playerType, TowerType towerType)
         {
@@ -30,7 +30,7 @@ namespace TowerDefence_SharedContent.Towers
         }
 
         public Tower(int level, int[] price, Point coordinates, int[] range, int[]power, double[]rateOfFire,
-            string sprite, List<ShootAlgorithm> ammunition, TowerType towerType)
+            string sprite, List<ShootAlgorithm> ammunition, TowerType towerType, int shootingCooldown)
         {
             Level = level;
             Price = price;
@@ -41,7 +41,7 @@ namespace TowerDefence_SharedContent.Towers
             Sprite = sprite;
             Ammunition = ammunition;
             TowerType = towerType;
-            ShootingCooldown = 0;
+            ShootingCooldown = shootingCooldown;
         }
 
         public void MoveAmmunition(PlayerType type)
@@ -74,23 +74,28 @@ namespace TowerDefence_SharedContent.Towers
                         if (this.Ammunition[k].CanDestroy(soldier.Coordinates, playerType))
                         {
                             soldier.CurrentHitpoints -= Ammunition[k].Power;
-                            if(soldier.CurrentHitpoints <= 0)
+                            if (soldier.CurrentHitpoints <= 0)
                             {
                                 soldiers.Remove(soldier);
                                 i--;
+                                if (TowerType == TowerType.Laser)
+                                {
+                                    Ammunition.Clear();
+                                    k = 0;
+                                }
                             }
-                            Ammunition.RemoveAt(k);
-                            k--;
+                            if (TowerType != TowerType.Laser)
+                            {
+                                Ammunition.RemoveAt(k);
+                                k--;
+                            }
                         }
                     }
                 }
             }
         }
 
-        public bool CanShoot(Point soldierCoordinates, Point towerCoordinates)
-        {
-            return Math.Sqrt(Math.Pow((soldierCoordinates.X - towerCoordinates.X), 2) + Math.Pow((soldierCoordinates.Y - towerCoordinates.Y), 2)) < Range[Level];
-        }
+        public abstract bool CanShoot(Point soldierCoordinates, Point towerCoordinates);
 
         public void Shoot()
         {

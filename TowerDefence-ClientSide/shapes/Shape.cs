@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace TowerDefence_ClientSide
 {
-    class Shape : IDraw
+    class Shape : IDraw, ICloneable
     {
         public float CenterX { get; set; }
         public float CenterY { get; set; }
@@ -54,6 +54,10 @@ namespace TowerDefence_ClientSide
         }
         // piešimas vykdomas išvestinėse klasėse
 
+    public object Clone()
+    {
+        return (Shape)this.MemberwiseClone();
+    }
 
     }
 }

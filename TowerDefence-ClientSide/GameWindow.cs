@@ -9,6 +9,7 @@ using TowerDefence_SharedContent.Towers;
 using TowerDefence_SharedContent;
 using TowerDefence_SharedContent.Soldiers;
 using Newtonsoft.Json.Linq;
+using TowerDefence_ClientSide.Prototype;
 
 namespace TowerDefence_ClientSide
 {
@@ -79,16 +80,29 @@ namespace TowerDefence_ClientSide
             {
                 shapes.Add(new Shape(tower.Coordinates, 100, 100, GetRotation(playerType), lazyImageDictionary.get(tower.Sprite)));
 
-                updateAmmunition(tower.Ammunition, GetRotation(playerType));
+                updateAmmunition(tower.Ammunition, CreateShape(tower.Coordinates, GetRotation(playerType), tower.TowerType));
             });
         }
 
-        private void updateAmmunition(List<ShootAlgorithm> ammunition, float rotation)
+        private void updateAmmunition(List<ShootAlgorithm> ammunition, Shape ammunitionShape)
         {
             ammunition.ForEach((amm) =>
             {
-                shapes.Add(new Shape(amm.Coordinates, amm.Width, amm.Height, rotation, lazyImageDictionary.get(amm.Sprite)));
-            });    
+                Shape temp = (Shape)ammunitionShape.Clone();
+                temp.CenterX = amm.Coordinates.X;
+                temp.CenterY = amm.Coordinates.Y;
+                shapes.Add(temp);
+            });
+        }
+
+        public Shape CreateShape(Point coordinates, float rotation, TowerType towerType)
+        {
+            if (towerType is TowerType.Minigun)
+                return new BulletShape(coordinates, rotation).Shape;
+            else if (towerType is TowerType.Laser)
+                return new LaserShape(coordinates, rotation).Shape;
+            else
+                return new RocketShape(coordinates, rotation).Shape;
         }
 
         private void startSignalR(String mapType)
