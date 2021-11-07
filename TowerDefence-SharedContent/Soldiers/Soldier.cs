@@ -12,6 +12,7 @@ namespace TowerDefence_SharedContent.Soldiers
         public int[] BuyPrice { get; set; }
         public double Speed { get; set; }
         public double[] Hitpoints { get; set; }
+        public double CurrentHitpoints { get; set; }
         public Point Coordinates { get; set; }
         public string Sprite { get; set; }
         public SoldierType SoldierType { get; set; }

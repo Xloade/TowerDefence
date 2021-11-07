@@ -28,9 +28,9 @@ namespace TowerDefence_SharedContent
         {
             switch(soldierType)
             {
-                case SoldierType.Hitpoints:
+                case SoldierType.HitpointsSoldier:
                     return playerType == PlayerType.PLAYER1 ? $"{dir}/hpSoldier(Blue).png" : $"{dir}/hpSoldier(Red).png";
-                case SoldierType.Speed:
+                case SoldierType.SpeedSoldier:
                     return playerType == PlayerType.PLAYER1 ? $"{dir}/speedSoldier(Blue).png" : $"{dir}/speedSoldier(Red).png";
                 default:
                     return "";

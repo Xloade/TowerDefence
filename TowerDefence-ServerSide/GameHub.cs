@@ -67,11 +67,11 @@ namespace TowerDefence_ServerSide
         {
             switch(soldierType)
             {
-                case SoldierType.Hitpoints:
+                case SoldierType.HitpointsSoldier:
                     builder = new HitpointsSoldierBuilder(playerType, soldierType, 1);
                     barrack.Train(builder, playerType);
                     return builder.Soldier;
-                case SoldierType.Speed:
+                case SoldierType.SpeedSoldier:
                     builder = new SpeedSoldierBuilder(playerType, soldierType, 1);
                     barrack.Train(builder, playerType);
                     return builder.Soldier;

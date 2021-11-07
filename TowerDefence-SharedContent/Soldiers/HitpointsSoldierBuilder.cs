@@ -13,12 +13,13 @@ namespace TowerDefence_SharedContent.Soldiers
 
         public override void BuildHitpoints()
         {
-            soldier.Hitpoints = new double[] { 1, 2, 3 };
+            soldier.Hitpoints = new double[] { 10, 20, 30 };
+            soldier.CurrentHitpoints = soldier.Hitpoints[soldier.Level];
         }
 
         public override void BuildSpeed()
         {
-            soldier.Speed = 5;
+            soldier.Speed = 1;
         }
 
         public override void BuildSprite(PlayerType playerType)

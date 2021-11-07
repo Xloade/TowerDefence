@@ -21,7 +21,7 @@ namespace TowerDefence_ClientSide
         private const string BUTTON_UPGRADE_SOLDIER = "Upgrade soldier";
         private const string SERVER_URL = "https://localhost:5001/GameHub";
 
-        List<Shape> shapes = new List<Shape>();
+        List<IDraw> shapes = new List<IDraw>();
         LazyImageDictionary lazyImageDictionary = new LazyImageDictionary();
 
         HubConnection connection;
@@ -37,7 +37,7 @@ namespace TowerDefence_ClientSide
     
         private void updateMap(Map map)
         {
-            shapes = new List<Shape>();
+            shapes = new List<IDraw>();
 
             updateMapColor(map.backgroundImageDir);
 
@@ -65,7 +65,11 @@ namespace TowerDefence_ClientSide
         {
             soldiers.ForEach((soldier) =>
             {
-                shapes.Add(new Shape(soldier.Coordinates, 100, 100, rotation, lazyImageDictionary.get(soldier.Sprite)));
+                IDraw firstWrap = new Shape(soldier.Coordinates, 100, 100, rotation, lazyImageDictionary.get(soldier.Sprite));
+                IDraw secondWrap = new LvlDrawDecorator(firstWrap, soldier.Level);
+                IDraw thirdWrap = new NameDrawDecorator(secondWrap, soldier.SoldierType.ToString());
+                IDraw fourthWrap = new HpDrawDecorator(thirdWrap, (int)(soldier.Hitpoints[soldier.Level]), (int)soldier.CurrentHitpoints);
+                shapes.Add(fourthWrap);
             });
         }
 
@@ -109,7 +113,7 @@ namespace TowerDefence_ClientSide
             Graphics gr = e.Graphics;
             gr.DrawImage(bgImage, 0, 0, DrawArea.Width, DrawArea.Height);
             gr.SmoothingMode = SmoothingMode.HighSpeed;
-            foreach (Shape shape in shapes)
+            foreach (IDraw shape in shapes)
             {
                 shape.Draw(gr);
             }
@@ -205,10 +209,10 @@ namespace TowerDefence_ClientSide
             switch (name)
             {
                 case "Hitpoints":
-                    connection.SendAsync("buySoldier", playerType, SoldierType.Hitpoints);
+                    connection.SendAsync("buySoldier", playerType, SoldierType.HitpointsSoldier);
                     break;
                 case "Speed":
-                    connection.SendAsync("buySoldier", playerType, SoldierType.Speed);
+                    connection.SendAsync("buySoldier", playerType, SoldierType.SpeedSoldier);
                     break;
                 default:
                     break;
