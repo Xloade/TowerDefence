@@ -12,7 +12,7 @@ namespace TowerDefence_SharedContent.Towers
         public abstract int[] Price  { get; set; }
         public abstract Point Coordinates { get; set; }
         public abstract int[] Range { get; set; }
-        public abstract int[] Power { get; set; }
+        public int[] Power { get; set; }
         public abstract double[] RateOfFire { get; set; }
         public abstract string Sprite { get; set; }
         public abstract List<ShootAlgorithm> Ammunition { get; set; }

@@ -13,7 +13,7 @@ namespace TowerDefence_SharedContent.Soldiers
 
         public override void BuildHitpoints()
         {
-            soldier.Hitpoints = new double[] { 10, 20, 30 };
+            soldier.Hitpoints = new int[] { 10, 20, 30 };
             soldier.CurrentHitpoints = soldier.Hitpoints[soldier.Level];
         }
 

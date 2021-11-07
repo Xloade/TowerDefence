@@ -13,7 +13,7 @@ namespace TowerDefence_SharedContent
             throw new NotImplementedException();
         }
 
-        public override ShootAlgorithm CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType, double power)
+        public override ShootAlgorithm CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType, int power)
         {
             return ammunitionType switch
             {
