@@ -19,9 +19,9 @@ namespace TowerDefence_SharedContent.Towers
         public MiniGunTower(PlayerType playerType, TowerType towerType) : base(playerType, towerType)
         {
             Price = new int[] { 20, 30, 40 };
-            Range = new int[] { 200, 300, 400 };
+            Range = new int[] { 400, 400, 400 };
             Power = new int[] { 5, 10, 15 };
-            RateOfFire = new double[] { 1, 2, 3, };
+            RateOfFire = new double[] { 10, 15, 20, };
             TowerType = towerType;
         }
 

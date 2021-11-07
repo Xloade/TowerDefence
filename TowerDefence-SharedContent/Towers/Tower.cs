@@ -17,6 +17,7 @@ namespace TowerDefence_SharedContent.Towers
         public abstract string Sprite { get; set; }
         public abstract List<ShootAlgorithm> Ammunition { get; set; }
         public abstract TowerType TowerType { get; set; }
+        public int ShootingCooldown { get; set; }
 
         public Tower(PlayerType playerType, TowerType towerType)
         {
@@ -25,6 +26,7 @@ namespace TowerDefence_SharedContent.Towers
             Ammunition = new List<ShootAlgorithm>();
             TowerType = towerType;
             Sprite = SpritePaths.getTower(playerType, towerType);
+            ShootingCooldown = 0;
         }
 
         public Tower(int level, int[] price, Point coordinates, int[] range, int[]power, double[]rateOfFire,
@@ -39,6 +41,7 @@ namespace TowerDefence_SharedContent.Towers
             Sprite = sprite;
             Ammunition = ammunition;
             TowerType = towerType;
+            ShootingCooldown = 0;
         }
 
         public void MoveAmmunition(PlayerType type)
@@ -59,7 +62,7 @@ namespace TowerDefence_SharedContent.Towers
             for (int i = 0; i < soldiers.Count; i++)
             {
                 var soldier = soldiers[i];
-
+                ShootingCooldown--;
                 if (CanShoot(soldier.Coordinates, this.Coordinates))
                 {
                     Shoot();
@@ -74,6 +77,7 @@ namespace TowerDefence_SharedContent.Towers
                             if(soldier.CurrentHitpoints <= 0)
                             {
                                 soldiers.Remove(soldier);
+                                i--;
                             }
                             Ammunition.RemoveAt(k);
                             k--;
@@ -90,6 +94,11 @@ namespace TowerDefence_SharedContent.Towers
 
         public void Shoot()
         {
+            if(ShootingCooldown > 0)
+            {
+                return;
+            }
+            ShootingCooldown = (int)(600/RateOfFire[Level]);
             GameElementFactory ammunitionFactory = new AmmunitionFactory();
             Console.WriteLine("----- Strategy -----");
             if (this is MiniGunTower)

@@ -19,9 +19,9 @@ namespace TowerDefence_SharedContent.Towers
         public RocketTower(PlayerType playerType, TowerType towerType) : base(playerType, towerType)
         {
             Price = new int[] { 20, 30, 40 };
-            Range = new int[] { 300, 400, 500 };
+            Range = new int[] { 450, 500, 700 };
             Power = new int[] { 5, 10, 15 };
-            RateOfFire = new double[] { 1, 2, 3, };
+            RateOfFire = new double[] { 5, 6, 8, };
             TowerType = towerType;
         }
 
