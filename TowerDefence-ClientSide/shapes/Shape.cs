@@ -34,7 +34,8 @@ class Shape
     }
     public virtual void Draw(Graphics gr)
     {
-        Bitmap bmp = new Bitmap((int)(Width*1.5), (int)(Height * 1.5));
+        int biggerSide = (int)(Math.Max(Width, Height) * 1.5);
+        Bitmap bmp = new Bitmap(biggerSide, biggerSide);
 
 
         using (Graphics grImage = Graphics.FromImage(bmp))
@@ -48,7 +49,7 @@ class Shape
             grImage.DrawImage(sprite, 0,0,Width, Height);
         }
 
-        gr.DrawImage(bmp, CenterX - (Width / 2), CenterY - (Height / 2), Width, Height);
+        gr.DrawImage(bmp, CenterX - (bmp.Width / 2), CenterY - (bmp.Height / 2), bmp.Width, bmp.Height);
     }
     // piešimas vykdomas išvestinėse klasėse
 
