@@ -22,65 +22,90 @@ namespace TowerDefence_SharedContent
 
         public void AddPlayer(PlayerType playerType)
         {
-            players.Add(new Player(playerType));
+            lock (this)
+            {
+                players.Add(new Player(playerType));
+            }
         }
 
 
         public Player GetPlayer(PlayerType type)
         {
-            return players.Find(player => player.PlayerType == type);
+            lock (this)
+            {
+                return players.Find(player => player.PlayerType == type);
+            }
         }
 
         public Player GetPlayerEnemy(PlayerType type)
         {
+            lock (this)
+            {
             return players.Find(player => player.PlayerType != type);
+            }
         }
 
         public string ToJson()
         {
-            JObject mapJson = (JObject)JToken.FromObject(this);
+            JObject mapJson;
+            lock (this)
+            {
+                mapJson = (JObject)JToken.FromObject(this);
+            }
             return mapJson.ToString();
         }
 
         public void AddSoldier(Soldier soldier, PlayerType playerType)
         {
-            foreach(Player player in players)
+            lock (this)
             {
-                if(player.PlayerType == playerType)
+                foreach (Player player in players)
                 {
-                    player.soldiers.Add(soldier);
+                    if (player.PlayerType == playerType)
+                    {
+                        player.soldiers.Add(soldier);
+                    }
                 }
             }
         }
 
         public void AddTower(Tower tower, PlayerType playerType)
         {
-            foreach (Player player in players)
+            lock (this)
             {
-                if (player.PlayerType == playerType)
+                foreach (Player player in players)
                 {
-                    player.towers.Add(tower);
+                    if (player.PlayerType == playerType)
+                    {
+                        player.towers.Add(tower);
+                    }
                 }
             }
         }
 
         public void UpdateSoldierMovement()
         {
-            foreach(Player player in players)
+            lock (this)
             {
-                player.UpdateSoldierMovement();
+                foreach (Player player in players)
+                {
+                    player.UpdateSoldierMovement();
+                }
             }
         }
 
         public void UpdateTowerActivity()
         {
-            if(players.Count > 1)
+            lock (this)
             {
-                foreach (Player player in players)
+                if (players.Count > 1)
                 {
-                    player.UpdateTowerActivity(GetPlayerEnemy(player.PlayerType).soldiers);
+                    foreach (Player player in players)
+                    {
+                        player.UpdateTowerActivity(GetPlayerEnemy(player.PlayerType).soldiers);
+                    }
                 }
-            }           
+            }         
         }
     }
 }
