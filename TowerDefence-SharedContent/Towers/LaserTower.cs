@@ -20,7 +20,7 @@ namespace TowerDefence_SharedContent.Towers
         public LaserTower(PlayerType playerType, TowerType towerType) : base(playerType, towerType)
         {
             Price = new int[] { 20, 30, 40 };
-            Range = new int[] { 200, 300, 400 };
+            Range = new int[] { 500, 600, 700 };
             Power = new int[] { 25, 35, 45 };
             RateOfFire = new double[] { 1, 2, 3, };
             TowerType = towerType;

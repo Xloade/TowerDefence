@@ -18,13 +18,12 @@ namespace TowerDefence_SharedContent
         public ShootAlgorithm(Point towerCoordinates, AmmunitionType ammunitionType)
         {
             Coordinates = towerCoordinates;
-            Sprite = SpritePaths.getBullet();
-            Speed = 5;
             AmmunitionType = ammunitionType;
         }
 
         public abstract void MoveForward(PlayerType playerType);
         
+        public abstract bool CanDestroy(Point soldierCoordinates, PlayerType playerType);
 
         public bool IsOutOfMap(PlayerType playerType)
         {

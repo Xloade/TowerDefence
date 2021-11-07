@@ -18,11 +18,16 @@ namespace TowerDefence_SharedContent
         public Rocket(Point towerCoordinates, AmmunitionType ammunitionType) : base(towerCoordinates, ammunitionType)
         {
             Coordinates = towerCoordinates;
-            Sprite = SpritePaths.getBullet();
+            Sprite = SpritePaths.getRocket();
             Speed = 5;
-            Width = 500;
-            Height = 500;
+            Width = 300;
+            Height = 300;
             AmmunitionType = ammunitionType;
+        }
+
+        public override bool CanDestroy(Point soldierCoordinates, PlayerType playerType)
+        {
+            return soldierCoordinates.X == this.Coordinates.X;
         }
 
         public override void MoveForward(PlayerType playerType)

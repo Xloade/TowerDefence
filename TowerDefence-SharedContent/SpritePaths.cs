@@ -42,6 +42,16 @@ namespace TowerDefence_SharedContent
             return $"{dir}/bullet.png";
         }
 
+        public static string getLaser()
+        {
+            return $"{dir}/laserBeam.png";
+        }
+
+        public static string getRocket()
+        {
+            return $"{dir}/rocket.png";
+        }
+
         public static string getMap(String mapType)
         {
             return $"{dir}/{mapType}Map.png";

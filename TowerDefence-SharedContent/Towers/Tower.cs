@@ -54,7 +54,7 @@ namespace TowerDefence_SharedContent.Towers
             }
         }
 
-        public void Scan(List<Soldier> soldiers)
+        public void Scan(List<Soldier> soldiers, PlayerType playerType)
         {
             for (int i = 0; i < soldiers.Count; i++)
             {
@@ -67,7 +67,7 @@ namespace TowerDefence_SharedContent.Towers
                 }
                 if (this.Ammunition.Count > 0)
                 {
-                    if (CanDestroy(soldier.Coordinates, this.Ammunition[0].Coordinates))
+                    if (this.Ammunition[0].CanDestroy(soldier.Coordinates, playerType))
                     {
                         this.Ammunition.Clear();
                         soldiers.Remove(soldier);
@@ -85,17 +85,13 @@ namespace TowerDefence_SharedContent.Towers
         public void Shoot()
         {
             GameElementFactory ammunitionFactory = new AmmunitionFactory();
+            Console.WriteLine("----- Strategy -----");
             if (this is MiniGunTower)
                 Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Bullet));
             else if (this is RocketTower)
                 Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Rocket));
             else if  (this is LaserTower)
                 Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Laser));
-        }
-
-        public bool CanDestroy(Point soldierCoordinates, Point ammunitionCoordinates)
-        {
-            return soldierCoordinates.X == ammunitionCoordinates.X;
         }
     }
 }

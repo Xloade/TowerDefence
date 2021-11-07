@@ -24,6 +24,11 @@ namespace TowerDefence_SharedContent
             Height = 50;
             AmmunitionType = ammunitionType;
         }
+
+        public override bool CanDestroy(Point soldierCoordinates, PlayerType playerType)
+        {
+            return soldierCoordinates.X == this.Coordinates.X;
+        }
         public override void MoveForward(PlayerType playerType)
         {
             switch (playerType)
