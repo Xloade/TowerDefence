@@ -24,7 +24,7 @@ class GameWindow : Window
 
     HubConnection connection;
     private PlayerType playerType;
-    private Stats stats;
+    private IStats stats;
 
     public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
         1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
@@ -36,7 +36,7 @@ class GameWindow : Window
     
     private void updateMap(Map map) 
     {
-        this.stats = new PlayerStats(map.GetPlayer(playerType));
+        this.stats = new PlayerStatsAdapter(map.GetPlayer(playerType));
         shapes = new List<Shape>();
 
         updateMapColor(map.backgroundImageDir);
