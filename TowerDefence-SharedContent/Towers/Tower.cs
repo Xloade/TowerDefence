@@ -63,14 +63,12 @@ namespace TowerDefence_SharedContent.Towers
                 if (CanShoot(soldier.Coordinates, this.Coordinates))
                 {
                     Shoot();
-
                 }
                 if (this.Ammunition.Count > 0)
                 {
                     if (this.Ammunition[0].CanDestroy(soldier.Coordinates, playerType))
                     {
-                        //this.Ammunition.Clear(); 
-                        Ammunition.Remove(Ammunition[0]);
+                        this.Ammunition.Clear();
                         soldiers.Remove(soldier);
                         i--;
                     }
