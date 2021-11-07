@@ -85,7 +85,7 @@ namespace TowerDefence_SharedContent.Towers
 
         public bool CanShoot(Point soldierCoordinates, Point towerCoordinates)
         {
-            return Math.Abs(soldierCoordinates.X - towerCoordinates.X) == Range[Level];
+            return Math.Sqrt(Math.Pow((soldierCoordinates.X - towerCoordinates.X), 2) + Math.Pow((soldierCoordinates.Y - towerCoordinates.Y), 2)) < Range[Level];
         }
 
         public void Shoot()
