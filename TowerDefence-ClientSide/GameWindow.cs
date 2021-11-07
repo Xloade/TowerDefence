@@ -84,7 +84,10 @@ namespace TowerDefence_ClientSide
         {
             ammunition.ForEach((amm) =>
             {
-                shapes.Add(ammunitionShape.Clone() as Shape);
+                Shape temp = (Shape)ammunitionShape.Clone();
+                temp.CenterX = amm.Coordinates.X;
+                temp.CenterY = amm.Coordinates.Y;
+                shapes.Add(temp);
             });
         }
 
