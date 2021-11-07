@@ -63,15 +63,21 @@ namespace TowerDefence_SharedContent.Towers
                 if (CanShoot(soldier.Coordinates, this.Coordinates))
                 {
                     Shoot();
-
                 }
                 if (this.Ammunition.Count > 0)
                 {
-                    if (this.Ammunition[0].CanDestroy(soldier.Coordinates, playerType))
+                    for (int k = 0; k < Ammunition.Count; k++)
                     {
-                        this.Ammunition.Clear();
-                        soldiers.Remove(soldier);
-                        i--;
+                        if (this.Ammunition[k].CanDestroy(soldier.Coordinates, playerType))
+                        {
+                            soldier.CurrentHitpoints -= Ammunition[k].Power;
+                            if(soldier.CurrentHitpoints <= 0)
+                            {
+                                soldiers.Remove(soldier);
+                            }
+                            Ammunition.RemoveAt(k);
+                            k--;
+                        }
                     }
                 }
             }
@@ -87,11 +93,11 @@ namespace TowerDefence_SharedContent.Towers
             GameElementFactory ammunitionFactory = new AmmunitionFactory();
             Console.WriteLine("----- Strategy -----");
             if (this is MiniGunTower)
-                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Bullet));
+                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Bullet, Power[Level]));
             else if (this is RocketTower)
-                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Rocket));
+                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Rocket, Power[Level]));
             else if  (this is LaserTower)
-                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Laser));
+                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Laser, Power[Level]));
         }
     }
 }

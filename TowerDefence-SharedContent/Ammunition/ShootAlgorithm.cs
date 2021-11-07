@@ -13,12 +13,14 @@ namespace TowerDefence_SharedContent
         public abstract int Speed { get; set; }
         public abstract int Width { get; set; }
         public abstract int Height { get; set; }
+        public abstract double Power { get; set; }
         public abstract AmmunitionType AmmunitionType { get; set; }
 
-        public ShootAlgorithm(Point towerCoordinates, AmmunitionType ammunitionType)
+        public ShootAlgorithm(Point towerCoordinates, AmmunitionType ammunitionType, double power)
         {
             Coordinates = towerCoordinates;
             AmmunitionType = ammunitionType;
+            Power = power;
         }
 
         public abstract void MoveForward(PlayerType playerType);

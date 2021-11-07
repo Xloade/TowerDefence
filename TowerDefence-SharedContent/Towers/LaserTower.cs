@@ -21,7 +21,7 @@ namespace TowerDefence_SharedContent.Towers
         {
             Price = new int[] { 20, 30, 40 };
             Range = new int[] { 500, 600, 700 };
-            Power = new int[] { 25, 35, 45 };
+            Power = new int[] { 5, 10, 15 };
             RateOfFire = new double[] { 1, 2, 3, };
             TowerType = towerType;
         }

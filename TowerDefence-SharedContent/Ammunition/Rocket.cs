@@ -14,8 +14,9 @@ namespace TowerDefence_SharedContent
         public override int Width { get; set; }
         public override int Height { get; set; }
         public override AmmunitionType AmmunitionType { get; set; }
+        public override double Power { get; set; }
 
-        public Rocket(Point towerCoordinates, AmmunitionType ammunitionType) : base(towerCoordinates, ammunitionType)
+        public Rocket(Point towerCoordinates, AmmunitionType ammunitionType, double power) : base(towerCoordinates, ammunitionType, power)
         {
             Coordinates = towerCoordinates;
             Sprite = SpritePaths.getRocket();

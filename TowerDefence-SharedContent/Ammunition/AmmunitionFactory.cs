@@ -13,13 +13,13 @@ namespace TowerDefence_SharedContent
             throw new NotImplementedException();
         }
 
-        public override ShootAlgorithm CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType)
+        public override ShootAlgorithm CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType, double power)
         {
             return ammunitionType switch
             {
-                AmmunitionType.Bullet => new Bullet(towerCoordinates, ammunitionType),
-                AmmunitionType.Rocket => new Rocket(towerCoordinates, ammunitionType),
-                AmmunitionType.Laser => new Laser(towerCoordinates, ammunitionType),
+                AmmunitionType.Bullet => new Bullet(towerCoordinates, ammunitionType, power),
+                AmmunitionType.Rocket => new Rocket(towerCoordinates, ammunitionType, power),
+                AmmunitionType.Laser => new Laser(towerCoordinates, ammunitionType, power),
                 _ => null,
             };
         }
