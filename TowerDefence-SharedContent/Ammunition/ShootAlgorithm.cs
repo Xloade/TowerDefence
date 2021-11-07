@@ -9,10 +9,7 @@ namespace TowerDefence_SharedContent
     public abstract class ShootAlgorithm : IMove
     {
         public abstract Point Coordinates { get; set; }
-        public abstract string Sprite { get; set; }
         public abstract int Speed { get; set; }
-        public abstract int Width { get; set; }
-        public abstract int Height { get; set; }
         public abstract AmmunitionType AmmunitionType { get; set; }
 
         public ShootAlgorithm(Point towerCoordinates, AmmunitionType ammunitionType)
@@ -37,5 +34,6 @@ namespace TowerDefence_SharedContent
                     return false;
             }
         }
+
     }
 }

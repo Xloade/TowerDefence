@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-class Shape
+class Shape : ICloneable
 {
     public float CenterX { get; set; }
     public float CenterY { get; set; }
@@ -53,5 +53,9 @@ class Shape
     }
     // piešimas vykdomas išvestinėse klasėse
 
+    public object Clone()
+    {
+        return (Shape)this.MemberwiseClone();
+    }
 
 }

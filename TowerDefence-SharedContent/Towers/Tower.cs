@@ -69,7 +69,8 @@ namespace TowerDefence_SharedContent.Towers
                 {
                     if (this.Ammunition[0].CanDestroy(soldier.Coordinates, playerType))
                     {
-                        this.Ammunition.Clear();
+                        //this.Ammunition.Clear(); 
+                        Ammunition.Remove(Ammunition[0]);
                         soldiers.Remove(soldier);
                         i--;
                     }
@@ -79,7 +80,7 @@ namespace TowerDefence_SharedContent.Towers
 
         public bool CanShoot(Point soldierCoordinates, Point towerCoordinates)
         {
-            return Math.Abs(soldierCoordinates.X - towerCoordinates.X) == Range[Level];
+            return Math.Abs(soldierCoordinates.X - towerCoordinates.X) <= Range[Level];
         }
 
         public void Shoot()
