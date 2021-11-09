@@ -19,6 +19,9 @@ namespace TowerDefence_SharedContent
 
         public Player(PlayerType playerType)
         {
+            Hitpoints = 5;
+            TowerCurrency = 250;
+            SoldierCurrency = 700;
             soldiers = new List<Soldier>();
             towers = new List<Tower>();
             this.PlayerType = playerType;
