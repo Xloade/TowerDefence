@@ -9,7 +9,6 @@ using TowerDefence_SharedContent;
 using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_ClientSide.Prototype;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
 namespace TowerDefence_ClientSide
@@ -28,7 +27,6 @@ namespace TowerDefence_ClientSide
 
         HubConnection connection;
         private PlayerType playerType;
-        private System.Windows.Forms.Timer functionReconectionTimer = new System.Windows.Forms.Timer();
         private Stats stats;
         private PlayerStatsShowStatus PlayerStatsShowStatus = PlayerStatsShowStatus.All;
         private CursorState cursorState = CursorState.Default;
@@ -36,7 +34,6 @@ namespace TowerDefence_ClientSide
         private Command cursorCommand;
         private string towerToBuy = "";
         private System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
-        private Stats stats;
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
             1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
