@@ -47,8 +47,10 @@ namespace TowerDefence_ClientSide
                 grImage.RotateTransform(Rotation);
                 //Move image back.
                 grImage.TranslateTransform(-(float)Width / 2, -(float)Height / 2);
-                grImage.DrawImage(sprite, 0, 0, Width, Height);
-
+                lock (this)
+                {
+                    grImage.DrawImage(sprite, 0, 0, Width, Height);
+                }
             }
             lock (gr)
             {
