@@ -41,7 +41,7 @@ namespace TowerDefence_SharedContent
                 soldiers[i].MoveForward(PlayerType);
                 if (soldiers[i].IsOutOfMap(PlayerType))
                 {
-                    soldiers.Remove(soldiers[i]);
+                    soldiers.RemoveAt(i);
                     i--;
                 }
             }
