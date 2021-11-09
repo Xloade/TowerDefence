@@ -29,6 +29,7 @@ namespace TowerDefence_ClientSide
 
         HubConnection connection;
         private PlayerType playerType;
+        private System.Windows.Forms.Timer functionReconectionTimer = new System.Windows.Forms.Timer();
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
             1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
@@ -37,22 +38,22 @@ namespace TowerDefence_ClientSide
             startSignalR(mapType);
             MapParser.CreateInstance();
         }
-    
+
         private void updateMap(Map map)
         {
             shapes = new List<IDraw>();
 
             updateMapColor(map.backgroundImageDir);
 
-            foreach(Player player in map.players)
+            foreach (Player player in map.players)
             {
                 updateSoldiers(player.soldiers, GetRotation(player.PlayerType));
                 updateTowers(player.towers, player.PlayerType);
             }
-   
+
             Refresh();
-        }   
-    
+        }
+
         private int GetRotation(PlayerType playerType)
         {
             return playerType == PlayerType.PLAYER1 ? 90 : -90;
@@ -110,7 +111,12 @@ namespace TowerDefence_ClientSide
         private void startSignalR(String mapType)
         {
             connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();
-            connection.On<string>("ReceiveMessage", ReceiveMessage);
+            connectFunction();
+            functionReconectionTimer.Tick += new EventHandler(delegate (Object o, EventArgs a)
+            {
+                connectFunction();
+            });
+            functionReconectionTimer.Interval = 10;
             connection.StartAsync();
             connection.SendAsync("createMap", mapType);
             connection.SendAsync("addPlayer", playerType);
@@ -124,6 +130,12 @@ namespace TowerDefence_ClientSide
             MapParser mapParser = MapParser.getInstance();
             updateMap(mapParser.Parse(updatedMapJson));
 
+
+            //connectFunction();
+            functionReconectionTimer.Start();
+        }
+        private void connectFunction()
+        {
             connection.On<string>("ReceiveMessage", ReceiveMessage);
         }
 
