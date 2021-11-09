@@ -31,9 +31,8 @@ namespace TowerDefence_ClientSide
         HubConnection connection;
         private PlayerType playerType;
         private System.Windows.Forms.Timer functionReconectionTimer = new System.Windows.Forms.Timer();
-    HubConnection connection;
-    private PlayerType playerType;
-    private Stats stats;
+
+        private Stats stats;
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
             1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
@@ -45,19 +44,8 @@ namespace TowerDefence_ClientSide
 
         private void updateMap(Map map)
         {
+            this.stats = new PlayerStats(map.GetPlayer(playerType));
             shapes = new List<IDraw>();
-    public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
-        1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
-    {
-        this.playerType = playerType;
-        startSignalR(mapType);
-        MapParser.CreateInstance();
-    }
-    
-    private void updateMap(Map map) 
-    {
-        this.stats = new PlayerStats(map.GetPlayer(playerType));
-        shapes = new List<Shape>();
 
             updateMapColor(map.backgroundImageDir);
 
@@ -170,7 +158,8 @@ namespace TowerDefence_ClientSide
             //{
             //    shape.Draw(gr);
             //}
-            Parallel.ForEach(shapes, shape => {
+            Parallel.ForEach(shapes, shape =>
+            {
                 shape.Draw(gr);
             });
         }
@@ -225,11 +214,11 @@ namespace TowerDefence_ClientSide
         protected override void tower_selection_click(object sender, EventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
-            if(comboBox.SelectedItem != null)
+            if (comboBox.SelectedItem != null)
             {
                 BuyTower(comboBox.SelectedItem.ToString());
                 comboBox.Visible = false;
-            }    
+            }
         }
 
         protected override void soldier_selection_click(object sender, EventArgs e)
@@ -244,7 +233,7 @@ namespace TowerDefence_ClientSide
 
         private void BuyTower(string name)
         {
-            switch(name)
+            switch (name)
             {
                 case "Minigun":
                     connection.SendAsync("buyTower", playerType, TowerType.Minigun);
@@ -260,67 +249,68 @@ namespace TowerDefence_ClientSide
             }
         }
 
-    private void BuySoldier(string name)
-    {
-        switch (name)
+        private void BuySoldier(string name)
         {
-            case "Hitpoints":
-                connection.SendAsync("buySoldier", playerType, SoldierType.Hitpoints);
-                break;
-            case "Speed":
-                connection.SendAsync("buySoldier", playerType, SoldierType.Speed);
-                break;
-            default:
-                break;
-        }
-    }
-
-    protected override void status_selection_click(object sender, EventArgs e)
-    {
-        ComboBox comboBox = (ComboBox)sender;
-        if(comboBox.SelectedItem != null)
-        {
-            switch(comboBox.SelectedItem.ToString())
+            switch (name)
             {
-                case "All":
-                    int[] playerStats = stats.Show();
-
-                    LifePointsText.Text = $"Lifepoints: {playerStats[0]}";
-                    LifePointsText.Visible = true;
-
-                    TowerCurrencyText.Text = $"Tower Currency: {playerStats[1]}";
-                    TowerCurrencyText.Visible = true;
-
-                    SoldierCurrencyText.Text = $"Soldier Currency: {playerStats[2]}";                                      
-                    SoldierCurrencyText.Visible = true;
+                case "Hitpoints":
+                    connection.SendAsync("buySoldier", playerType, SoldierType.HitpointsSoldier);
                     break;
-                case "Lifepoints":
-                    int lifepoints = stats.ShowParameter(PlayerStatsShowStatus.Lifepoints);
-
-                    LifePointsText.Text = $"Lifepoints: {lifepoints}";
-                    LifePointsText.Visible = true;
-
-                    TowerCurrencyText.Visible = false;
-                    SoldierCurrencyText.Visible = false;
+                case "Speed":
+                    connection.SendAsync("buySoldier", playerType, SoldierType.SpeedSoldier);
                     break;
-                case "Tower Currency":
-                    int towerCurrency = stats.ShowParameter(PlayerStatsShowStatus.TowerCurrency);
-
-                    TowerCurrencyText.Text = $"Tower Currency: {towerCurrency}";
-
-                    LifePointsText.Visible = false;
-                    TowerCurrencyText.Visible = true;
-                    SoldierCurrencyText.Visible = false;
+                default:
                     break;
-                case "Soldier Currency":
-                    int soldierCurrency = stats.ShowParameter(PlayerStatsShowStatus.SoldierCurrency);
+            }
+        }
 
-                    SoldierCurrencyText.Text = $"Soldier Currency: {soldierCurrency}";
+        protected override void status_selection_click(object sender, EventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            if (comboBox.SelectedItem != null)
+            {
+                switch (comboBox.SelectedItem.ToString())
+                {
+                    case "All":
+                        int[] playerStats = stats.Show();
 
-                    LifePointsText.Visible = false;
-                    TowerCurrencyText.Visible = false;
-                    SoldierCurrencyText.Visible = true;
-                    break;
+                        LifePointsText.Text = $"Lifepoints: {playerStats[0]}";
+                        LifePointsText.Visible = true;
+
+                        TowerCurrencyText.Text = $"Tower Currency: {playerStats[1]}";
+                        TowerCurrencyText.Visible = true;
+
+                        SoldierCurrencyText.Text = $"Soldier Currency: {playerStats[2]}";
+                        SoldierCurrencyText.Visible = true;
+                        break;
+                    case "Lifepoints":
+                        int lifepoints = stats.ShowParameter(PlayerStatsShowStatus.Lifepoints);
+
+                        LifePointsText.Text = $"Lifepoints: {lifepoints}";
+                        LifePointsText.Visible = true;
+
+                        TowerCurrencyText.Visible = false;
+                        SoldierCurrencyText.Visible = false;
+                        break;
+                    case "Tower Currency":
+                        int towerCurrency = stats.ShowParameter(PlayerStatsShowStatus.TowerCurrency);
+
+                        TowerCurrencyText.Text = $"Tower Currency: {towerCurrency}";
+
+                        LifePointsText.Visible = false;
+                        TowerCurrencyText.Visible = true;
+                        SoldierCurrencyText.Visible = false;
+                        break;
+                    case "Soldier Currency":
+                        int soldierCurrency = stats.ShowParameter(PlayerStatsShowStatus.SoldierCurrency);
+
+                        SoldierCurrencyText.Text = $"Soldier Currency: {soldierCurrency}";
+
+                        LifePointsText.Visible = false;
+                        TowerCurrencyText.Visible = false;
+                        SoldierCurrencyText.Visible = true;
+                        break;
+                }
             }
         }
     }
