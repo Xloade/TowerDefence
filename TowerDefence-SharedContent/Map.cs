@@ -24,6 +24,7 @@ namespace TowerDefence_SharedContent
         {
             lock (this)
             {
+                players.RemoveAll((player)=> player.PlayerType == playerType);
                 players.Add(new Player(playerType));
             }
         }
