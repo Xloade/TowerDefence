@@ -110,15 +110,23 @@ namespace TowerDefence_ClientSide
         private void startSignalR(String mapType)
         {
             connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();
-            connection.On<string>("ReceiveMessage", (updatedMapJson) =>
-            {
-                MapParser mapParser = MapParser.getInstance();
-                updateMap(mapParser.Parse(updatedMapJson));
-            });
+            connection.On<string>("ReceiveMessage", ReceiveMessage);
             connection.StartAsync();
             connection.SendAsync("createMap", mapType);
             connection.SendAsync("addPlayer", playerType);
         }
+
+        private void ReceiveMessage(string updatedMapJson)
+        {
+            //when working on updating remove connection to not get backlog
+            connection.Remove("ReceiveMessage");
+
+            MapParser mapParser = MapParser.getInstance();
+            updateMap(mapParser.Parse(updatedMapJson));
+
+            connection.On<string>("ReceiveMessage", ReceiveMessage);
+        }
+
 
         protected override void graphicalTimer_Tick(object sender, EventArgs e)
         {
