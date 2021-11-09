@@ -10,6 +10,8 @@ using TowerDefence_SharedContent;
 using TowerDefence_SharedContent.Soldiers;
 using Newtonsoft.Json.Linq;
 using TowerDefence_ClientSide.Prototype;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace TowerDefence_ClientSide
 {
@@ -127,10 +129,14 @@ namespace TowerDefence_ClientSide
             Graphics gr = e.Graphics;
             gr.DrawImage(bgImage, 0, 0, DrawArea.Width, DrawArea.Height);
             gr.SmoothingMode = SmoothingMode.HighSpeed;
-            foreach (IDraw shape in shapes)
-            {
+
+            //foreach (IDraw shape in shapes)
+            //{
+            //    shape.Draw(gr);
+            //}
+            Parallel.ForEach(shapes, shape => {
                 shape.Draw(gr);
-            }
+            });
         }
 
         protected override void btn_Click(object sender, EventArgs e)
