@@ -16,9 +16,9 @@ namespace TowerDefence_SharedContent.Towers
         public override List<ShootAlgorithm> Ammunition { get; set; }
         public override TowerType TowerType { get; set; }
         public override int ShootingCooldown { get; set; }
-        public RocketTower(PlayerType playerType, TowerType towerType) : base(playerType, towerType)
+        public RocketTower(PlayerType playerType, TowerType towerType, Point coordinates) : base(playerType, towerType, coordinates)
         {
-            Price = new int[] { 20, 30, 40 };
+            Price = new int[] { 25, 50, 75 };
             Range = new int[] { 150, 250, 300 };
             Power = new int[] { 15, 20, 25 };
             RateOfFire = new double[] { 5, 6, 8 };

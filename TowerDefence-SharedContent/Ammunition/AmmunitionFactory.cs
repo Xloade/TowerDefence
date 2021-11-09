@@ -8,7 +8,7 @@ namespace TowerDefence_SharedContent
 {
     public class AmmunitionFactory : GameElementFactory
     {
-        public override Tower CreateTower(PlayerType playerType, TowerType towerType)
+        public override Tower CreateTower(PlayerType playerType, TowerType towerType, Point point)
         {            
             throw new NotImplementedException();
         }

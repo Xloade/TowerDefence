@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TowerDefence_SharedContent.Towers;
 using TowerDefence_SharedContent.Soldiers;
+using System.Drawing;
 
 namespace TowerDefence_ServerSide
 {
@@ -37,10 +38,11 @@ namespace TowerDefence_ServerSide
             Console.WriteLine($"{playerType.ToString()}: buySoldier");
         }
 
-        public void buyTower(PlayerType playerType, TowerType towerType)
+        public void buyTower(PlayerType playerType, TowerType towerType, string coordinates)
         {
+            var point = JsonConvert.DeserializeObject<Point>(coordinates);
             MapController mapController = MapController.getInstance();
-            mapController.AddTower(towerFactory.CreateTower(playerType, towerType), playerType);
+            mapController.AddTower(towerFactory.CreateTower(playerType, towerType, point), playerType);
             Console.WriteLine($"{playerType.ToString()}: buyTower");                   
         }
         public void restartGame()

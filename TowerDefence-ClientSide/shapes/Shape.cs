@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace TowerDefence_ClientSide
 {
-    class Shape : IDraw, ICloneable
+    public class Shape : IDraw, ICloneable
     {
         public float CenterX { get; set; }
         public float CenterY { get; set; }

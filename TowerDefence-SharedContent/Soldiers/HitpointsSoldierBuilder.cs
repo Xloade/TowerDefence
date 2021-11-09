@@ -8,6 +8,7 @@ namespace TowerDefence_SharedContent.Soldiers
     {
         public HitpointsSoldierBuilder(PlayerType playerType, SoldierType soldierType, int level)
         {
+            Console.WriteLine("Builder: build hitpoints soldier");
             soldier = new Soldier(playerType, soldierType, level);
         }
 

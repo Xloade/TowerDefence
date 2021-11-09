@@ -58,6 +58,7 @@ namespace TowerDefence_SharedContent
 
         public void AddSoldier(Soldier soldier, PlayerType playerType)
         {
+            Console.WriteLine("Observer: Update Map");
             lock (this)
             {
                 foreach (Player player in players)
@@ -65,6 +66,7 @@ namespace TowerDefence_SharedContent
                     if (player.PlayerType == playerType)
                     {
                         player.soldiers.Add(soldier);
+                        player.SoldierCurrency -= soldier.BuyPrice[soldier.Level];
                     }
                 }
             }
@@ -72,6 +74,7 @@ namespace TowerDefence_SharedContent
 
         public void AddTower(Tower tower, PlayerType playerType)
         {
+            Console.WriteLine("Observer: Update Map");
             lock (this)
             {
                 foreach (Player player in players)
@@ -79,6 +82,7 @@ namespace TowerDefence_SharedContent
                     if (player.PlayerType == playerType)
                     {
                         player.towers.Add(tower);
+                        player.TowerCurrency -= tower.Price[tower.Level];
                     }
                 }
             }

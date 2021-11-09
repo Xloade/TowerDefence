@@ -8,6 +8,7 @@ namespace TowerDefence_SharedContent.Towers
     {
         Minigun,
         Laser,
-        Rocket
+        Rocket,
+        Empty
     }
 }

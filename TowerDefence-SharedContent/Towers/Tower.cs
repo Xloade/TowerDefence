@@ -19,10 +19,10 @@ namespace TowerDefence_SharedContent.Towers
         public abstract TowerType TowerType { get; set; }
         public abstract int ShootingCooldown { get; set; }
 
-        public Tower(PlayerType playerType, TowerType towerType)
+        public Tower(PlayerType playerType, TowerType towerType, Point coordinates)
         {
             Level = 0;
-            Coordinates = playerType == PlayerType.PLAYER1 ? new Point(200, 450) : new Point(800, 450);
+            Coordinates = coordinates;
             Ammunition = new List<ShootAlgorithm>();
             TowerType = towerType;
             Sprite = SpritePaths.getTower(playerType, towerType);

@@ -17,9 +17,9 @@ namespace TowerDefence_SharedContent.Towers
         public override TowerType TowerType { get; set; }
         public override int ShootingCooldown { get; set; }
 
-        public LaserTower(PlayerType playerType, TowerType towerType) : base(playerType, towerType)
+        public LaserTower(PlayerType playerType, TowerType towerType, Point coordinates) : base(playerType, towerType, coordinates)
         {
-            Price = new int[] { 20, 30, 40 };
+            Price = new int[] { 50, 80, 110 };
             Range = new int[] { 500, 600, 700 };
             Power = new int[] { 2, 3, 5 };
             RateOfFire = new double[] { 20, 20, 20 };

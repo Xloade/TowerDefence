@@ -3,20 +3,18 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.SignalR.Client;
 using TowerDefence_SharedContent.Towers;
 using TowerDefence_SharedContent;
 using TowerDefence_SharedContent.Soldiers;
-using Newtonsoft.Json.Linq;
 using TowerDefence_ClientSide.Prototype;
-using System.Threading;
 using System.Threading.Tasks;
-using TowerDefence_ClientSide;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace TowerDefence_ClientSide
 {
-    class GameWindow : Window
+    public class GameWindow : Window, ICursorChange
     {
         private const string BUTTON_BUY_SOLDIER = "Buy soldier";
         private const string BUTTON_BUY_TOWER = "Buy tower";
@@ -31,33 +29,28 @@ namespace TowerDefence_ClientSide
         HubConnection connection;
         private PlayerType playerType;
         private System.Windows.Forms.Timer functionReconectionTimer = new System.Windows.Forms.Timer();
-    HubConnection connection;
-    private PlayerType playerType;
-    private Stats stats;
+        private Stats stats;
+        private PlayerStatsShowStatus PlayerStatsShowStatus = PlayerStatsShowStatus.All;
+        private CursorState cursorState = CursorState.Default;
+        private GameCursor gameCursor;
+        private Command cursorCommand;
+        private string towerToBuy = "";
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
             1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
         {
+            gameCursor = new GameCursor(this, playerType);
+            cursorCommand = new CursorCommand(gameCursor);
             this.playerType = playerType;
             startSignalR(mapType);
             MapParser.CreateInstance();
         }
-
         private void updateMap(Map map)
         {
+            stats = new PlayerStats(map.GetPlayer(playerType));
+            UpdateStatsView();
+
             shapes = new List<IDraw>();
-    public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
-        1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
-    {
-        this.playerType = playerType;
-        startSignalR(mapType);
-        MapParser.CreateInstance();
-    }
-    
-    private void updateMap(Map map) 
-    {
-        this.stats = new PlayerStats(map.GetPlayer(playerType));
-        shapes = new List<Shape>();
 
             updateMapColor(map.backgroundImageDir);
 
@@ -170,7 +163,8 @@ namespace TowerDefence_ClientSide
             //{
             //    shape.Draw(gr);
             //}
-            Parallel.ForEach(shapes, shape => {
+            Parallel.ForEach(shapes, shape =>
+            {
                 shape.Draw(gr);
             });
         }
@@ -213,7 +207,28 @@ namespace TowerDefence_ClientSide
 
         protected override void Mouse_Click(object sender, MouseEventArgs e)
         {
-            connection.SendAsync("SendMessage", playerType.ToString(), "explotion", new string[] { e.X.ToString(), e.Y.ToString() });
+            if (cursorState == CursorState.Modified && e.Button == MouseButtons.Left && CanBuyTower())
+            {
+                BuyTower(towerToBuy, JsonConvert.SerializeObject(PointToClient(Cursor.Position)).ToString());
+                cursorCommand.Undo();
+                //connection.SendAsync("SendMessage", playerType.ToString(), "explotion", new string[] { e.X.ToString(), e.Y.ToString() });
+            } else if(cursorState == CursorState.Modified && e.Button == MouseButtons.Right)
+            {
+                cursorCommand.Undo();
+            }
+        }
+
+        private bool CanBuyTower()
+        {
+            switch(playerType)
+            {
+                case PlayerType.PLAYER1:
+                    return PointToClient(Cursor.Position).X < 550;
+                case PlayerType.PLAYER2:
+                    return PointToClient(Cursor.Position).X > 550;
+                default:
+                    return false;
+            }
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
@@ -225,11 +240,27 @@ namespace TowerDefence_ClientSide
         protected override void tower_selection_click(object sender, EventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
-            if(comboBox.SelectedItem != null)
+            if (comboBox.SelectedItem != null)
             {
-                BuyTower(comboBox.SelectedItem.ToString());
                 comboBox.Visible = false;
-            }    
+                cursorCommand.Do(GetTowerType(comboBox.SelectedItem.ToString()));
+                towerToBuy = comboBox.SelectedItem.ToString();
+            }
+        }
+
+        private TowerType GetTowerType(string name)
+        {
+            switch (name)
+            {
+                case "Minigun":
+                    return TowerType.Minigun;
+                case "Laser":
+                    return TowerType.Laser;
+                case "Rocket":
+                    return TowerType.Rocket;
+                default:
+                    return TowerType.Empty;
+            }
         }
 
         protected override void soldier_selection_click(object sender, EventArgs e)
@@ -242,86 +273,107 @@ namespace TowerDefence_ClientSide
             }
         }
 
-        private void BuyTower(string name)
+        private void BuyTower(string name, string coordinates)
         {
-            switch(name)
+            switch (name)
             {
                 case "Minigun":
-                    connection.SendAsync("buyTower", playerType, TowerType.Minigun);
+                    connection.SendAsync("buyTower", playerType, TowerType.Minigun, coordinates);
                     break;
                 case "Laser":
-                    connection.SendAsync("buyTower", playerType, TowerType.Laser);
+                    connection.SendAsync("buyTower", playerType, TowerType.Laser, coordinates);
                     break;
                 case "Rocket":
-                    connection.SendAsync("buyTower", playerType, TowerType.Rocket);
+                    connection.SendAsync("buyTower", playerType, TowerType.Rocket, coordinates);
                     break;
                 default:
                     break;
             }
         }
 
-    private void BuySoldier(string name)
-    {
-        switch (name)
+        private void BuySoldier(string name)
         {
-            case "Hitpoints":
-                connection.SendAsync("buySoldier", playerType, SoldierType.Hitpoints);
-                break;
-            case "Speed":
-                connection.SendAsync("buySoldier", playerType, SoldierType.Speed);
-                break;
-            default:
-                break;
-        }
-    }
-
-    protected override void status_selection_click(object sender, EventArgs e)
-    {
-        ComboBox comboBox = (ComboBox)sender;
-        if(comboBox.SelectedItem != null)
-        {
-            switch(comboBox.SelectedItem.ToString())
+            switch (name)
             {
-                case "All":
-                    int[] playerStats = stats.Show();
-
-                    LifePointsText.Text = $"Lifepoints: {playerStats[0]}";
-                    LifePointsText.Visible = true;
-
-                    TowerCurrencyText.Text = $"Tower Currency: {playerStats[1]}";
-                    TowerCurrencyText.Visible = true;
-
-                    SoldierCurrencyText.Text = $"Soldier Currency: {playerStats[2]}";                                      
-                    SoldierCurrencyText.Visible = true;
+                case "Hitpoints":
+                    connection.SendAsync("buySoldier", playerType, SoldierType.HitpointsSoldier);
                     break;
-                case "Lifepoints":
-                    int lifepoints = stats.ShowParameter(PlayerStatsShowStatus.Lifepoints);
-
-                    LifePointsText.Text = $"Lifepoints: {lifepoints}";
-                    LifePointsText.Visible = true;
-
-                    TowerCurrencyText.Visible = false;
-                    SoldierCurrencyText.Visible = false;
+                case "Speed":
+                    connection.SendAsync("buySoldier", playerType, SoldierType.SpeedSoldier);
                     break;
-                case "Tower Currency":
-                    int towerCurrency = stats.ShowParameter(PlayerStatsShowStatus.TowerCurrency);
-
-                    TowerCurrencyText.Text = $"Tower Currency: {towerCurrency}";
-
-                    LifePointsText.Visible = false;
-                    TowerCurrencyText.Visible = true;
-                    SoldierCurrencyText.Visible = false;
-                    break;
-                case "Soldier Currency":
-                    int soldierCurrency = stats.ShowParameter(PlayerStatsShowStatus.SoldierCurrency);
-
-                    SoldierCurrencyText.Text = $"Soldier Currency: {soldierCurrency}";
-
-                    LifePointsText.Visible = false;
-                    TowerCurrencyText.Visible = false;
-                    SoldierCurrencyText.Visible = true;
+                default:
                     break;
             }
+        }
+
+        private void UpdateStatsView()
+        {
+            switch(PlayerStatsShowStatus)
+            {
+                case PlayerStatsShowStatus.All:
+                    int[] playerStats = stats.Show();
+                    LifePointsText.Text = $"Lifepoints: {playerStats[0]}";
+                    TowerCurrencyText.Text = $"Tower Currency: {playerStats[1]}";
+                    SoldierCurrencyText.Text = $"Soldier Currency: {playerStats[2]}";
+                    break;
+                case PlayerStatsShowStatus.Lifepoints:
+                    int lifepoints = stats.ShowParameter(PlayerStatsShowStatus);
+                    LifePointsText.Text = $"Lifepoints: {lifepoints}";
+                    break;
+                case PlayerStatsShowStatus.TowerCurrency:
+                    int towerCurrency = stats.ShowParameter(PlayerStatsShowStatus);
+                    LifePointsText.Text = $"Lifepoints: {towerCurrency}";
+                    break;
+                case PlayerStatsShowStatus.SoldierCurrency:
+                    int soldierCurrency = stats.ShowParameter(PlayerStatsShowStatus);
+                    LifePointsText.Text = $"Lifepoints: {soldierCurrency}";
+                    break;
+            }          
+        }
+
+        protected override void status_selection_click(object sender, EventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            if (comboBox.SelectedItem != null)
+            {
+                switch (comboBox.SelectedItem.ToString())
+                {
+                    case "All":
+                        PlayerStatsShowStatus = PlayerStatsShowStatus.All;
+                        LifePointsText.Visible = true;
+                        TowerCurrencyText.Visible = true;
+                        SoldierCurrencyText.Visible = true;
+                        Console.WriteLine("Adapter: show all");
+                        break;
+                    case "Lifepoints":                        
+                        PlayerStatsShowStatus = PlayerStatsShowStatus.Lifepoints;
+                        LifePointsText.Visible = true;
+                        TowerCurrencyText.Visible = false;
+                        SoldierCurrencyText.Visible = false;
+                        Console.WriteLine("Adapter: show lifepoints");
+                        break;
+                    case "Tower Currency":
+                        PlayerStatsShowStatus = PlayerStatsShowStatus.TowerCurrency;
+                        LifePointsText.Visible = false;
+                        TowerCurrencyText.Visible = true;
+                        SoldierCurrencyText.Visible = false;
+                        Console.WriteLine("Adapter: show tower currency");
+                        break;
+                    case "Soldier Currency":                        
+                        PlayerStatsShowStatus = PlayerStatsShowStatus.SoldierCurrency;
+                        LifePointsText.Visible = false;
+                        TowerCurrencyText.Visible = false;
+                        SoldierCurrencyText.Visible = true;
+                        Console.WriteLine("Adapter: show soldier currency");
+                        break;
+                }
+            }
+        }
+
+        public void OnCursorChanged(Cursor cursor, CursorState cursorState)
+        {
+            Cursor = cursor;
+            this.cursorState = cursorState;
         }
     }
 }

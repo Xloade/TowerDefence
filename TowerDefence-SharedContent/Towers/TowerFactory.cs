@@ -7,13 +7,14 @@ namespace TowerDefence_SharedContent.Towers
 {
     public class TowerFactory : GameElementFactory
     {
-        public override Tower CreateTower(PlayerType playerType, TowerType towerType)
+        public override Tower CreateTower(PlayerType playerType, TowerType towerType, Point coordinates)
         {
+            Console.WriteLine($"Abstract Factory: Create Tower {towerType}");
             return towerType switch
-            {
-                TowerType.Minigun => new MiniGunTower(playerType, towerType),
-                TowerType.Rocket => new RocketTower(playerType, towerType),
-                TowerType.Laser => new LaserTower(playerType, towerType),
+            {                
+                TowerType.Minigun => new MiniGunTower(playerType, towerType, coordinates),
+                TowerType.Rocket => new RocketTower(playerType, towerType, coordinates),
+                TowerType.Laser => new LaserTower(playerType, towerType, coordinates),
                 _ => null,
             };
         }

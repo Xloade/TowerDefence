@@ -1,10 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>TowerDefence_ClientSide</RootNamespace>
     <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +16,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TowerDefence-SharedContent\TowerDefence-SharedContent.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Cursors\" />
   </ItemGroup>
 
 </Project>
