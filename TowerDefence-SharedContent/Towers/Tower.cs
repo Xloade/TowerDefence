@@ -59,36 +59,33 @@ namespace TowerDefence_SharedContent.Towers
 
         public void Scan(List<Soldier> soldiers, PlayerType playerType)
         {
+            ShootingCooldown--;
             for (int i = 0; i < soldiers.Count; i++)
             {
                 var soldier = soldiers[i];
-                ShootingCooldown--;
                 if (CanShoot(soldier.Coordinates, this.Coordinates))
                 {
                     Shoot();
                 }
-                if (this.Ammunition.Count > 0)
+                for (int k = 0; k < Ammunition.Count; k++)
                 {
-                    for (int k = 0; k < Ammunition.Count; k++)
+                    if (this.Ammunition[k].CanDestroy(soldier.Coordinates, playerType))
                     {
-                        if (this.Ammunition[k].CanDestroy(soldier.Coordinates, playerType))
+                        soldier.CurrentHitpoints -= Ammunition[k].Power;
+                        if (soldier.CurrentHitpoints <= 0)
                         {
-                            soldier.CurrentHitpoints -= Ammunition[k].Power;
-                            if (soldier.CurrentHitpoints <= 0)
+                            soldiers.RemoveAt(i);
+                            i--;
+                            if (TowerType == TowerType.Laser)
                             {
-                                soldiers.Remove(soldier);
-                                i--;
-                                if (TowerType == TowerType.Laser)
-                                {
-                                    Ammunition.Clear();
-                                    k = 0;
-                                }
+                                Ammunition.Clear();
+                                k = 0;
                             }
-                            if (TowerType != TowerType.Laser)
-                            {
-                                Ammunition.RemoveAt(k);
-                                k--;
-                            }
+                        }
+                        if (TowerType != TowerType.Laser)
+                        {
+                            Ammunition.RemoveAt(k);
+                            k--;
                         }
                     }
                 }
