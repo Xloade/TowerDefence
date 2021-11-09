@@ -49,7 +49,11 @@ namespace TowerDefence_ClientSide
                 grImage.TranslateTransform(-(float)Width / 2, -(float)Height / 2);
                 lock (this)
                 {
-                    grImage.DrawImage(sprite, 0, 0, Width, Height);
+                    //bullet prototipe doesnt do deep enough copy
+                    lock (sprite)
+                    {
+                        grImage.DrawImage(sprite, 0, 0, Width, Height);
+                    }
                 }
             }
             lock (gr)
