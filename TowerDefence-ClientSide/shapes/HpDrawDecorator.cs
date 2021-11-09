@@ -28,8 +28,10 @@ namespace TowerDefence_ClientSide
                 grImage.FillRectangle(Brushes.Green, 0, 0, green, 10);
                 grImage.FillRectangle(Brushes.Red, green, 0, red, 10);
             }
-
-            gr.DrawImage(bmp, CenterX - (Width / 2)+25, CenterY - (Height / 2)-10, bmp.Width, bmp.Height);
+            lock(gr)
+            {
+                gr.DrawImage(bmp, CenterX - (Width / 2)+25, CenterY - (Height / 2)-10, bmp.Width, bmp.Height);
+            }
         }
     }
 }

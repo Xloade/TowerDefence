@@ -49,8 +49,10 @@ namespace TowerDefence_ClientSide
                 grImage.TranslateTransform(-(float)Width / 2, -(float)Height / 2);
                 grImage.DrawImage(sprite, 0, 0, Width, Height);
             }
-
-            gr.DrawImage(bmp, CenterX - (bmp.Width / 2), CenterY - (bmp.Height / 2), bmp.Width, bmp.Height);
+            lock (gr)
+            {
+                gr.DrawImage(bmp, CenterX - (bmp.Width / 2), CenterY - (bmp.Height / 2), bmp.Width, bmp.Height);
+            }
         }
         // piešimas vykdomas išvestinėse klasėse
 

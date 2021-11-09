@@ -25,7 +25,10 @@ namespace TowerDefence_ClientSide
             drawFormat.FormatFlags = StringFormatFlags.DirectionRightToLeft;
 
             // Draw string to screen.
-            gr.DrawString($"{_name}", drawFont, drawBrush, CenterX + (Width / 2)+50, CenterY + (Height / 2), drawFormat);
+            lock (gr)
+            {
+                gr.DrawString($"{_name}", drawFont, drawBrush, CenterX + (Width / 2)+50, CenterY + (Height / 2), drawFormat);
+            }
         }
     }
 }
