@@ -24,14 +24,13 @@ namespace TowerDefence_ClientSide
         private const string BUTTON_DELETE_TOWER = "Delete tower";
         private const string BUTTON_UPGRADE_SOLDIER = "Upgrade soldier";
         private const string SERVER_URL = "https://localhost:5001/GameHub";
-
+        Map currentMap;
         List<IDraw> shapes = new List<IDraw>();
         LazyImageDictionary lazyImageDictionary = new LazyImageDictionary();
 
         HubConnection connection;
         private PlayerType playerType;
-        private System.Windows.Forms.Timer functionReconectionTimer = new System.Windows.Forms.Timer();
-
+        private System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
         private Stats stats;
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
@@ -40,6 +39,19 @@ namespace TowerDefence_ClientSide
             this.playerType = playerType;
             startSignalR(mapType);
             MapParser.CreateInstance();
+            renderTimer.Tick += RenderTimer_Tick;
+            renderTimer.Interval = 10;
+            renderTimer.Start();
+        }
+
+        private void RenderTimer_Tick(object sender, EventArgs e)
+        {
+            renderTimer.Stop();
+            if (currentMap != null)
+            {
+                updateMap(currentMap);
+            }
+            renderTimer.Start();
         }
 
         private void updateMap(Map map)
@@ -115,12 +127,7 @@ namespace TowerDefence_ClientSide
         private void startSignalR(String mapType)
         {
             connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();
-            connectFunction();
-            functionReconectionTimer.Tick += new EventHandler(delegate (Object o, EventArgs a)
-            {
-                connectFunction();
-            });
-            functionReconectionTimer.Interval = 10;
+            connection.On<string>("ReceiveMessage", ReceiveMessage);
             connection.StartAsync();
             connection.SendAsync("createMap", mapType);
             connection.SendAsync("addPlayer", playerType);
@@ -128,26 +135,10 @@ namespace TowerDefence_ClientSide
 
         private void ReceiveMessage(string updatedMapJson)
         {
-            //when working on updating remove connection to not get backlog
-            connection.Remove("ReceiveMessage");
-
             MapParser mapParser = MapParser.getInstance();
-            updateMap(mapParser.Parse(updatedMapJson));
-
-
-            //connectFunction();
-            functionReconectionTimer.Start();
-        }
-        private void connectFunction()
-        {
-            connection.On<string>("ReceiveMessage", ReceiveMessage);
+            currentMap = mapParser.Parse(updatedMapJson);
         }
 
-
-        protected override void graphicalTimer_Tick(object sender, EventArgs e)
-        {
-            Refresh();
-        }
         protected override void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics gr = e.Graphics;
