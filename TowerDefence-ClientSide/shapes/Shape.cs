@@ -22,7 +22,7 @@ namespace TowerDefence_ClientSide
         {
             Width = width;
             Height = height;
-            this.sprite = sprite;
+            this.sprite = (Image)sprite.Clone();
         }
 
         public Shape()
@@ -48,6 +48,7 @@ namespace TowerDefence_ClientSide
                 //Move image back.
                 grImage.TranslateTransform(-(float)Width / 2, -(float)Height / 2);
                 grImage.DrawImage(sprite, 0, 0, Width, Height);
+
             }
             lock (gr)
             {
