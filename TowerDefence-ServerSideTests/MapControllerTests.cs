@@ -27,7 +27,7 @@ namespace TowerDefence_ServerSide.Tests
             factory = new MapFactory();
             MapController.createInstance();
             map = factory.CreateMap("Winter");
-            MapController mapController = MapController.getInstance();
+            mapController = MapController.getInstance();
             mapController.Attach(map);
         }
         [TestMethod()]
@@ -63,9 +63,13 @@ namespace TowerDefence_ServerSide.Tests
             var numOfsoldiers = mapFromSingleton.GetPlayer(PlayerType.PLAYER1).soldiers.Count;
             Assert.AreEqual(0, numOfsoldiers);
         }
-
-        
-
-        
+        [TestMethod()]
+        public void deattach_checksIfPlayerAdded_FailsToAdd(){
+            mapController.Deattach(map);
+            
+            Assert.ThrowsException<ArgumentOutOfRangeException>(()=>{
+                mapController.AddPlayer(PlayerType.PLAYER1);
+            });
+        }
     }
 }

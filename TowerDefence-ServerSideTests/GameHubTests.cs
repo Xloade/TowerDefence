@@ -43,12 +43,15 @@ namespace TowerDefence_ServerSide.Tests
             Assert.IsNotNull(MapController.getInstance());
         }
 
-        [TestMethod()]
-        public void buySoldierTest()
+        [DataTestMethod()]
+        [DataRow(SoldierType.HitpointsSoldier)]
+        [DataRow(SoldierType.SpeedSoldier)]
+        public void buySoldierTest(SoldierType soldierType)
         {
 
-            gameHub.buySoldier(PlayerType.PLAYER1, SoldierType.HitpointsSoldier);
-            Assert.AreEqual(1, map.GetPlayer(PlayerType.PLAYER1).soldiers.Count);
+            gameHub.buySoldier(PlayerType.PLAYER1, soldierType);
+            Player player = map.GetPlayer(PlayerType.PLAYER1);
+            Assert.AreEqual(soldierType, player.soldiers[player.soldiers.Count - 1].SoldierType);
         }
 
         [TestMethod()]
@@ -64,6 +67,15 @@ namespace TowerDefence_ServerSide.Tests
             gameHub.buyTower(PlayerType.PLAYER1, TowerType.Minigun, new System.Drawing.Point(100, 100));
             gameHub.restartGame();
             Assert.AreEqual(0, map.GetPlayer(PlayerType.PLAYER1).towers.Count);
+        }
+
+        [DataTestMethod()]
+        [DataRow(PlayerType.PLAYER1)]
+        [DataRow(PlayerType.PLAYER2)]
+        public void addPlayerTest(PlayerType playerType)
+        {
+            gameHub.addPlayer(playerType);
+            Assert.IsNotNull(map.GetPlayer(playerType));
         }
     }
 }
