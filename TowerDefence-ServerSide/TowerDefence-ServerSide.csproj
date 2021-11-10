@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TowerDefence-ClientSide\TowerDefence-ClientSide.csproj" />
     <ProjectReference Include="..\TowerDefence-SharedContent\TowerDefence-SharedContent.csproj" />
   </ItemGroup>
 
