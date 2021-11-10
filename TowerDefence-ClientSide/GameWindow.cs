@@ -39,6 +39,7 @@ namespace TowerDefence_ClientSide
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
             1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
         {
+            AllocConsole();
             gameCursor = new GameCursor(this, playerType);
             cursorCommand = new CursorCommand(gameCursor);
             this.playerType = playerType;
@@ -47,8 +48,6 @@ namespace TowerDefence_ClientSide
             renderTimer.Tick += RenderTimer_Tick;
             renderTimer.Interval = 10;
             renderTimer.Start();
-            AllocConsole();
-            Console.WriteLine("test");
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -112,8 +111,10 @@ namespace TowerDefence_ClientSide
         {
             towers.ForEach((tower) =>
             {
-                shapes.Add(new Shape(tower.Coordinates, 100, 100, GetRotation(playerType), lazyImageDictionary.get(tower.Sprite)));
-
+                IDraw firstWrap = new Shape(tower.Coordinates, 100, 100, GetRotation(playerType), lazyImageDictionary.get(tower.Sprite));
+                IDraw secondWrap = new LvlDrawDecorator(firstWrap, tower.Level);
+                IDraw thirdWrap = new NameDrawDecorator(secondWrap, tower.TowerType.ToString());
+                shapes.Add(thirdWrap);
                 updateAmmunition(tower.Ammunition, CreateShape(tower.Coordinates, GetRotation(playerType), tower.TowerType));
             });
         }
