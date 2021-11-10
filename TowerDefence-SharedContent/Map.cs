@@ -112,5 +112,13 @@ namespace TowerDefence_SharedContent
                 }
             }         
         }
+
+        public void Restart()
+        {
+            players.ForEach((player)=> {
+                player.soldiers.Clear();
+                player.towers.Clear();
+            });
+        }
     }
 }

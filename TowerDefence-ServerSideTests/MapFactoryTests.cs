@@ -18,25 +18,16 @@ namespace TowerDefence_ServerSide.Tests
             mapFactory = new MapFactory();
         }
         [DataTestMethod()]
-        [DataRow("Summer", "Green")]
-        [DataRow("Spring", "GreenYellow")]
-        [DataRow("Winter", "LightCyan")]
-        [DataRow("Autumn", "OrangeRed")]
-        [DataRow("RandromName", "OrangeRed")]
-        public void CreateMap_checksIfcreatedCorrect_allMatches(string mapType, String correctColor)
+        [DataRow("Summer", "Summer")]
+        [DataRow("Spring", "Spring")]
+        [DataRow("Winter", "Winter")]
+        [DataRow("Autumn", "Autumn")]
+        [DataRow("RandromName", "Autumn")]
+        public void CreateMap_checksIfcreatedCorrect_allMatches(string mapType, string mapTypeToGetDir)
         {
-            Color color = Color.FromName(correctColor);
+            string correctDir = SpritePaths.getMap(mapTypeToGetDir);
             Map map = mapFactory.CreateMap(mapType);
-            Assert.AreEqual(map.mapColor,color);
-        }
-        [DataTestMethod()]
-        [DataRow("Summer", "Blue")]
-        [DataRow("RandromName", "RandomColor")]
-        public void CreateMap_checksIfcreatedCorrect_allDoesntMatch(string mapType, String correctColor)
-        {
-            Color color = Color.FromName(correctColor);
-            Map map = mapFactory.CreateMap(mapType);
-            Assert.AreNotEqual(map.mapColor, color);
+            Assert.AreEqual(map.backgroundImageDir, correctDir);
         }
     }
 }

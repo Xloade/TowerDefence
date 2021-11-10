@@ -14,5 +14,6 @@ namespace TowerDefence_SharedContent
         void UpdateSoldierMovement();
         void UpdateTowerActivity();
         string ToJson();
+        void Restart();
     }
 }

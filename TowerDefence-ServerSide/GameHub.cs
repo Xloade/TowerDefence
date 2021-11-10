@@ -39,16 +39,16 @@ namespace TowerDefence_ServerSide
             MyConsole.WriteLineWithCount($"{playerType.ToString()}: buySoldier");
         }
 
-        public void buyTower(PlayerType playerType, TowerType towerType, string coordinates)
+        public void buyTower(PlayerType playerType, TowerType towerType, Point point)
         {
-            var point = JsonConvert.DeserializeObject<Point>(coordinates);
             MapController mapController = MapController.getInstance();
             mapController.AddTower(towerFactory.CreateTower(playerType, towerType, point), playerType);
             MyConsole.WriteLineWithCount($"{playerType.ToString()}: buyTower");                   
         }
         public void restartGame()
         {
-
+            MapController mapController = MapController.getInstance();
+            mapController.Restart();
         }
         public void buyTwoSoldier(PlayerType playerType, SoldierType soldierType)
         {
@@ -69,7 +69,8 @@ namespace TowerDefence_ServerSide
         public void deleteTower(PlayerType playerType)
         {
             MapController mapController = MapController.getInstance();
-           // mapController.map.deleteTower(playerType);
+            // todo
+            // mapController.deleteTower(playerType);
             MyConsole.WriteLineWithCount($"{playerType.ToString()}: deleteTower");
 
         }

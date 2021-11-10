@@ -209,7 +209,7 @@ namespace TowerDefence_ClientSide
         {
             if (cursorState == CursorState.Modified && e.Button == MouseButtons.Left && CanBuyTower())
             {
-                BuyTower(towerToBuy, JsonConvert.SerializeObject(PointToClient(Cursor.Position)).ToString());
+                BuyTower(towerToBuy, PointToClient(Cursor.Position));
                 cursorCommand.Undo();
                 //connection.SendAsync("SendMessage", playerType.ToString(), "explotion", new string[] { e.X.ToString(), e.Y.ToString() });
             } else if(cursorState == CursorState.Modified && e.Button == MouseButtons.Right)
@@ -273,7 +273,7 @@ namespace TowerDefence_ClientSide
             }
         }
 
-        private void BuyTower(string name, string coordinates)
+        private void BuyTower(string name, Point coordinates)
         {
             switch (name)
             {

@@ -6,6 +6,7 @@ using TowerDefence_SharedContent;
 using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_SharedContent.Towers;
 using System.Threading;
+using System.Drawing;
 
 namespace TowerDefence_ServerSide
 {
@@ -129,6 +130,9 @@ namespace TowerDefence_ServerSide
                     mapObservers[0].UpdateTowerActivity();
                 }
             }
+        }
+        public void Restart(){
+            mapObservers[0].Restart();
         }
     }
 }

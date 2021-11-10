@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Text;
 using Moq;
 using TowerDefence_SharedContent;
-
+using TowerDefence_SharedContent.Soldiers;
+using TowerDefence_SharedContent.Towers;
 
 namespace TowerDefence_ServerSide.Tests
 {
@@ -15,14 +16,19 @@ namespace TowerDefence_ServerSide.Tests
 
         private GameHub gameHub;
         private MapController mapController;
+        private Map map;
         [TestInitialize()]
         public void Setup()
         {
             gameHub = new GameHub();
             var gameHubMock = new Mock<Microsoft.AspNetCore.SignalR.IHubContext<GameHub>>();
             MapController.setIHubContext(gameHubMock.Object);
-            MapController.createInstance("Winter");
+            MapFactory factory = new MapFactory();
+            MapController.createInstance();
+            map = factory.CreateMap("Winter");
             mapController = MapController.getInstance();
+            mapController.Attach(map);
+            mapController.AddPlayer(PlayerType.PLAYER1);
         }
         [TestCleanup()]
         public void TestCleanup()
@@ -40,30 +46,24 @@ namespace TowerDefence_ServerSide.Tests
         [TestMethod()]
         public void buySoldierTest()
         {
-            gameHub.buySoldier(PlayerType.PLAYER1);
-            Assert.AreEqual(1, mapController.map.GetPlayer(PlayerType.PLAYER1).soldiers.Count);
+
+            gameHub.buySoldier(PlayerType.PLAYER1, SoldierType.HitpointsSoldier);
+            Assert.AreEqual(1, map.GetPlayer(PlayerType.PLAYER1).soldiers.Count);
         }
 
         [TestMethod()]
         public void buyTowerTest()
         {
-            gameHub.buyTower(PlayerType.PLAYER1);
-            Assert.AreEqual(1, mapController.map.GetPlayer(PlayerType.PLAYER1).towers.Count);
+            gameHub.buyTower(PlayerType.PLAYER1, TowerType.Minigun, new System.Drawing.Point(100, 100));
+            Assert.AreEqual(1, map.GetPlayer(PlayerType.PLAYER1).towers.Count);
         }
 
         [TestMethod()]
         public void restartGameTest()
         {
+            gameHub.buyTower(PlayerType.PLAYER1, TowerType.Minigun, new System.Drawing.Point(100, 100));
             gameHub.restartGame();
-            Assert.AreNotSame(mapController, MapController.getInstance());
-        }
-
-        [TestMethod()]
-        public void deleteTowerTest()
-        {
-            gameHub.buyTower(PlayerType.PLAYER1);
-            gameHub.deleteTower(PlayerType.PLAYER1);
-            Assert.AreEqual(0, mapController.map.GetPlayer(PlayerType.PLAYER1).towers.Count);
+            Assert.AreEqual(0, map.GetPlayer(PlayerType.PLAYER1).towers.Count);
         }
     }
 }
