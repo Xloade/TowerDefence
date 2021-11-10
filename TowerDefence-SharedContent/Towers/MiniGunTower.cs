@@ -13,7 +13,7 @@ namespace TowerDefence_SharedContent.Towers
         public override int[] Range { get; set; }
         public override double[] RateOfFire { get; set; }
         public override string Sprite { get; set; }
-        public override List<ShootAlgorithm> Ammunition { get; set; }
+        public override List<Ammunition> Ammunition { get; set; }
         public override TowerType TowerType { get; set; }
         public override int ShootingCooldown { get; set; }
         public MiniGunTower(PlayerType playerType, TowerType towerType, Point coordinates) : base(playerType, towerType, coordinates)
@@ -23,10 +23,11 @@ namespace TowerDefence_SharedContent.Towers
             Power = new int[] { 5, 10, 15 };
             RateOfFire = new double[] { 10, 15, 20, };
             TowerType = towerType;
+            canShootAlgorithm = new CanMiniGunShoot(Level, Coordinates, Range);
         }
 
         public MiniGunTower(int level, int[] price, Point coordinates, int[] range, int[] power, double[] rateOfFire,
-            string sprite, List<ShootAlgorithm> ammunition, TowerType towerType, int shootingCooldown) : base(level, price, coordinates, range, power, rateOfFire,
+            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown) : base(level, price, coordinates, range, power, rateOfFire,
             sprite, ammunition, towerType, shootingCooldown)
         {
             Level = level;
@@ -39,11 +40,6 @@ namespace TowerDefence_SharedContent.Towers
             Ammunition = ammunition;
             TowerType = towerType;
             ShootingCooldown = shootingCooldown;
-        }
-
-        public override bool CanShoot(Point soldierCoordinates, Point towerCoordinates)
-        {
-            return Math.Sqrt(Math.Pow((soldierCoordinates.X - towerCoordinates.X), 2) + Math.Pow((soldierCoordinates.Y - towerCoordinates.Y), 2)) < Range[Level];
         }
     }
 }

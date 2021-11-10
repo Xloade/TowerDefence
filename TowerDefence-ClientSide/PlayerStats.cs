@@ -5,7 +5,7 @@ using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
-    public class PlayerStats : Stats
+    public class PlayerStats : IStats
     {
         private PlayerStatsView ConsoleView;
 
@@ -13,12 +13,12 @@ namespace TowerDefence_ClientSide
         {
             ConsoleView = new PlayerStatsView(player.Hitpoints, player.TowerCurrency, player.SoldierCurrency);
         }
-        public override int[] Show()
+        public int[] Show()
         {
             return ConsoleView.ShowAll();
         }
 
-        public override int ShowParameter(PlayerStatsShowStatus consoleShowStatus)
+        public int ShowParameter(PlayerStatsShowStatus consoleShowStatus)
         {
             return consoleShowStatus switch
             {

@@ -8,6 +8,7 @@ namespace TowerDefence_SharedContent.Towers
 {
     public abstract class Tower
     {
+        protected CanShootAlgorithm canShootAlgorithm;
         public abstract int Level { get; set; }
         public abstract int[] Price  { get; set; }
         public abstract Point Coordinates { get; set; }
@@ -15,7 +16,7 @@ namespace TowerDefence_SharedContent.Towers
         public int[] Power { get; set; }
         public abstract double[] RateOfFire { get; set; }
         public abstract string Sprite { get; set; }
-        public abstract List<ShootAlgorithm> Ammunition { get; set; }
+        public abstract List<Ammunition> Ammunition { get; set; }
         public abstract TowerType TowerType { get; set; }
         public abstract int ShootingCooldown { get; set; }
 
@@ -23,14 +24,14 @@ namespace TowerDefence_SharedContent.Towers
         {
             Level = 0;
             Coordinates = coordinates;
-            Ammunition = new List<ShootAlgorithm>();
+            Ammunition = new List<Ammunition>();
             TowerType = towerType;
             Sprite = SpritePaths.getTower(playerType, towerType);
             ShootingCooldown = 0;
         }
 
         public Tower(int level, int[] price, Point coordinates, int[] range, int[]power, double[]rateOfFire,
-            string sprite, List<ShootAlgorithm> ammunition, TowerType towerType, int shootingCooldown)
+            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown)
         {
             Level = level;
             Price = price;
@@ -63,7 +64,7 @@ namespace TowerDefence_SharedContent.Towers
             for (int i = 0; i < soldiers.Count; i++)
             {
                 var soldier = soldiers[i];
-                if (CanShoot(soldier.Coordinates, this.Coordinates))
+                if (canShootAlgorithm.CanShoot(soldier.Coordinates))
                 {
                     Shoot();
                 }
@@ -91,8 +92,6 @@ namespace TowerDefence_SharedContent.Towers
                 }
             }
         }
-
-        public abstract bool CanShoot(Point soldierCoordinates, Point towerCoordinates);
 
         public void Shoot()
         {

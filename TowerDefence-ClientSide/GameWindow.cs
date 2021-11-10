@@ -28,7 +28,7 @@ namespace TowerDefence_ClientSide
 
         HubConnection connection;
         private PlayerType playerType;
-        private Stats stats;
+        private IStats stats;
         private PlayerStatsShowStatus PlayerStatsShowStatus = PlayerStatsShowStatus.All;
         private CursorState cursorState = CursorState.Default;
         private GameCursor gameCursor;
@@ -61,7 +61,6 @@ namespace TowerDefence_ClientSide
 
         private void updateMap(Map map)
         {
-            this.stats = new PlayerStats(map.GetPlayer(playerType));
             shapes = new List<IDraw>();
             stats = new PlayerStats(map.GetPlayer(playerType));
             UpdateStatsView();
@@ -102,7 +101,7 @@ namespace TowerDefence_ClientSide
             });
         }
 
-        private void updateTowers(List<Tower> towers, PlayerType playerType)
+        private void updateTowers(List<TowerDefence_SharedContent.Towers.Tower> towers, PlayerType playerType)
         {
             towers.ForEach((tower) =>
             {
@@ -114,7 +113,7 @@ namespace TowerDefence_ClientSide
             });
         }
 
-        private void updateAmmunition(List<ShootAlgorithm> ammunition, Shape ammunitionShape)
+        private void updateAmmunition(List<Ammunition> ammunition, Shape ammunitionShape)
         {
             ammunition.ForEach((amm) =>
             {

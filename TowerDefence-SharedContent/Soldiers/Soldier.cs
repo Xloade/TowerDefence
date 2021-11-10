@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace TowerDefence_SharedContent.Soldiers
 {
-    public class Soldier : IMove
+    public class Soldier
     {
         public int Level { get; set; }
         public int[] UpgradePrice { get; set; }
@@ -53,6 +53,6 @@ namespace TowerDefence_SharedContent.Soldiers
                 default:
                     return false;
             }
-        }       
+        }
     }
 }

@@ -6,7 +6,7 @@ using TowerDefence_SharedContent.Towers;
 
 namespace TowerDefence_SharedContent
 {
-    public class Bullet : ShootAlgorithm, IMove
+    public class Bullet : Ammunition, IMove
     {
         public override Point Coordinates { get; set; }
         public override int Speed { get; set; }

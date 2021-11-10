@@ -86,7 +86,7 @@ namespace TowerDefence_ServerSide
             }
         }
 
-        public void AddTower(Tower tower, PlayerType playerType)
+        public void AddTower(TowerDefence_SharedContent.Towers.Tower tower, PlayerType playerType)
         {
             lock (mapObservers)
             {

@@ -51,7 +51,7 @@ namespace TowerDefence_SharedContent
                 var towersJson = player["towers"].Children();
                 
 
-                var towers = new List<Tower>();
+                var towers = new List<Towers.Tower>();
                 foreach (JToken tower in towersJson)
                 {
                     towers.Add(ParseTower(tower));
@@ -62,7 +62,7 @@ namespace TowerDefence_SharedContent
             }
             return map;
         }
-        public Tower ParseTower(JToken token)
+        public Towers.Tower ParseTower(JToken token)
         {
             var level = token["Level"].ToObject<int>();
             var price = token["Price"].ToObject<int[]>();
@@ -75,7 +75,7 @@ namespace TowerDefence_SharedContent
             var towerType = token["TowerType"].ToObject<TowerType>();
             var shootingCooldown = token["ShootingCooldown"].ToObject<int>();
 
-            var ammunition = new List<ShootAlgorithm>();
+            var ammunition = new List<Ammunition>();
             foreach (JToken amm in ammunitionJson)
             {
                 ammunition.Add(ParseAmmunition(amm));
@@ -94,7 +94,7 @@ namespace TowerDefence_SharedContent
             }
         }
 
-        public ShootAlgorithm ParseAmmunition(JToken token)
+        public Ammunition ParseAmmunition(JToken token)
         {
             var type = token["AmmunitionType"].ToObject<AmmunitionType>();
             switch (type)

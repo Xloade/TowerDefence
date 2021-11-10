@@ -72,7 +72,7 @@ namespace TowerDefence_SharedContent
             }
         }
 
-        public void AddTower(Tower tower, PlayerType playerType)
+        public void AddTower(Towers.Tower tower, PlayerType playerType)
         {
             MyConsole.WriteLineWithCount("Observer: Update Map");
             lock (this)
