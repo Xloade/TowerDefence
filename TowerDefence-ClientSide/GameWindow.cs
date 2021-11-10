@@ -10,7 +10,6 @@ using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_ClientSide.Prototype;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using System.Runtime.InteropServices;
 
 namespace TowerDefence_ClientSide
 {
@@ -40,7 +39,6 @@ namespace TowerDefence_ClientSide
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
             1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER, BUTTON_QUICK_BUY)
         {
-            AllocConsole();
             gameCursor = new GameCursor(this, playerType);
             cursorCommand = new CursorCommand(gameCursor);
             this.playerType = playerType;
@@ -50,10 +48,6 @@ namespace TowerDefence_ClientSide
             renderTimer.Interval = 10;
             renderTimer.Start();
         }
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
 
         private void RenderTimer_Tick(object sender, EventArgs e)
         {
