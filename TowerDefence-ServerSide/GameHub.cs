@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using TowerDefence_SharedContent.Towers;
 using TowerDefence_SharedContent.Soldiers;
 using System.Drawing;
+using System.Threading;
 
 namespace TowerDefence_ServerSide
 {
@@ -47,9 +48,24 @@ namespace TowerDefence_ServerSide
         }
         public void restartGame()
         {
-            MapController.restartInstance();
-            Console.WriteLine($"restartGame");
+
         }
+        public void buyTwoSoldier(PlayerType playerType, SoldierType soldierType)
+        {
+            Thread thread1 = new Thread(new ThreadStart(() =>
+            {
+                var controller = MapController.getInstance();
+                controller.AddSoldier(TrainConcreteSoldier(playerType, soldierType), playerType);
+            }));
+            Thread thread2 = new Thread(new ThreadStart(() =>
+            {
+                var controller = MapController.getInstance();
+                controller.AddSoldier(TrainConcreteSoldier(playerType, soldierType), playerType);
+            }));
+            thread1.Start();
+            thread2.Start();
+        }
+
         public void deleteTower(PlayerType playerType)
         {
             MapController mapController = MapController.getInstance();

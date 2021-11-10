@@ -11,7 +11,7 @@ namespace TowerDefence_SharedContent
         private static Dictionary<string, int> writeWithCount = new Dictionary<string, int>();
         static private Timer timer = new Timer();
         static private Dictionary<string, List<int>> randomIds = new Dictionary<string, List<int>>();
-
+        static Random rnd = new Random();
         static MyConsole()
         {
             timer.Interval = 1000;
@@ -67,7 +67,7 @@ namespace TowerDefence_SharedContent
                 }
             }
         }
-        static void LookForMultiThreads(string message, int randomId)
+        static public bool LookForMultiThreads(string message, int randomId)
         {
             lock (randomIds)
             {
@@ -81,8 +81,22 @@ namespace TowerDefence_SharedContent
                     if (currentRandIds[currentRandIds.Count - 1] != randomId)
                     {
                         WriteLineWithCount($"\"{message}\" in multiple threads detected");
+                        return true;
                     }
+                    currentRandIds.Remove(randomId);
                 }
+                else
+                {
+                    currentRandIds.Add(randomId);
+                }
+            }
+            return false;
+        }
+        public static int Random()
+        {
+            lock (rnd)
+            {
+                return rnd.Next();
             }
         }
     }

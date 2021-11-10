@@ -5,6 +5,7 @@ using System.Timers;
 using TowerDefence_SharedContent;
 using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_SharedContent.Towers;
+using System.Threading;
 
 namespace TowerDefence_ServerSide
 {
@@ -13,8 +14,9 @@ namespace TowerDefence_ServerSide
         private List<IMapObserver> mapObservers = new List<IMapObserver>();
 
         static IHubContext<GameHub> hubContext;
-        public Timer timer = new Timer();
+        public System.Timers.Timer timer = new System.Timers.Timer();
         public static double timerSpeed = 36; //~30times per second
+        public static bool foundThreading = false;
 
         private static MapController instance;
 
@@ -24,6 +26,8 @@ namespace TowerDefence_ServerSide
         }
 
         public static MapController getInstance(){
+            int random = MyConsole.Random();
+            MyConsole.LookForMultiThreads("Singleton", random);
             try
             {
                 lock (instance)
@@ -35,6 +39,11 @@ namespace TowerDefence_ServerSide
             {
                 throw new Exception("instance not yet created");
             }
+            finally
+            {
+                MyConsole.LookForMultiThreads("Singleton", random);
+            }
+
         }
         public static void createInstance(){
             if (instance != null) return;
@@ -61,40 +70,65 @@ namespace TowerDefence_ServerSide
             timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
             {
                 Notify();
-                await hubContext.Clients.All.SendAsync("ReceiveMessage", mapObservers[0].ToJson());
+                if(mapObservers.Count > 0)
+                {
+                    await hubContext.Clients.All.SendAsync("ReceiveMessage", mapObservers[0].ToJson());
+                }
             };
         }
 
         public void AddSoldier(Soldier soldier, PlayerType playerType)
         {
-            mapObservers[0].AddSoldier(soldier, playerType);
+            lock (mapObservers)
+            {
+                mapObservers[0].AddSoldier(soldier, playerType);
+            }
         }
 
         public void AddTower(Tower tower, PlayerType playerType)
         {
-            mapObservers[0].AddTower(tower, playerType);
+            lock (mapObservers)
+            {
+                mapObservers[0].AddTower(tower, playerType);
+            }
         }
 
         public void AddPlayer(PlayerType playerType)
         {
-            mapObservers[0].AddPlayer(playerType);
+            lock (mapObservers)
+            {
+                mapObservers[0].AddPlayer(playerType);
+            }
         }
 
         public void Attach(IMapObserver mapObserver)
         {
             Console.WriteLine("Observer: Attach map observer");
-            mapObservers.Add(mapObserver);
+            lock (mapObservers)
+            {
+                mapObservers.Add(mapObserver);
+            }
         }
 
         public void Deattach(IMapObserver mapObserver)
         {
-            mapObservers.Remove(mapObserver);
+            lock (mapObservers)
+            {
+                mapObservers.Remove(mapObserver);
+            }
+            
         }
 
         public void Notify()
         {
-            mapObservers[0].UpdateSoldierMovement();
-            mapObservers[0].UpdateTowerActivity();
+            lock (mapObservers)
+            {
+                if(mapObservers.Count > 0)
+                {
+                    mapObservers[0].UpdateSoldierMovement();
+                    mapObservers[0].UpdateTowerActivity();
+                }
+            }
         }
     }
 }

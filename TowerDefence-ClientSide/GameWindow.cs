@@ -21,6 +21,7 @@ namespace TowerDefence_ClientSide
         private const string BUTTON_RESTART_GAME = "Restart game";
         private const string BUTTON_DELETE_TOWER = "Delete tower";
         private const string BUTTON_UPGRADE_SOLDIER = "Upgrade soldier";
+        private const string BUTTON_QUICK_BUY = "Quick buy two";
         private const string SERVER_URL = "https://localhost:5001/GameHub";
         Map currentMap;
         List<IDraw> shapes = new List<IDraw>();
@@ -37,7 +38,7 @@ namespace TowerDefence_ClientSide
         private System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
-            1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER)
+            1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER, BUTTON_QUICK_BUY)
         {
             AllocConsole();
             gameCursor = new GameCursor(this, playerType);
@@ -189,6 +190,9 @@ namespace TowerDefence_ClientSide
                     break;
                 case BUTTON_RESTART_GAME:
                     connection.SendAsync("restartGame");
+                    break;
+                case BUTTON_QUICK_BUY:
+                    connection.SendAsync("buyTwoSoldier", playerType, SoldierType.HitpointsSoldier);
                     break;
                 default:
                     break;
