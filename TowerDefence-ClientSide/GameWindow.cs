@@ -10,6 +10,7 @@ using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_ClientSide.Prototype;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Runtime.InteropServices;
 
 namespace TowerDefence_ClientSide
 {
@@ -46,7 +47,13 @@ namespace TowerDefence_ClientSide
             renderTimer.Tick += RenderTimer_Tick;
             renderTimer.Interval = 10;
             renderTimer.Start();
+            AllocConsole();
+            Console.WriteLine("test");
         }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
 
         private void RenderTimer_Tick(object sender, EventArgs e)
         {
