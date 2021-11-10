@@ -8,7 +8,7 @@ namespace TowerDefence_SharedContent.Soldiers
     {
         public SpeedSoldierBuilder(PlayerType playerType, SoldierType soldierType, int level)
         {
-            Console.WriteLine("Builder: build speed soldier");
+            MyConsole.WriteLineWithCount("Builder: build speed soldier");
             soldier = new Soldier(playerType, soldierType, level);
         }
         public override void BuildHitpoints()

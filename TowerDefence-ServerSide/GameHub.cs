@@ -36,7 +36,7 @@ namespace TowerDefence_ServerSide
         {
             MapController mapController = MapController.getInstance();
             mapController.AddSoldier(TrainConcreteSoldier(playerType, soldierType), playerType);
-            Console.WriteLine($"{playerType.ToString()}: buySoldier");
+            MyConsole.WriteLineWithCount($"{playerType.ToString()}: buySoldier");
         }
 
         public void buyTower(PlayerType playerType, TowerType towerType, string coordinates)
@@ -44,7 +44,7 @@ namespace TowerDefence_ServerSide
             var point = JsonConvert.DeserializeObject<Point>(coordinates);
             MapController mapController = MapController.getInstance();
             mapController.AddTower(towerFactory.CreateTower(playerType, towerType, point), playerType);
-            Console.WriteLine($"{playerType.ToString()}: buyTower");                   
+            MyConsole.WriteLineWithCount($"{playerType.ToString()}: buyTower");                   
         }
         public void restartGame()
         {
@@ -70,7 +70,7 @@ namespace TowerDefence_ServerSide
         {
             MapController mapController = MapController.getInstance();
            // mapController.map.deleteTower(playerType);
-            Console.WriteLine($"{playerType.ToString()}: deleteTower");
+            MyConsole.WriteLineWithCount($"{playerType.ToString()}: deleteTower");
 
         }
 
@@ -78,7 +78,7 @@ namespace TowerDefence_ServerSide
         {
             MapController mapController = MapController.getInstance();
            // mapController.map.upgradeSoldier(playerType, 2);
-            Console.WriteLine($"{playerType.ToString()}: upgradeSoldier");
+            MyConsole.WriteLineWithCount($"{playerType.ToString()}: upgradeSoldier");
         }
 
         private Soldier TrainConcreteSoldier(PlayerType playerType, SoldierType soldierType)

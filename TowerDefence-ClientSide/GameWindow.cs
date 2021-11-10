@@ -349,28 +349,28 @@ namespace TowerDefence_ClientSide
                         LifePointsText.Visible = true;
                         TowerCurrencyText.Visible = true;
                         SoldierCurrencyText.Visible = true;
-                        Console.WriteLine("Adapter: show all");
+                        MyConsole.WriteLineWithCount("Adapter: show all");
                         break;
                     case "Lifepoints":                        
                         PlayerStatsShowStatus = PlayerStatsShowStatus.Lifepoints;
                         LifePointsText.Visible = true;
                         TowerCurrencyText.Visible = false;
                         SoldierCurrencyText.Visible = false;
-                        Console.WriteLine("Adapter: show lifepoints");
+                        MyConsole.WriteLineWithCount("Adapter: show lifepoints");
                         break;
                     case "Tower Currency":
                         PlayerStatsShowStatus = PlayerStatsShowStatus.TowerCurrency;
                         LifePointsText.Visible = false;
                         TowerCurrencyText.Visible = true;
                         SoldierCurrencyText.Visible = false;
-                        Console.WriteLine("Adapter: show tower currency");
+                        MyConsole.WriteLineWithCount("Adapter: show tower currency");
                         break;
                     case "Soldier Currency":                        
                         PlayerStatsShowStatus = PlayerStatsShowStatus.SoldierCurrency;
                         LifePointsText.Visible = false;
                         TowerCurrencyText.Visible = false;
                         SoldierCurrencyText.Visible = true;
-                        Console.WriteLine("Adapter: show soldier currency");
+                        MyConsole.WriteLineWithCount("Adapter: show soldier currency");
                         break;
                 }
             }

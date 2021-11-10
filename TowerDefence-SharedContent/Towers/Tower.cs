@@ -102,7 +102,7 @@ namespace TowerDefence_SharedContent.Towers
             }
             ShootingCooldown = (int)(600/RateOfFire[Level]);
             GameElementFactory ammunitionFactory = new AmmunitionFactory();
-            Console.WriteLine("----- Strategy -----");
+            MyConsole.WriteLineWithCount("----- Strategy -----");
             if (this is MiniGunTower)
                 Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Bullet, Power[Level]));
             else if (this is RocketTower)

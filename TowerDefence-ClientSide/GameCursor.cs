@@ -18,13 +18,13 @@ namespace TowerDefence_ClientSide
         public void Change(TowerType towerType)
         {
             CursorChange.OnCursorChanged(new Cursor(SpritePaths.GetTowerCursor(PlayerType, towerType)), CursorState.Modified);
-            Console.WriteLine("Command: Do");
+            MyConsole.WriteLineWithCount("Command: Do");
         }
 
         public void Reset()
         {
             CursorChange.OnCursorChanged(Cursors.Default, CursorState.Default);
-            Console.WriteLine("Command: Undo");
+            MyConsole.WriteLineWithCount("Command: Undo");
         }
     }
 }

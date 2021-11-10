@@ -9,7 +9,7 @@ namespace TowerDefence_SharedContent.Towers
     {
         public override Tower CreateTower(PlayerType playerType, TowerType towerType, Point coordinates)
         {
-            Console.WriteLine($"Abstract Factory: Create Tower {towerType}");
+            MyConsole.WriteLineWithCount($"Abstract Factory: Create Tower {towerType}");
             return towerType switch
             {                
                 TowerType.Minigun => new MiniGunTower(playerType, towerType, coordinates),

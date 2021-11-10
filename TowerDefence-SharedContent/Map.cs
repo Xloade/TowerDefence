@@ -58,7 +58,7 @@ namespace TowerDefence_SharedContent
 
         public void AddSoldier(Soldier soldier, PlayerType playerType)
         {
-            Console.WriteLine("Observer: Update Map");
+            MyConsole.WriteLineWithCount("Observer: Update Map");
             lock (this)
             {
                 foreach (Player player in players)
@@ -74,7 +74,7 @@ namespace TowerDefence_SharedContent
 
         public void AddTower(Tower tower, PlayerType playerType)
         {
-            Console.WriteLine("Observer: Update Map");
+            MyConsole.WriteLineWithCount("Observer: Update Map");
             lock (this)
             {
                 foreach (Player player in players)

@@ -103,7 +103,7 @@ namespace TowerDefence_ServerSide
 
         public void Attach(IMapObserver mapObserver)
         {
-            Console.WriteLine("Observer: Attach map observer");
+            MyConsole.WriteLineWithCount("Observer: Attach map observer");
             lock (mapObservers)
             {
                 mapObservers.Add(mapObserver);
