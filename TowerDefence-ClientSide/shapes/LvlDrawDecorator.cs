@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
@@ -15,7 +16,7 @@ namespace TowerDefence_ClientSide
         public override void Draw(Graphics gr)
         {
             base.Draw(gr);
-
+            MyConsole.WriteLineWithCount("|   LVL wrapper");
             // Create font and brush.
             Font drawFont = new Font("Arial", 10);
             SolidBrush drawBrush = new SolidBrush(Color.Black);

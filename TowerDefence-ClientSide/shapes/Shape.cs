@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
@@ -35,6 +36,7 @@ namespace TowerDefence_ClientSide
         }
         public void Draw(Graphics gr)
         {
+            MyConsole.WriteLineWithCount("Drawing shape");
             int biggerSide = (int)(Math.Max(Width, Height) * 1.5);
             Bitmap bmp = new Bitmap(biggerSide, biggerSide);
 

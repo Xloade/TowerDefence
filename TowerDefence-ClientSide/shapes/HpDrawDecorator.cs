@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
@@ -17,7 +18,7 @@ namespace TowerDefence_ClientSide
         public override void Draw(Graphics gr)
         {
             base.Draw(gr);
-
+            MyConsole.WriteLineWithCount("|   Hp wrapper");
             Bitmap bmp = new Bitmap(50, 10);
 
             using (Graphics grImage = Graphics.FromImage(bmp))
