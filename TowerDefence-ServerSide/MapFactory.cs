@@ -11,24 +11,28 @@ namespace TowerDefence_ServerSide
     {
         private Map CreateSummerMap()
         {
+            MyConsole.WriteLineWithCount("MapFactory: Summer");
             Map map = new Map();
             map.backgroundImageDir = SpritePaths.getMap("Summer");
             return map;
         }
         private Map CreateSpringMap()
         {
+            MyConsole.WriteLineWithCount("MapFactory: Spring");
             Map map = new Map();
             map.backgroundImageDir = SpritePaths.getMap("Spring");
             return map;
         }
         private Map CreateWinterMap()
         {
+            MyConsole.WriteLineWithCount("MapFactory: Winter");
             Map map = new Map();
             map.backgroundImageDir = SpritePaths.getMap("Winter");
             return map;
         }
         private Map CreateAutumnMap()
         {
+            MyConsole.WriteLineWithCount("MapFactory: Autumn");
             Map map = new Map();
             map.backgroundImageDir = SpritePaths.getMap("Autumn");
             return map;
