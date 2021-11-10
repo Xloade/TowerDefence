@@ -9,7 +9,8 @@ namespace TowerDefence_SharedContent
     {
         private static List<string> writeOnce = new List<string>();
         private static Dictionary<string, int> writeWithCount = new Dictionary<string, int>();
-        static Timer timer = new Timer();
+        static private Timer timer = new Timer();
+        static private Dictionary<string, List<int>> randomIds = new Dictionary<string, List<int>>();
 
         static MyConsole()
         {
@@ -63,6 +64,24 @@ namespace TowerDefence_SharedContent
                 foreach (string message in writeOnce)
                 {
                     Console.WriteLine(message);
+                }
+            }
+        }
+        static void LookForMultiThreads(string message, int randomId)
+        {
+            lock (randomIds)
+            {
+                if (!randomIds.ContainsKey(message))
+                {
+                    randomIds.Add(message, new List<int>());
+                }
+                List<int> currentRandIds = randomIds[message];
+                if (currentRandIds.Contains(randomId))
+                {
+                    if (currentRandIds[currentRandIds.Count - 1] != randomId)
+                    {
+                        WriteLineWithCount($"\"{message}\" in multiple threads detected");
+                    }
                 }
             }
         }
