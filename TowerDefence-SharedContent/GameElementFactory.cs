@@ -8,7 +8,7 @@ namespace TowerDefence_SharedContent
 {
     public abstract class GameElementFactory
     {
-        public abstract Towers.Tower CreateTower(PlayerType playerType, TowerType towerType, Point coordinates);
+        public abstract Tower CreateTower(PlayerType playerType, TowerType towerType, Point coordinates);
         public abstract Ammunition CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType, int power);
     }
 }
