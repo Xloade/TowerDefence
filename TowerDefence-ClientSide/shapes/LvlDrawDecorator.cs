@@ -8,10 +8,10 @@ namespace TowerDefence_ClientSide
 {
     class LvlDrawDecorator : DrawDecorator
     {
-        private int _level;
-        public LvlDrawDecorator(IDraw decoratedDraw, int level) : base(decoratedDraw)
+        private Ilevel Level;
+        public LvlDrawDecorator(IDraw decoratedDraw, Ilevel level) : base(decoratedDraw)
         {
-            _level = level;
+            Level = level;
         }
         public override void Draw(Graphics gr)
         {
@@ -28,7 +28,7 @@ namespace TowerDefence_ClientSide
             // Draw string to screen.
             lock (gr)
             {
-                gr.DrawString($"lvl:{_level}", drawFont, drawBrush, CenterX - (Width/2)+10, CenterY + (Height / 2), drawFormat);
+                gr.DrawString($"lvl:{Level.Level}", drawFont, drawBrush, CenterX - (Width/2)+10, CenterY + (Height / 2), drawFormat);
             }
         }
     }

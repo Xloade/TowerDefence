@@ -71,17 +71,13 @@ namespace TowerDefence_ClientSide
 
             foreach (Player player in map.players)
             {
-                updateSoldiers(player.soldiers, GetRotation(player.PlayerType));
+                updateSoldiers(player.soldiers);
                 updateTowers(player.towers, player.PlayerType);
             }
 
             Refresh();
         }
 
-        private int GetRotation(PlayerType playerType)
-        {
-            return playerType == PlayerType.PLAYER1 ? 90 : -90;
-        }
 
         //rotation temporary
         private void updateMapColor(string image)
@@ -89,14 +85,14 @@ namespace TowerDefence_ClientSide
 
             this.bgImage = lazyImageDictionary.get(image);
         }
-        private void updateSoldiers(List<Soldier> soldiers, float rotation)
+        private void updateSoldiers(List<Soldier> soldiers)
         {
             soldiers.ForEach((soldier) =>
             {
                 IDraw firstWrap = new Shape(soldier, 100, 100, lazyImageDictionary.get(soldier.Sprite));
-                IDraw secondWrap = new LvlDrawDecorator(firstWrap, soldier.Level);
-                IDraw thirdWrap = new NameDrawDecorator(secondWrap, soldier.SoldierType.ToString());
-                IDraw fourthWrap = new HpDrawDecorator(thirdWrap, (int)(soldier.Hitpoints[soldier.Level]), (int)soldier.CurrentHitpoints);
+                IDraw secondWrap = new LvlDrawDecorator(firstWrap, soldier);
+                IDraw thirdWrap = new NameDrawDecorator(secondWrap, soldier);
+                IDraw fourthWrap = new HpDrawDecorator(thirdWrap, soldier);
                 shapes.Add(fourthWrap);
             });
         }
@@ -106,8 +102,8 @@ namespace TowerDefence_ClientSide
             towers.ForEach((tower) =>
             {
                 IDraw firstWrap = new Shape(tower, 100, 100, lazyImageDictionary.get(tower.Sprite));
-                IDraw secondWrap = new LvlDrawDecorator(firstWrap, tower.Level);
-                IDraw thirdWrap = new NameDrawDecorator(secondWrap, tower.TowerType.ToString());
+                IDraw secondWrap = new LvlDrawDecorator(firstWrap, tower);
+                IDraw thirdWrap = new NameDrawDecorator(secondWrap, tower);
                 shapes.Add(thirdWrap);
                 updateAmmunition(tower.Ammunition);
             });

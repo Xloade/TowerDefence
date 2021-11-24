@@ -6,18 +6,19 @@ using TowerDefence_SharedContent.Soldiers;
 
 namespace TowerDefence_SharedContent.Towers
 {
-    public abstract class Tower: DrawInfo
+    public class Tower: DrawInfo, Ilevel, IName
     {
         protected CanShootAlgorithm canShootAlgorithm;
-        public abstract int Level { get; set; }
-        public abstract int[] Price  { get; set; }
-        public abstract int[] Range { get; set; }
+        public int Level { get; set; }
+        public int[] Price  { get; set; }
+        public int[] Range { get; set; }
         public int[] Power { get; set; }
-        public abstract double[] RateOfFire { get; set; }
-        public abstract List<Ammunition> Ammunition { get; set; }
-        public abstract TowerType TowerType { get; set; }
-        public abstract int ShootingCooldown { get; set; }
-        private PlayerType PlayerType { get; set; }
+        public double[] RateOfFire { get; set; }
+        public List<Ammunition> Ammunition { get; set; }
+        public TowerType TowerType { get; set; }
+        public int ShootingCooldown { get; set; }
+        public PlayerType PlayerType { get; set; }
+        public string Name { get { return TowerType.ToString(); } }
 
         public Tower(PlayerType playerType, TowerType towerType, Point coordinates)
         {
@@ -28,10 +29,11 @@ namespace TowerDefence_SharedContent.Towers
             Sprite = SpritePaths.getTower(playerType, towerType);
             ShootingCooldown = 0;
             PlayerType = playerType;
+            Rotation = playerType == PlayerType.PLAYER1 ? 90 : -90;
         }
 
         public Tower(int level, int[] price, Point coordinates, int[] range, int[]power, double[]rateOfFire,
-            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown)
+            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType)
         {
             Level = level;
             Price = price;
@@ -43,6 +45,8 @@ namespace TowerDefence_SharedContent.Towers
             Ammunition = ammunition;
             TowerType = towerType;
             ShootingCooldown = shootingCooldown;
+            PlayerType = playerType;
+            Rotation = playerType == PlayerType.PLAYER1 ? 90 : -90;
         }
 
         public void MoveAmmunition(PlayerType type)
