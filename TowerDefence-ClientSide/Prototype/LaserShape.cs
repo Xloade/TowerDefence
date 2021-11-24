@@ -6,25 +6,14 @@ using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide.Prototype
 {
-    class LaserShape : AmmunitionShapes
+    class LaserShape : Shape
     {
-        public override Shape Shape { get; set; }
-        public override string Sprite { get; set; }
-        public override int Width { get; set; }
-        public override int Height { get; set; }
-        public override float Rotation { get; set; }
-        public override Point Coordinates { get; set; }
-        public override LazyImageDictionary lazyImageDictionary { get; set; }
-
-        public LaserShape(Point coordinates, float rotation) : base(coordinates, rotation)
+        public LaserShape()
         {
-            Coordinates = new Point(coordinates.X + Height, coordinates.Y);
-            Sprite = SpritePaths.getLaser();
             Width = 50;
             Height = 500;
-            Rotation = rotation;
-            lazyImageDictionary = new LazyImageDictionary();
-            Shape = new Shape(Coordinates, Width, Height, Rotation, lazyImageDictionary.get(Sprite));
+            LazyImageDictionary lazyImageDictionary = new LazyImageDictionary();
+            this.spriteImage = lazyImageDictionary.get(SpritePaths.getLaser());
         }
     }
 }

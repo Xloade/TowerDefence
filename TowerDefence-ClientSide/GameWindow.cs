@@ -93,7 +93,7 @@ namespace TowerDefence_ClientSide
         {
             soldiers.ForEach((soldier) =>
             {
-                IDraw firstWrap = new Shape(soldier.Coordinates, 100, 100, rotation, lazyImageDictionary.get(soldier.Sprite));
+                IDraw firstWrap = new Shape(soldier, 100, 100, lazyImageDictionary.get(soldier.Sprite));
                 IDraw secondWrap = new LvlDrawDecorator(firstWrap, soldier.Level);
                 IDraw thirdWrap = new NameDrawDecorator(secondWrap, soldier.SoldierType.ToString());
                 IDraw fourthWrap = new HpDrawDecorator(thirdWrap, (int)(soldier.Hitpoints[soldier.Level]), (int)soldier.CurrentHitpoints);
@@ -105,35 +105,23 @@ namespace TowerDefence_ClientSide
         {
             towers.ForEach((tower) =>
             {
-                IDraw firstWrap = new Shape(tower.Coordinates, 100, 100, GetRotation(playerType), lazyImageDictionary.get(tower.Sprite));
+                IDraw firstWrap = new Shape(tower, 100, 100, lazyImageDictionary.get(tower.Sprite));
                 IDraw secondWrap = new LvlDrawDecorator(firstWrap, tower.Level);
                 IDraw thirdWrap = new NameDrawDecorator(secondWrap, tower.TowerType.ToString());
                 shapes.Add(thirdWrap);
-                updateAmmunition(tower.Ammunition, CreateShape(tower.Coordinates, GetRotation(playerType), tower.TowerType));
+                updateAmmunition(tower.Ammunition);
             });
         }
 
-        private void updateAmmunition(List<Ammunition> ammunition, Shape ammunitionShape)
+        private void updateAmmunition(List<Ammunition> ammunition)
         {
             ammunition.ForEach((amm) =>
             {
-                Shape temp = (Shape)ammunitionShape.Clone();
-                temp.CenterX = amm.Coordinates.X;
-                temp.CenterY = amm.Coordinates.Y;
+                Shape temp = AmunitionStore.getAmunitionShape(amm.AmmunitionType);
+                temp.Info = amm;
                 shapes.Add(temp);
             });
         }
-
-        public Shape CreateShape(Point coordinates, float rotation, TowerType towerType)
-        {
-            if (towerType is TowerType.Minigun)
-                return new BulletShape(coordinates, rotation).Shape;
-            else if (towerType is TowerType.Laser)
-                return new LaserShape(coordinates, rotation).Shape;
-            else
-                return new RocketShape(coordinates, rotation).Shape;
-        }
-
         private void startSignalR(String mapType)
         {
             connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();

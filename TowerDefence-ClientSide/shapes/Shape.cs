@@ -12,9 +12,9 @@ namespace TowerDefence_ClientSide
 
 
         public DrawInfo Info { get; set; }
-        float CenterX { get{ return Info.Coordinates.X} }
-        float CenterY { get { return Info.Coordinates.Y} }
-        float Rotation { get { return Info.Rotation} }
+        public float CenterX { get{ return Info.Coordinates.X; } }
+        public float CenterY { get { return Info.Coordinates.Y; } }
+        public float Rotation { get { return Info.Rotation; } }
 
         public Image spriteImage;
 
@@ -25,6 +25,7 @@ namespace TowerDefence_ClientSide
             this.spriteImage = (Image)spriteImage.Clone();
             Info = drawInfo;
         }
+
 
         public Shape()
         {
@@ -47,9 +48,9 @@ namespace TowerDefence_ClientSide
                 lock (this)
                 {
                     //bullet prototipe doesnt do deep enough copy
-                    lock (sprite)
+                    lock (spriteImage)
                     {
-                        grImage.DrawImage(sprite, 0, 0, Width, Height);
+                        grImage.DrawImage(spriteImage, 0, 0, Width, Height);
                     }
                 }
             }
