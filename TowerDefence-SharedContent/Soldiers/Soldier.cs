@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace TowerDefence_SharedContent.Soldiers
 {
-    public class Soldier
+    public class Soldier: IdableObject
     {
         public int Level { get; set; }
         public int[] UpgradePrice { get; set; }

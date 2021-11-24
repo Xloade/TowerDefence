@@ -6,7 +6,7 @@ using TowerDefence_SharedContent.Soldiers;
 
 namespace TowerDefence_SharedContent.Towers
 {
-    public abstract class Tower
+    public abstract class Tower: IdableObject
     {
         protected CanShootAlgorithm canShootAlgorithm;
         public abstract int Level { get; set; }
