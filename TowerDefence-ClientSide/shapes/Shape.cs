@@ -12,9 +12,9 @@ namespace TowerDefence_ClientSide
 
 
         public DrawInfo Info { get; set; }
-        float IDraw.CenterX { get{ return Info.Coordinates.X} }
-        float IDraw.CenterY { get { return Info.Coordinates.Y} }
-        float IDraw.Rotation { get { return Info.Rotation} }
+        float CenterX { get{ return Info.Coordinates.X} }
+        float CenterY { get { return Info.Coordinates.Y} }
+        float Rotation { get { return Info.Rotation} }
 
         public Image spriteImage;
 
