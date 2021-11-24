@@ -9,10 +9,8 @@ namespace TowerDefence_SharedContent.Towers
     {
         public override int Level { get; set; }
         public override int[] Price { get; set; }
-        public override Point Coordinates { get; set; }
         public override int[] Range { get; set; }
         public override double[] RateOfFire { get; set; }
-        public override string Sprite { get; set; }
         public override List<Ammunition> Ammunition { get; set; }
         public override TowerType TowerType { get; set; }
         public override int ShootingCooldown { get; set; }

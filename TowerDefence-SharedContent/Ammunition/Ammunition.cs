@@ -6,18 +6,18 @@ using TowerDefence_SharedContent.Towers;
 
 namespace TowerDefence_SharedContent
 {
-    public abstract class Ammunition : IMove
+    public abstract class Ammunition : DrawInfo, IMove
     {
-        public abstract Point Coordinates { get; set; }
         public abstract int Speed { get; set; }
         public int Power { get; set; }
         public abstract AmmunitionType AmmunitionType { get; set; }
 
-        public Ammunition(Point towerCoordinates, AmmunitionType ammunitionType, int power)
+        public Ammunition(Point towerCoordinates, AmmunitionType ammunitionType, int power, PlayerType playerType)
         {
             Coordinates = towerCoordinates;
             AmmunitionType = ammunitionType;
             Power = power;
+            Rotation = playerType == PlayerType.PLAYER1 ? 90 : -90;
         }
 
         public abstract void MoveForward(PlayerType playerType);

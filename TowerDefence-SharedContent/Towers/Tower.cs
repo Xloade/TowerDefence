@@ -6,19 +6,18 @@ using TowerDefence_SharedContent.Soldiers;
 
 namespace TowerDefence_SharedContent.Towers
 {
-    public abstract class Tower: IdableObject
+    public abstract class Tower: DrawInfo
     {
         protected CanShootAlgorithm canShootAlgorithm;
         public abstract int Level { get; set; }
         public abstract int[] Price  { get; set; }
-        public abstract Point Coordinates { get; set; }
         public abstract int[] Range { get; set; }
         public int[] Power { get; set; }
         public abstract double[] RateOfFire { get; set; }
-        public abstract string Sprite { get; set; }
         public abstract List<Ammunition> Ammunition { get; set; }
         public abstract TowerType TowerType { get; set; }
         public abstract int ShootingCooldown { get; set; }
+        private PlayerType PlayerType { get; set; }
 
         public Tower(PlayerType playerType, TowerType towerType, Point coordinates)
         {
@@ -28,6 +27,7 @@ namespace TowerDefence_SharedContent.Towers
             TowerType = towerType;
             Sprite = SpritePaths.getTower(playerType, towerType);
             ShootingCooldown = 0;
+            PlayerType = playerType;
         }
 
         public Tower(int level, int[] price, Point coordinates, int[] range, int[]power, double[]rateOfFire,
@@ -103,11 +103,11 @@ namespace TowerDefence_SharedContent.Towers
             GameElementFactory ammunitionFactory = new AmmunitionFactory();
             MyConsole.WriteLineWithCount("----- Strategy -----");
             if (this is MiniGunTower)
-                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Bullet, Power[Level]));
+                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Bullet, Power[Level], this.PlayerType));
             else if (this is RocketTower)
-                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Rocket, Power[Level]));
+                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Rocket, Power[Level], this.PlayerType));
             else if  (this is LaserTower)
-                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Laser, Power[Level]));
+                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Laser, Power[Level], this.PlayerType));
         }
     }
 }

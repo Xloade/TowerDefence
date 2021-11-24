@@ -8,10 +8,9 @@ namespace TowerDefence_SharedContent
 {
     public class Laser : Ammunition, IMove
     {
-        public override Point Coordinates { get; set; }
         public override int Speed { get; set; }
         public override AmmunitionType AmmunitionType { get; set; }
-        public Laser(Point towerCoordinates, AmmunitionType ammunitionType, int power) : base(towerCoordinates, ammunitionType, power)
+        public Laser(Point towerCoordinates, AmmunitionType ammunitionType, int power, PlayerType playerType) : base(towerCoordinates, ammunitionType, power, playerType)
         {
             Coordinates = towerCoordinates;
             Speed = 50;
