@@ -6,33 +6,28 @@ namespace TowerDefence_ClientSide
 {
     public class Shape : IDraw, ICloneable
     {
-        public float CenterX { get; set; }
-        public float CenterY { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
-        public float Rotation { get; set; }
 
-        public Image sprite;
 
-        public Shape(Point center, float width, float height, float rotation, Image sprite) : this(center, width, height, sprite)
-        {
-            Rotation = rotation;
-        }
 
-        public Shape(Point center, float width, float height, Image sprite) : this(center)
+        public DrawInfo Info { get; set; }
+        float IDraw.CenterX { get{ return Info.Coordinates.X} }
+        float IDraw.CenterY { get { return Info.Coordinates.Y} }
+        float IDraw.Rotation { get { return Info.Rotation} }
+
+        public Image spriteImage;
+
+        public Shape(DrawInfo drawInfo, float width, float height, Image spriteImage)
         {
             Width = width;
             Height = height;
-            this.sprite = (Image)sprite.Clone();
+            this.spriteImage = (Image)spriteImage.Clone();
+            Info = drawInfo;
         }
 
         public Shape()
         {
-        }
-        public Shape(Point center)
-        {
-            CenterX = center.X;
-            CenterY = center.Y;
         }
         public void Draw(Graphics gr)
         {
