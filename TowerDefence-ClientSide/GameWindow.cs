@@ -10,6 +10,7 @@ using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_ClientSide.Prototype;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using TowerDefence_ClientSide.Proxy;
 
 namespace TowerDefence_ClientSide
 {
@@ -35,18 +36,26 @@ namespace TowerDefence_ClientSide
         private Command cursorCommand;
         private string towerToBuy = "";
         private System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
+        private ServerConnection serverConnection;
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
             1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER, BUTTON_QUICK_BUY)
         {
             gameCursor = new GameCursor(this, playerType);
             cursorCommand = new CursorCommand(gameCursor);
+            serverConnection = new ServerConnection(SERVER_URL);
             this.playerType = playerType;
             startSignalR(mapType);
             MapParser.CreateInstance();
             renderTimer.Tick += RenderTimer_Tick;
             renderTimer.Interval = 10;
             renderTimer.Start();
+        }
+
+        private void SetupServerConnection()
+        {
+            serverConnection.MessageTransferedHandler += new MessageTransferedHandler(ReceiveMessage);
+            serverConnection.SubscribeToServer();
         }
 
         private void RenderTimer_Tick(object sender, EventArgs e)
@@ -232,7 +241,7 @@ namespace TowerDefence_ClientSide
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             graphicalTimer.Stop();
-            connection.StopAsync();
+            serverConnection.UnsubscribeFromServer();
             base.OnFormClosing(e);
         }
 

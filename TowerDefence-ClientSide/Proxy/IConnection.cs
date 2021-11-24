@@ -10,5 +10,7 @@ namespace TowerDefence_ClientSide.Proxy
     {
         void SendMessage(Message message);
         HubConnection GetConnection();
+        void SubscribeToServer();
+        void UnsubscribeFromServer();
     }
 }

@@ -1,35 +1,69 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TowerDefence_ClientSide.Proxy
 {
     public class Connection : IConnection
     {
         private HubConnection HubConnection;
-        private List<Message> Messages;
-        private ConnectionState ConnectionState;
+        private List<Message> PendingMessages;
+        public event MessageReceivedHandler MessageReceivedCallback;
 
         public Connection(string serverUrl)
         {
             HubConnection = new HubConnectionBuilder().WithUrl(serverUrl).Build();
-            Messages = new List<Message>();
-            ConnectionState = ConnectionState.Connected;
+            PendingMessages = new List<Message>();
         }
 
         public void SendMessage(Message message)
         {
-            switch(ConnectionState)
+            switch(HubConnection.State)
             {
-                case ConnectionState.Connected:
+                case HubConnectionState.Connected:
+                    if(PendingMessages.Count > 0)
+                    {
+                       for(int i = 0; i < PendingMessages.Count; i++)
+                       {
+                            Send(PendingMessages[i]);
+                            PendingMessages.RemoveAt(i);
+                            i--;
+                       }
+                    } else
+                    {
+                        Send(message);
+                    }
                     break;
-                case ConnectionState.Disconnected:
+                case HubConnectionState.Disconnected:
+                    PendingMessages.Add(message);
+                    break;
+            }           
+        }
+
+        public HubConnection GetConnection() => HubConnection;
+
+        private void Send(Message message)
+        {
+            switch (message.MessageType)
+            {
+                case MessageType.Tower:
+                    var towerMessage = message as TowerMessage;
+                    HubConnection.SendAsync(towerMessage.Command, towerMessage.PlayerType, towerMessage.TowerType, towerMessage.Coordinates);
                     break;
             }
         }
 
-        public HubConnection GetConnection() => HubConnection;     
+        public void SubscribeToServer()
+        {
+            HubConnection.On<string>("ReceiveMessage", (message) => {
+                MessageReceivedCallback(message);
+            });
+            HubConnection.StartAsync();
+        }
+
+        public void UnsubscribeFromServer()
+        {
+            HubConnection.StopAsync();
+        }
     }
 }
