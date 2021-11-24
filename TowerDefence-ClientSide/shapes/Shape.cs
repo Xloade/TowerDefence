@@ -28,10 +28,9 @@ namespace TowerDefence_ClientSide
             Info = drawInfo;
             DecoratedDrawInterface = this;
         }
-
-
         public Shape()
         {
+
         }
         public void Draw(Graphics gr)
         {

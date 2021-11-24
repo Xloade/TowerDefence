@@ -21,7 +21,10 @@ namespace TowerDefence_ClientSide.Prototype
         public static Shape getAmunitionShape(AmmunitionType type)
         {
             MyConsole.WriteLineWithCount($"Prototype: cloning {type.ToString()}");
-            return (Shape)ammunition[type].Clone();
+            Shape shape = (Shape)ammunition[type].Clone();
+            shape.DecoratedDrawInterface = shape;
+            return shape;
+
         }
     }
 }
