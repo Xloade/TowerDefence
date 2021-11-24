@@ -4,7 +4,7 @@ using System.Text;
 using System.Drawing;
 namespace TowerDefence_ClientSide
 {
-    interface IDraw
+    public interface IDraw
     {
         public float CenterX { get;}
         public float CenterY { get;}

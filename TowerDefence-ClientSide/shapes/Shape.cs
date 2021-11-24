@@ -4,7 +4,7 @@ using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
-    public class Shape : IDraw, ICloneable
+    public class Shape : IDraw, ICloneable, Composite.IGroupedShape
     {
         public float Width { get; set; }
         public float Height { get; set; }
@@ -18,12 +18,15 @@ namespace TowerDefence_ClientSide
 
         public Image spriteImage;
 
+        public IDraw DecoratedDrawInterface { get; set; }
+
         public Shape(DrawInfo drawInfo, float width, float height, Image spriteImage)
         {
             Width = width;
             Height = height;
             this.spriteImage = (Image)spriteImage.Clone();
             Info = drawInfo;
+            DecoratedDrawInterface = this;
         }
 
 
@@ -61,10 +64,17 @@ namespace TowerDefence_ClientSide
         }
         // piešimas vykdomas išvestinėse klasėse
 
-    public object Clone()
-    {
-        return (Shape)this.MemberwiseClone();
-    }
-
+        public object Clone()
+        {
+            return (Shape)this.MemberwiseClone();
+        }
+        public void DecoratedDraw(Graphics gr)
+        {
+            DecoratedDrawInterface.Draw(gr);
+        }
+        public void GroupDraw(Graphics gr)
+        {
+            DecoratedDraw(gr);
+        }
     }
 }

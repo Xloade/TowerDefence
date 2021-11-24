@@ -10,6 +10,7 @@ using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_ClientSide.Prototype;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using TowerDefence_ClientSide.Composite;
 
 namespace TowerDefence_ClientSide
 {
@@ -23,7 +24,7 @@ namespace TowerDefence_ClientSide
         private const string BUTTON_QUICK_BUY = "Quick buy two";
         private const string SERVER_URL = "https://localhost:5001/GameHub";
         Map currentMap;
-        List<IDraw> shapes = new List<IDraw>();
+        GroupOfShapes shapes = new GroupOfShapes();
         LazyImageDictionary lazyImageDictionary = new LazyImageDictionary();
 
         HubConnection connection;
@@ -61,18 +62,16 @@ namespace TowerDefence_ClientSide
 
         private void updateMap(Map map)
         {
-            shapes = new List<IDraw>();
+            shapes.Shapes.Clear();
             stats = new PlayerStats(map.GetPlayer(playerType));
             UpdateStatsView();
-
-            shapes = new List<IDraw>();
 
             updateMapColor(map.backgroundImageDir);
 
             foreach (Player player in map.players)
             {
-                updateSoldiers(player.soldiers);
-                updateTowers(player.towers, player.PlayerType);
+                updateSoldiers(player.soldiers, shapes);
+                updateTowers(player.towers, shapes);
             }
 
             Refresh();
@@ -85,37 +84,41 @@ namespace TowerDefence_ClientSide
 
             this.bgImage = lazyImageDictionary.get(image);
         }
-        private void updateSoldiers(List<Soldier> soldiers)
+        private void updateSoldiers(List<Soldier> soldiers, GroupOfShapes groupOfShapes)
         {
             soldiers.ForEach((soldier) =>
             {
-                IDraw firstWrap = new Shape(soldier, 100, 100, lazyImageDictionary.get(soldier.Sprite));
+                Shape firstWrap = new Shape(soldier, 100, 100, lazyImageDictionary.get(soldier.Sprite));
                 IDraw secondWrap = new LvlDrawDecorator(firstWrap, soldier);
                 IDraw thirdWrap = new NameDrawDecorator(secondWrap, soldier);
                 IDraw fourthWrap = new HpDrawDecorator(thirdWrap, soldier);
-                shapes.Add(fourthWrap);
+                firstWrap.DecoratedDrawInterface = fourthWrap;
+                groupOfShapes.Shapes.Add(firstWrap);
             });
         }
 
-        private void updateTowers(List<TowerDefence_SharedContent.Towers.Tower> towers, PlayerType playerType)
+        private void updateTowers(List<TowerDefence_SharedContent.Towers.Tower> towers, GroupOfShapes groupOfShapes)
         {
             towers.ForEach((tower) =>
             {
-                IDraw firstWrap = new Shape(tower, 100, 100, lazyImageDictionary.get(tower.Sprite));
+                Shape firstWrap = new Shape(tower, 100, 100, lazyImageDictionary.get(tower.Sprite));
                 IDraw secondWrap = new LvlDrawDecorator(firstWrap, tower);
                 IDraw thirdWrap = new NameDrawDecorator(secondWrap, tower);
-                shapes.Add(thirdWrap);
-                updateAmmunition(tower.Ammunition);
+                firstWrap.DecoratedDrawInterface = thirdWrap;
+                groupOfShapes.Shapes.Add(firstWrap);
+                GroupOfShapes groupOfShapesNew = new GroupOfShapes();
+                groupOfShapes.Shapes.Add(groupOfShapesNew);
+                updateAmmunition(tower.Ammunition, groupOfShapesNew);
             });
         }
 
-        private void updateAmmunition(List<Ammunition> ammunition)
+        private void updateAmmunition(List<Ammunition> ammunition, GroupOfShapes groupOfShapes)
         {
             ammunition.ForEach((amm) =>
             {
                 Shape temp = AmunitionStore.getAmunitionShape(amm.AmmunitionType);
                 temp.Info = amm;
-                shapes.Add(temp);
+                groupOfShapes.Shapes.Add(temp);
             });
         }
         private void startSignalR(String mapType)
@@ -143,9 +146,9 @@ namespace TowerDefence_ClientSide
             //{
             //    shape.Draw(gr);
             //}
-            Parallel.ForEach(shapes, shape =>
+            Parallel.ForEach(shapes.Shapes, shape =>
             {
-                shape.Draw(gr);
+                shape.GroupDraw(gr);
             });
         }
 
