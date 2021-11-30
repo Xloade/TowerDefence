@@ -20,7 +20,6 @@ namespace TowerDefence_ServerSide
         public static double timerSpeed = 36; //~30times per second
         public static bool foundThreading = false;
         private static MapController instance;
-        private ObjectIDGenerator iDGenerator = new ObjectIDGenerator();
 
         public static void setIHubContext(IHubContext<GameHub> context)
         {
@@ -83,7 +82,6 @@ namespace TowerDefence_ServerSide
         {
             lock (mapObservers)
             {
-                soldier.Id = iDGenerator.GetId(soldier, out _);
                 mapObservers[0].AddSoldier(soldier, playerType);
             }
         }
@@ -92,7 +90,6 @@ namespace TowerDefence_ServerSide
         {
             lock (mapObservers)
             {
-                tower.Id = iDGenerator.GetId(tower, out _);
                 mapObservers[0].AddTower(tower, playerType);
             }
         }
