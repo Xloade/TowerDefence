@@ -4,35 +4,33 @@ using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
-    public class Shape : IDraw, ICloneable
+    public class Shape : IDraw, ICloneable, Composite.IGroupedShape
     {
-        public float CenterX { get; set; }
-        public float CenterY { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
-        public float Rotation { get; set; }
 
-        public Image sprite;
 
-        public Shape(Point center, float width, float height, float rotation, Image sprite) : this(center, width, height, sprite)
-        {
-            Rotation = rotation;
-        }
 
-        public Shape(Point center, float width, float height, Image sprite) : this(center)
+        public DrawInfo Info { get; set; }
+        public float CenterX { get{ return Info.Coordinates.X; } }
+        public float CenterY { get { return Info.Coordinates.Y; } }
+        public float Rotation { get { return Info.Rotation; } }
+
+        public Image spriteImage;
+
+        public IDraw DecoratedDrawInterface { get; set; }
+
+        public Shape(DrawInfo drawInfo, float width, float height, Image spriteImage)
         {
             Width = width;
             Height = height;
-            this.sprite = (Image)sprite.Clone();
+            this.spriteImage = (Image)spriteImage.Clone();
+            Info = drawInfo;
+            DecoratedDrawInterface = this;
         }
-
         public Shape()
         {
-        }
-        public Shape(Point center)
-        {
-            CenterX = center.X;
-            CenterY = center.Y;
+
         }
         public void Draw(Graphics gr)
         {
@@ -52,9 +50,9 @@ namespace TowerDefence_ClientSide
                 lock (this)
                 {
                     //bullet prototipe doesnt do deep enough copy
-                    lock (sprite)
+                    lock (spriteImage)
                     {
-                        grImage.DrawImage(sprite, 0, 0, Width, Height);
+                        grImage.DrawImage(spriteImage, 0, 0, Width, Height);
                     }
                 }
             }
@@ -65,10 +63,17 @@ namespace TowerDefence_ClientSide
         }
         // piešimas vykdomas išvestinėse klasėse
 
-    public object Clone()
-    {
-        return (Shape)this.MemberwiseClone();
-    }
-
+        public object Clone()
+        {
+            return (Shape)this.MemberwiseClone();
+        }
+        public void DecoratedDraw(Graphics gr)
+        {
+            DecoratedDrawInterface.Draw(gr);
+        }
+        public void GroupDraw(Graphics gr)
+        {
+            DecoratedDraw(gr);
+        }
     }
 }

@@ -5,17 +5,17 @@ using System.Drawing;
 
 namespace TowerDefence_SharedContent.Soldiers
 {
-    public class Soldier
+    public class Soldier: DrawInfo, Ilevel, IHitpoints, IName
     {
         public int Level { get; set; }
         public int[] UpgradePrice { get; set; }
         public int[] BuyPrice { get; set; }
         public double Speed { get; set; }
         public int[] Hitpoints { get; set; }
-        public int CurrentHitpoints { get; set; }
-        public Point Coordinates { get; set; }
-        public string Sprite { get; set; }
+        public  int CurrentHitpoints { get; set; }
         public SoldierType SoldierType { get; set; }
+        public int CurrentLvlHitpoints { get { return Hitpoints[Level]; } }
+        public string Name { get { return SoldierType.ToString(); } }
 
         public Soldier(PlayerType playerType, SoldierType soldierType, int level)
         {
@@ -25,6 +25,7 @@ namespace TowerDefence_SharedContent.Soldiers
             Level = level;
             SoldierType = soldierType;
             BuyPrice = new int[] { 10, 15, 20 };
+            Rotation = playerType == PlayerType.PLAYER1 ? 90 : -90;
         }
 
         public void MoveForward(PlayerType playerType)

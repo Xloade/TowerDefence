@@ -8,10 +8,10 @@ namespace TowerDefence_ClientSide
 {
     class NameDrawDecorator : DrawDecorator
     {
-        private string _name;
-        public NameDrawDecorator(IDraw decoratedDraw, string name) : base(decoratedDraw)
+        private IName Name ;
+        public NameDrawDecorator(IDraw decoratedDraw, IName name) : base(decoratedDraw)
         {
-            _name = name;
+            Name = name;
         }
         public override void Draw(Graphics gr)
         {
@@ -28,7 +28,7 @@ namespace TowerDefence_ClientSide
             // Draw string to screen.
             lock (gr)
             {
-                gr.DrawString($"{_name}", drawFont, drawBrush, CenterX + (Width / 2)+50, CenterY + (Height / 2), drawFormat);
+                gr.DrawString($"{Name.Name}", drawFont, drawBrush, CenterX + (Width / 2)+50, CenterY + (Height / 2), drawFormat);
             }
         }
     }

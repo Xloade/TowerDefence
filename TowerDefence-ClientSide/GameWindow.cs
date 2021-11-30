@@ -10,6 +10,7 @@ using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_ClientSide.Prototype;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using TowerDefence_ClientSide.Composite;
 
 namespace TowerDefence_ClientSide
 {
@@ -23,7 +24,7 @@ namespace TowerDefence_ClientSide
         private const string BUTTON_QUICK_BUY = "Quick buy two";
         private const string SERVER_URL = "https://localhost:5001/GameHub";
         Map currentMap;
-        List<IDraw> shapes = new List<IDraw>();
+        GroupOfShapes shapes = new GroupOfShapes();
         LazyImageDictionary lazyImageDictionary = new LazyImageDictionary();
 
         HubConnection connection;
@@ -61,27 +62,21 @@ namespace TowerDefence_ClientSide
 
         private void updateMap(Map map)
         {
-            shapes = new List<IDraw>();
+            shapes.Shapes.Clear();
             stats = new PlayerStats(map.GetPlayer(playerType));
             UpdateStatsView();
-
-            shapes = new List<IDraw>();
 
             updateMapColor(map.backgroundImageDir);
 
             foreach (Player player in map.players)
             {
-                updateSoldiers(player.soldiers, GetRotation(player.PlayerType));
-                updateTowers(player.towers, player.PlayerType);
+                updateSoldiers(player.soldiers, shapes);
+                updateTowers(player.towers, shapes);
             }
 
             Refresh();
         }
 
-        private int GetRotation(PlayerType playerType)
-        {
-            return playerType == PlayerType.PLAYER1 ? 90 : -90;
-        }
 
         //rotation temporary
         private void updateMapColor(string image)
@@ -89,51 +84,43 @@ namespace TowerDefence_ClientSide
 
             this.bgImage = lazyImageDictionary.get(image);
         }
-        private void updateSoldiers(List<Soldier> soldiers, float rotation)
+        private void updateSoldiers(List<Soldier> soldiers, GroupOfShapes groupOfShapes)
         {
             soldiers.ForEach((soldier) =>
             {
-                IDraw firstWrap = new Shape(soldier.Coordinates, 100, 100, rotation, lazyImageDictionary.get(soldier.Sprite));
-                IDraw secondWrap = new LvlDrawDecorator(firstWrap, soldier.Level);
-                IDraw thirdWrap = new NameDrawDecorator(secondWrap, soldier.SoldierType.ToString());
-                IDraw fourthWrap = new HpDrawDecorator(thirdWrap, (int)(soldier.Hitpoints[soldier.Level]), (int)soldier.CurrentHitpoints);
-                shapes.Add(fourthWrap);
+                Shape firstWrap = new Shape(soldier, 100, 100, lazyImageDictionary.get(soldier.Sprite));
+                IDraw secondWrap = new LvlDrawDecorator(firstWrap, soldier);
+                IDraw thirdWrap = new NameDrawDecorator(secondWrap, soldier);
+                IDraw fourthWrap = new HpDrawDecorator(thirdWrap, soldier);
+                firstWrap.DecoratedDrawInterface = fourthWrap;
+                groupOfShapes.Shapes.Add(firstWrap);
             });
         }
 
-        private void updateTowers(List<TowerDefence_SharedContent.Towers.Tower> towers, PlayerType playerType)
+        private void updateTowers(List<TowerDefence_SharedContent.Towers.Tower> towers, GroupOfShapes groupOfShapes)
         {
             towers.ForEach((tower) =>
             {
-                IDraw firstWrap = new Shape(tower.Coordinates, 100, 100, GetRotation(playerType), lazyImageDictionary.get(tower.Sprite));
-                IDraw secondWrap = new LvlDrawDecorator(firstWrap, tower.Level);
-                IDraw thirdWrap = new NameDrawDecorator(secondWrap, tower.TowerType.ToString());
-                shapes.Add(thirdWrap);
-                updateAmmunition(tower.Ammunition, CreateShape(tower.Coordinates, GetRotation(playerType), tower.TowerType));
+                Shape firstWrap = new Shape(tower, 100, 100, lazyImageDictionary.get(tower.Sprite));
+                IDraw secondWrap = new LvlDrawDecorator(firstWrap, tower);
+                IDraw thirdWrap = new NameDrawDecorator(secondWrap, tower);
+                firstWrap.DecoratedDrawInterface = thirdWrap;
+                groupOfShapes.Shapes.Add(firstWrap);
+                GroupOfShapes groupOfShapesNew = new GroupOfShapes();
+                groupOfShapes.Shapes.Add(groupOfShapesNew);
+                updateAmmunition(tower.Ammunition, groupOfShapesNew);
             });
         }
 
-        private void updateAmmunition(List<Ammunition> ammunition, Shape ammunitionShape)
+        private void updateAmmunition(List<Ammunition> ammunition, GroupOfShapes groupOfShapes)
         {
             ammunition.ForEach((amm) =>
             {
-                Shape temp = (Shape)ammunitionShape.Clone();
-                temp.CenterX = amm.Coordinates.X;
-                temp.CenterY = amm.Coordinates.Y;
-                shapes.Add(temp);
+                Shape temp = AmunitionStore.getAmunitionShape(amm.AmmunitionType);
+                temp.Info = amm;
+                groupOfShapes.Shapes.Add(temp);
             });
         }
-
-        public Shape CreateShape(Point coordinates, float rotation, TowerType towerType)
-        {
-            if (towerType is TowerType.Minigun)
-                return new BulletShape(coordinates, rotation).Shape;
-            else if (towerType is TowerType.Laser)
-                return new LaserShape(coordinates, rotation).Shape;
-            else
-                return new RocketShape(coordinates, rotation).Shape;
-        }
-
         private void startSignalR(String mapType)
         {
             connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();
@@ -159,9 +146,9 @@ namespace TowerDefence_ClientSide
             //{
             //    shape.Draw(gr);
             //}
-            Parallel.ForEach(shapes, shape =>
+            Parallel.ForEach(shapes.Shapes, shape =>
             {
-                shape.Draw(gr);
+                shape.GroupDraw(gr);
             });
         }
 

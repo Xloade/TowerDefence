@@ -9,11 +9,11 @@ namespace TowerDefence_ClientSide
     {
         protected IDraw wrapee;
 
-        public float CenterX { get { return wrapee.CenterX; } set { wrapee.CenterX = value; } }
-        public float CenterY { get { return wrapee.CenterY; } set { wrapee.CenterY = value; } }
+        public float CenterX { get { return wrapee.CenterX; }}
+        public float CenterY { get { return wrapee.CenterY; } }
         public float Width { get { return wrapee.Width; } set { wrapee.Width = value; } }
         public float Height { get { return wrapee.Height; } set { wrapee.Height = value; } }
-        public float Rotation { get { return wrapee.Rotation; } set { wrapee.Rotation = value; } }
+        public float Rotation { get { return wrapee.Rotation; }}
 
         public DrawDecorator(IDraw component)
         {
