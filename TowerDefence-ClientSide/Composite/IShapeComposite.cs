@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace TowerDefence_ClientSide.Composite
 {
-    interface IGroupedShape
+    interface IShapeComposite
     {
         public bool isShape()
         {
@@ -13,5 +13,7 @@ namespace TowerDefence_ClientSide.Composite
         }
 
         public void GroupDraw(Graphics gr);
+
+        public Shape GetNextShape(long last);
     }
 }

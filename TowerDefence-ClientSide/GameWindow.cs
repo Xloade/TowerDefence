@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using Microsoft.AspNetCore.SignalR.Client;
 using TowerDefence_SharedContent.Towers;
 using TowerDefence_SharedContent;
@@ -24,7 +25,7 @@ namespace TowerDefence_ClientSide
         private const string BUTTON_QUICK_BUY = "Quick buy two";
         private const string SERVER_URL = "https://localhost:5001/GameHub";
         Map currentMap;
-        GroupOfShapes shapes = new GroupOfShapes();
+        ShapePlatoon shapes = new ShapePlatoon();
         LazyImageDictionary lazyImageDictionary = new LazyImageDictionary();
 
         HubConnection connection;
@@ -84,7 +85,7 @@ namespace TowerDefence_ClientSide
 
             this.bgImage = lazyImageDictionary.get(image);
         }
-        private void updateSoldiers(List<Soldier> soldiers, GroupOfShapes groupOfShapes)
+        private void updateSoldiers(List<Soldier> soldiers, ShapePlatoon shapePlatoon)
         {
             soldiers.ForEach((soldier) =>
             {
@@ -93,11 +94,11 @@ namespace TowerDefence_ClientSide
                 IDraw thirdWrap = new NameDrawDecorator(secondWrap, soldier);
                 IDraw fourthWrap = new HpDrawDecorator(thirdWrap, soldier);
                 firstWrap.DecoratedDrawInterface = fourthWrap;
-                groupOfShapes.Shapes.Add(firstWrap);
+                shapePlatoon.Shapes.Add(firstWrap);
             });
         }
 
-        private void updateTowers(List<TowerDefence_SharedContent.Towers.Tower> towers, GroupOfShapes groupOfShapes)
+        private void updateTowers(List<TowerDefence_SharedContent.Towers.Tower> towers, ShapePlatoon shapePlatoon)
         {
             towers.ForEach((tower) =>
             {
@@ -105,20 +106,20 @@ namespace TowerDefence_ClientSide
                 IDraw secondWrap = new LvlDrawDecorator(firstWrap, tower);
                 IDraw thirdWrap = new NameDrawDecorator(secondWrap, tower);
                 firstWrap.DecoratedDrawInterface = thirdWrap;
-                groupOfShapes.Shapes.Add(firstWrap);
-                GroupOfShapes groupOfShapesNew = new GroupOfShapes();
-                groupOfShapes.Shapes.Add(groupOfShapesNew);
-                updateAmmunition(tower.Ammunition, groupOfShapesNew);
+                shapePlatoon.Shapes.Add(firstWrap);
+                ShapePlatoon shapePlatoonNew = new ShapePlatoon();
+                shapePlatoon.Shapes.Add(shapePlatoonNew);
+                updateAmmunition(tower.Ammunition, shapePlatoonNew);
             });
         }
 
-        private void updateAmmunition(List<Ammunition> ammunition, GroupOfShapes groupOfShapes)
+        private void updateAmmunition(List<Ammunition> ammunition, ShapePlatoon shapePlatoon)
         {
             ammunition.ForEach((amm) =>
             {
                 Shape temp = AmunitionStore.getAmunitionShape(amm.AmmunitionType);
                 temp.Info = amm;
-                groupOfShapes.Shapes.Add(temp);
+                shapePlatoon.Shapes.Add(temp);
             });
         }
         private void startSignalR(String mapType)
@@ -142,14 +143,15 @@ namespace TowerDefence_ClientSide
             gr.DrawImage(bgImage, 0, 0, DrawArea.Width, DrawArea.Height);
             gr.SmoothingMode = SmoothingMode.HighSpeed;
 
-            //foreach (IDraw shape in shapes)
-            //{
-            //    shape.Draw(gr);
-            //}
-            Parallel.ForEach(shapes.Shapes, shape =>
+            foreach (Shape shape in shapes)
             {
-                shape.GroupDraw(gr);
-            });
+                shape.DecoratedDraw(gr);
+            }
+            /*Parallel.ForEach(shapes, shape =>
+            {
+                shape.DecoratedDraw(gr);
+            });*/
+            
         }
 
         protected override void btn_Click(object sender, EventArgs e)

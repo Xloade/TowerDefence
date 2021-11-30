@@ -4,7 +4,7 @@ using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
-    public class Shape : IDraw, ICloneable, Composite.IGroupedShape
+    public class Shape : IDraw, ICloneable, Composite.IShapeComposite
     {
         public float Width { get; set; }
         public float Height { get; set; }
@@ -74,6 +74,11 @@ namespace TowerDefence_ClientSide
         public void GroupDraw(Graphics gr)
         {
             DecoratedDraw(gr);
+        }
+
+        public Shape GetNextShape(long last)
+        {
+            return this;
         }
     }
 }
