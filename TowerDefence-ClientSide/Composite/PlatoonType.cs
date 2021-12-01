@@ -10,6 +10,7 @@ namespace TowerDefence_ClientSide.Composite
         Platoon1,
         Platoon2,
         Enemy,
-        Root
+        Root,
+        Selected
     }
 }

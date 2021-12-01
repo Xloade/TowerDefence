@@ -297,6 +297,7 @@ namespace TowerDefence_ClientSide
         protected override void Mouse_Up(object sender, MouseEventArgs e)
         {
             selectionDrawing.Selection.Selected = false;
+            mapUpdater.SaveSelection(selectionDrawing.Selection);
         }
 
         protected override void Mouse_Move(object sender, MouseEventArgs e)

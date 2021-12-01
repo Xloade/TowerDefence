@@ -6,7 +6,7 @@ using System.Speech.Synthesis.TtsEngine;
 
 namespace TowerDefence_ClientSide
 {
-    class MouseSelection
+    public class MouseSelection
     {
         public Point StartPoint { get; set; }
         public Point EndPoint { get; set; }

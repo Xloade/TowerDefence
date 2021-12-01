@@ -49,43 +49,20 @@ namespace TowerDefence_ClientSide
 
             GetNewShapes(map);
             DeleteOldShapes(map);
-            root.UpdatePlatoon(PlatoonType.DefaultPlatoon);
-            UpdateSelection(mouseSelection);
+            root.UpdatePlatoon(PlatoonType.Root);
+            UpdateTempSelection(mouseSelection);
+            UpdatePermaSelection(mouseSelection);
         }
-
-        private void UpdateSelection(MouseSelection selection)
+        private void UpdatePermaSelection(MouseSelection selection)
         {
-            int left;
-            int right;
-            int top;
-            int bot;
-
-            if (selection.StartPoint.X > selection.EndPoint.X)
-            {
-                right = selection.StartPoint.X;
-                left = selection.EndPoint.X;
-            }
-            else
-            {
-                right = selection.EndPoint.X;
-                left = selection.StartPoint.X;
-            }
-
-            if (selection.StartPoint.Y > selection.EndPoint.Y)
-            {
-                bot = selection.StartPoint.Y;
-                top = selection.EndPoint.Y;
-            }
-            else
-            {
-                bot = selection.EndPoint.Y;
-                top = selection.StartPoint.Y;
-            }
-
+            root.UpdateSelection(PlatoonType.Root);
+        }
+        private void UpdateTempSelection(MouseSelection selection)
+        {
             foreach (var shape in root)
             {
-                if (shape.CenterX > left && shape.CenterX < right &&
-                    shape.CenterY > top && shape.CenterY < bot && selection.Selected)
+                if (shape.CenterX > selection.Left && shape.CenterX < selection.Right &&
+                    shape.CenterY > selection.Top && shape.CenterY < selection.Bot && selection.Selected)
                 {
                     shape.Selected = true;
                 }
@@ -94,6 +71,10 @@ namespace TowerDefence_ClientSide
                     shape.Selected = false;
                 }
             }
+        }
+        public void SaveSelection(MouseSelection selection)
+        {
+            root.SaveSelection(selection);
         }
 
         private void DeleteOldShapes(Map map)

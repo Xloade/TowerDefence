@@ -89,5 +89,15 @@ namespace TowerDefence_ClientSide
         {
             PlatoonType = platoonType;
         }
+
+        public void UpdateSelection(PlatoonType platoonType)
+        {
+            if (platoonType == PlatoonType.Selected)
+            {
+                Selected = true;
+            }
+        }
+
+        public void SaveSelection(MouseSelection mouseSelection) { }
     }
 }
