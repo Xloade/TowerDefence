@@ -15,7 +15,7 @@ using TowerDefence_ClientSide.Composite;
 
 namespace TowerDefence_ClientSide
 {
-    public class GameWindow : Window, ICursorChange, IPlayerStats
+    public class GameWindow : Window, ICursorChange, IPlayerStats, IHaveShapePlatoon
     {
         private const string BUTTON_BUY_SOLDIER = "Buy soldier";
         private const string BUTTON_BUY_TOWER = "Buy tower";
@@ -25,12 +25,12 @@ namespace TowerDefence_ClientSide
         private const string BUTTON_QUICK_BUY = "Quick buy two";
         private const string SERVER_URL = "https://localhost:5001/GameHub";
         Map currentMap;
-        ShapePlatoon shapes = new ShapePlatoon();
-        private MapUpdater mapUpdater = new MapUpdater();
+
+        public ShapePlatoon Shapes { get; set; } = new ShapePlatoon(PlatoonType.Root);
+        private MapUpdater mapUpdater;
 
         HubConnection connection;
         private PlayerType playerType;
-        private IStats stats;
         private PlayerStatsShowStatus PlayerStatsShowStatus = PlayerStatsShowStatus.All;
         private CursorState cursorState = CursorState.Default;
         private GameCursor gameCursor;
@@ -47,6 +47,7 @@ namespace TowerDefence_ClientSide
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
             1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER, BUTTON_QUICK_BUY)
         {
+            mapUpdater = new MapUpdater(this,playerType);
             gameCursor = new GameCursor(this, playerType);
             cursorCommand = new CursorCommand(gameCursor);
             this.playerType = playerType;
@@ -62,7 +63,7 @@ namespace TowerDefence_ClientSide
             renderTimer.Stop();
             if (currentMap != null)
             {
-                mapUpdater.UpdateMap(currentMap, shapes,playerType, out bgImage, this);
+                mapUpdater.UpdateMap(currentMap, out bgImage, this);
                 Refresh();
             }
             renderTimer.Start();
@@ -90,7 +91,7 @@ namespace TowerDefence_ClientSide
             gr.DrawImage(bgImage, 0, 0, DrawArea.Width, DrawArea.Height);
             gr.SmoothingMode = SmoothingMode.HighSpeed;
 
-            foreach (Shape shape in shapes)
+            foreach (Shape shape in Shapes)
             {
                 shape.DecoratedDraw(gr);
             }

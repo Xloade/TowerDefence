@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace TowerDefence_ClientSide.Composite
 {
-    interface IShapeComposite
+    public interface IShapeComposite
     {
         public bool isShape()
         {
@@ -15,5 +15,7 @@ namespace TowerDefence_ClientSide.Composite
         public void GroupDraw(Graphics gr);
 
         public Shape GetNextShape(long last);
+        public void DeleteShape(Shape shape);
+        public void UpdatePlatoon(PlatoonType platoonType);
     }
 }

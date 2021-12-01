@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using TowerDefence_ClientSide.shapes;
 using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
     class LvlDrawDecorator : DrawDecorator
     {
-        private Ilevel Level;
-        public LvlDrawDecorator(IDraw decoratedDraw, Ilevel level) : base(decoratedDraw)
+        private IShape Shape;
+        public LvlDrawDecorator(IDraw decoratedDraw, IShape shape) : base(decoratedDraw)
         {
-            Level = level;
+            Shape = shape;
         }
         public override void Draw(Graphics gr)
         {
+            Ilevel Level = (Ilevel)Shape.Info;
             base.Draw(gr);
             MyConsole.WriteLineWithCount("|   LVL wrapper");
             // Create font and brush.

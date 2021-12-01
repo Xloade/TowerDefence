@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Drawing;
+using TowerDefence_ClientSide.shapes;
 using TowerDefence_SharedContent;
+using TowerDefence_ClientSide.Composite;
 
 namespace TowerDefence_ClientSide
 {
-    public class Shape : IDraw, ICloneable, Composite.IShapeComposite
+    public class Shape : IDraw, ICloneable, Composite.IShapeComposite, IShape
     {
         public float Width { get; set; }
         public float Height { get; set; }
 
-
+        public PlatoonType PlatoonType { get; set; }
 
         public DrawInfo Info { get; set; }
         public float CenterX { get{ return Info.Coordinates.X; } }
@@ -79,6 +81,12 @@ namespace TowerDefence_ClientSide
         public Shape GetNextShape(long last)
         {
             return this;
+        }
+
+        public void DeleteShape(Shape shape){}
+        public void UpdatePlatoon(PlatoonType platoonType)
+        {
+            PlatoonType = platoonType;
         }
     }
 }

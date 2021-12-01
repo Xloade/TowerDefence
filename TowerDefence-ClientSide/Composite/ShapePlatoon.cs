@@ -10,9 +10,15 @@ using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide.Composite
 {
-    class ShapePlatoon: IShapeComposite, IEnumerable<Shape>
+    public class ShapePlatoon: IShapeComposite, IEnumerable<Shape>
     {
+        public PlatoonType PlatoonName { get; set; }
         public List<IShapeComposite> Shapes = new List<IShapeComposite>();
+
+        public ShapePlatoon(PlatoonType platoonName)
+        {
+            PlatoonName = platoonName;
+        }
         public List<IShapeComposite> getShapes()
         {
             return Shapes;
@@ -57,6 +63,17 @@ namespace TowerDefence_ClientSide.Composite
             {
                 return null;
             }
+        }
+
+        public void DeleteShape(Shape shape)
+        {
+            Shapes.RemoveAll(x => x == shape);
+            Shapes.FindAll(x => x is ShapePlatoon).ForEach(x => x.DeleteShape(shape));
+        }
+
+        public void UpdatePlatoon(PlatoonType platoonType)
+        {
+            Shapes.ForEach(x => x.UpdatePlatoon(PlatoonName));
         }
     }
 }
