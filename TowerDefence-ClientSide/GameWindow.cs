@@ -15,7 +15,7 @@ using TowerDefence_ClientSide.Composite;
 
 namespace TowerDefence_ClientSide
 {
-    public class GameWindow : Window, ICursorChange
+    public class GameWindow : Window, ICursorChange, IPlayerStats
     {
         private const string BUTTON_BUY_SOLDIER = "Buy soldier";
         private const string BUTTON_BUY_TOWER = "Buy tower";
@@ -26,7 +26,7 @@ namespace TowerDefence_ClientSide
         private const string SERVER_URL = "https://localhost:5001/GameHub";
         Map currentMap;
         ShapePlatoon shapes = new ShapePlatoon();
-        LazyImageDictionary lazyImageDictionary = new LazyImageDictionary();
+        private MapUpdater mapUpdater = new MapUpdater();
 
         HubConnection connection;
         private PlayerType playerType;
@@ -38,6 +38,12 @@ namespace TowerDefence_ClientSide
         private string towerToBuy = "";
         private System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
 
+        string IPlayerStats.LifePointsText{ set { LifePointsText.Text = value; } }
+
+        string IPlayerStats.TowerCurrencyText { set { TowerCurrencyText.Text = value; } }
+        string IPlayerStats.SoldierCurrencyText { set { SoldierCurrencyText.Text = value; } }
+
+        PlayerStatsShowStatus IPlayerStats.PlayerStatsShowStatus { get { return PlayerStatsShowStatus; }}
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
             1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER, BUTTON_QUICK_BUY)
         {
@@ -56,72 +62,13 @@ namespace TowerDefence_ClientSide
             renderTimer.Stop();
             if (currentMap != null)
             {
-                updateMap(currentMap);
+                mapUpdater.UpdateMap(currentMap, shapes,playerType, out bgImage, this);
+                Refresh();
             }
             renderTimer.Start();
         }
 
-        private void updateMap(Map map)
-        {
-            shapes.Shapes.Clear();
-            stats = new PlayerStats(map.GetPlayer(playerType));
-            UpdateStatsView();
-
-            updateMapColor(map.backgroundImageDir);
-
-            foreach (Player player in map.players)
-            {
-                updateSoldiers(player.soldiers, shapes);
-                updateTowers(player.towers, shapes);
-            }
-
-            Refresh();
-        }
-
-
-        //rotation temporary
-        private void updateMapColor(string image)
-        {
-
-            this.bgImage = lazyImageDictionary.get(image);
-        }
-        private void updateSoldiers(List<Soldier> soldiers, ShapePlatoon shapePlatoon)
-        {
-            soldiers.ForEach((soldier) =>
-            {
-                Shape firstWrap = new Shape(soldier, 100, 100, lazyImageDictionary.get(soldier.Sprite));
-                IDraw secondWrap = new LvlDrawDecorator(firstWrap, soldier);
-                IDraw thirdWrap = new NameDrawDecorator(secondWrap, soldier);
-                IDraw fourthWrap = new HpDrawDecorator(thirdWrap, soldier);
-                firstWrap.DecoratedDrawInterface = fourthWrap;
-                shapePlatoon.Shapes.Add(firstWrap);
-            });
-        }
-
-        private void updateTowers(List<TowerDefence_SharedContent.Towers.Tower> towers, ShapePlatoon shapePlatoon)
-        {
-            towers.ForEach((tower) =>
-            {
-                Shape firstWrap = new Shape(tower, 100, 100, lazyImageDictionary.get(tower.Sprite));
-                IDraw secondWrap = new LvlDrawDecorator(firstWrap, tower);
-                IDraw thirdWrap = new NameDrawDecorator(secondWrap, tower);
-                firstWrap.DecoratedDrawInterface = thirdWrap;
-                shapePlatoon.Shapes.Add(firstWrap);
-                ShapePlatoon shapePlatoonNew = new ShapePlatoon();
-                shapePlatoon.Shapes.Add(shapePlatoonNew);
-                updateAmmunition(tower.Ammunition, shapePlatoonNew);
-            });
-        }
-
-        private void updateAmmunition(List<Ammunition> ammunition, ShapePlatoon shapePlatoon)
-        {
-            ammunition.ForEach((amm) =>
-            {
-                Shape temp = AmunitionStore.getAmunitionShape(amm.AmmunitionType);
-                temp.Info = amm;
-                shapePlatoon.Shapes.Add(temp);
-            });
-        }
+        
         private void startSignalR(String mapType)
         {
             connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();
@@ -292,31 +239,6 @@ namespace TowerDefence_ClientSide
                 default:
                     break;
             }
-        }
-
-        private void UpdateStatsView()
-        {
-            switch(PlayerStatsShowStatus)
-            {
-                case PlayerStatsShowStatus.All:
-                    int[] playerStats = stats.Show();
-                    LifePointsText.Text = $"Lifepoints: {playerStats[0]}";
-                    TowerCurrencyText.Text = $"Tower Currency: {playerStats[1]}";
-                    SoldierCurrencyText.Text = $"Soldier Currency: {playerStats[2]}";
-                    break;
-                case PlayerStatsShowStatus.Lifepoints:
-                    int lifepoints = stats.ShowParameter(PlayerStatsShowStatus);
-                    LifePointsText.Text = $"Lifepoints: {lifepoints}";
-                    break;
-                case PlayerStatsShowStatus.TowerCurrency:
-                    int towerCurrency = stats.ShowParameter(PlayerStatsShowStatus);
-                    LifePointsText.Text = $"Lifepoints: {towerCurrency}";
-                    break;
-                case PlayerStatsShowStatus.SoldierCurrency:
-                    int soldierCurrency = stats.ShowParameter(PlayerStatsShowStatus);
-                    LifePointsText.Text = $"Lifepoints: {soldierCurrency}";
-                    break;
-            }          
         }
 
         protected override void status_selection_click(object sender, EventArgs e)
