@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using TowerDefence_ClientSide.shapes;
 using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
-    class NameDrawDecorator : DrawDecorator
+    class PlatoonDecorator : DrawDecorator
     {
-        private IName Name ;
-        public NameDrawDecorator(IDraw decoratedDraw, IName name) : base(decoratedDraw)
+        private IShape Shape;
+        public PlatoonDecorator(IDraw decoratedDraw, IShape shape) : base(decoratedDraw)
         {
-            Name = name;
+            Shape = shape;
         }
         public override void Draw(Graphics gr)
         {
+            string platoon = Shape.PlatoonType.ToString();
             base.Draw(gr);
-            MyConsole.WriteLineWithCount("|   Name wrapper");
+            MyConsole.WriteLineWithCount("|   platoon wrapper");
             // Create font and brush.
             Font drawFont = new Font("Arial", 10);
             SolidBrush drawBrush = new SolidBrush(Color.Black);
@@ -28,7 +30,7 @@ namespace TowerDefence_ClientSide
             // Draw string to screen.
             lock (gr)
             {
-                gr.DrawString($"{Name.Name}", drawFont, drawBrush, CenterX + (Width / 2)+50, CenterY + (Height / 2), drawFormat);
+                gr.DrawString($"{platoon}", drawFont, drawBrush, CenterX + (Width / 2)+50, CenterY + (Height / 2), drawFormat);
             }
         }
     }

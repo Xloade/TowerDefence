@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using TowerDefence_ClientSide.shapes;
 using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
     class HpDrawDecorator : DrawDecorator
     {
-        private IHitpoints Hitpoints;
-        public HpDrawDecorator(IDraw decoratedDraw, IHitpoints hitpoints) : base(decoratedDraw)
+        private IShape Shape;
+        public HpDrawDecorator(IDraw decoratedDraw, IShape shape) : base(decoratedDraw)
         {
-            Hitpoints = hitpoints;
+            Shape = shape;
         }
         public override void Draw(Graphics gr)
         {
+            IHitpoints Hitpoints = (IHitpoints)Shape.Info;
             base.Draw(gr);
             MyConsole.WriteLineWithCount("|   Hp wrapper");
             Bitmap bmp = new Bitmap(50, 10);

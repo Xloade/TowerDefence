@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace TowerDefence_SharedContent.Soldiers
 {
-    public class Soldier: DrawInfo, Ilevel, IHitpoints, IName
+    public class Soldier: DrawInfo, Ilevel, IHitpoints
     {
         public int Level { get; set; }
         public int[] UpgradePrice { get; set; }
@@ -15,7 +15,6 @@ namespace TowerDefence_SharedContent.Soldiers
         public  int CurrentHitpoints { get; set; }
         public SoldierType SoldierType { get; set; }
         public int CurrentLvlHitpoints { get { return Hitpoints[Level]; } }
-        public string Name { get { return SoldierType.ToString(); } }
 
         public Soldier(PlayerType playerType, SoldierType soldierType, int level)
         {

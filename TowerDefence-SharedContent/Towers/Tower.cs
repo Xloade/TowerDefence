@@ -6,7 +6,7 @@ using TowerDefence_SharedContent.Soldiers;
 
 namespace TowerDefence_SharedContent.Towers
 {
-    public class Tower: DrawInfo, Ilevel, IName
+    public class Tower: DrawInfo, Ilevel
     {
         protected CanShootAlgorithm canShootAlgorithm;
         public int Level { get; set; }
@@ -18,7 +18,6 @@ namespace TowerDefence_SharedContent.Towers
         public TowerType TowerType { get; set; }
         public int ShootingCooldown { get; set; }
         public PlayerType PlayerType { get; set; }
-        public string Name { get { return TowerType.ToString(); } }
 
         public Tower(PlayerType playerType, TowerType towerType, Point coordinates)
         {
