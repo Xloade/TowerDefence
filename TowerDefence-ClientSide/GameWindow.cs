@@ -43,19 +43,22 @@ namespace TowerDefence_ClientSide
         {
             gameCursor = new GameCursor(this, playerType);
             cursorCommand = new CursorCommand(gameCursor);
-            serverConnection = new ServerConnection(SERVER_URL);
             this.playerType = playerType;
-            startSignalR(mapType);
+            SetupServerConnection(mapType);
             MapParser.CreateInstance();
             renderTimer.Tick += RenderTimer_Tick;
             renderTimer.Interval = 10;
             renderTimer.Start();
         }
 
-        private void SetupServerConnection()
+        private void SetupServerConnection(string mapType)
         {
-            serverConnection.MessageTransferedHandler += new MessageTransferedHandler(ReceiveMessage);
-            serverConnection.SubscribeToServer();
+            serverConnection = new ServerConnection(SERVER_URL);
+            serverConnection.GetConnection().On<string>("ReceiveMessage", ReceiveMessage);
+            serverConnection.GetConnection().StartAsync();
+
+            serverConnection.SendMessage(new MapMessage("createMap", MessageType.Map, mapType));
+            serverConnection.SendMessage(new PlayerMessage("addPlayer", MessageType.Player, playerType));
         }
 
         private void RenderTimer_Tick(object sender, EventArgs e)
@@ -143,14 +146,14 @@ namespace TowerDefence_ClientSide
                 return new RocketShape(coordinates, rotation).Shape;
         }
 
-        private void startSignalR(String mapType)
-        {
-            connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();
-            connection.On<string>("ReceiveMessage", ReceiveMessage);
-            connection.StartAsync();
-            connection.SendAsync("createMap", mapType);
-            connection.SendAsync("addPlayer", playerType);
-        }
+        //private void startSignalR(String mapType)
+        //{
+        //    connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();
+        //    connection.On<string>("ReceiveMessage", ReceiveMessage);
+        //    connection.StartAsync();
+        //    connection.SendAsync("createMap", mapType);
+        //    connection.SendAsync("addPlayer", playerType);
+        //}
 
         private void ReceiveMessage(string updatedMapJson)
         {
@@ -241,7 +244,7 @@ namespace TowerDefence_ClientSide
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             graphicalTimer.Stop();
-            serverConnection.UnsubscribeFromServer();
+            serverConnection.GetConnection().StopAsync();
             base.OnFormClosing(e);
         }
 
@@ -286,13 +289,13 @@ namespace TowerDefence_ClientSide
             switch (name)
             {
                 case "Minigun":
-                    connection.SendAsync("buyTower", playerType, TowerType.Minigun, coordinates);
+                    serverConnection.SendMessage(new TowerMessage("buyTower", playerType, TowerType.Minigun, coordinates, MessageType.Tower));
                     break;
                 case "Laser":
-                    connection.SendAsync("buyTower", playerType, TowerType.Laser, coordinates);
+                    serverConnection.SendMessage(new TowerMessage("buyTower", playerType, TowerType.Laser, coordinates, MessageType.Tower));
                     break;
                 case "Rocket":
-                    connection.SendAsync("buyTower", playerType, TowerType.Rocket, coordinates);
+                    serverConnection.SendMessage(new TowerMessage("buyTower", playerType, TowerType.Rocket, coordinates, MessageType.Tower));
                     break;
                 default:
                     break;
@@ -304,10 +307,10 @@ namespace TowerDefence_ClientSide
             switch (name)
             {
                 case "Hitpoints":
-                    connection.SendAsync("buySoldier", playerType, SoldierType.HitpointsSoldier);
+                    serverConnection.SendMessage(new SoldierMessage("buySoldier", MessageType.Soldier, playerType, SoldierType.HitpointsSoldier));
                     break;
                 case "Speed":
-                    connection.SendAsync("buySoldier", playerType, SoldierType.SpeedSoldier);
+                    serverConnection.SendMessage(new SoldierMessage("buySoldier", MessageType.Soldier, playerType, SoldierType.SpeedSoldier));
                     break;
                 default:
                     break;

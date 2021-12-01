@@ -13,6 +13,7 @@ namespace TowerDefence_ClientSide.Proxy
         public Message(string command, MessageType messageType)
         {
             Command = command;
+            MessageType = messageType;
         }
     }
 }

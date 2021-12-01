@@ -8,6 +8,7 @@ namespace TowerDefence_ClientSide.Proxy
     {
         Tower,
         Soldier,
+        Map,
         Player
     }
 }

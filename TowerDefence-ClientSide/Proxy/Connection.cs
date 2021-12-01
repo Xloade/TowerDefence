@@ -20,6 +20,12 @@ namespace TowerDefence_ClientSide.Proxy
         {
             switch(HubConnection.State)
             {
+                case HubConnectionState.Connecting:
+                    PendingMessages.Add(message);
+                    break;
+                case HubConnectionState.Disconnected:
+                    PendingMessages.Add(message);
+                    break;
                 case HubConnectionState.Connected:
                     if(PendingMessages.Count > 0)
                     {
@@ -34,9 +40,6 @@ namespace TowerDefence_ClientSide.Proxy
                         Send(message);
                     }
                     break;
-                case HubConnectionState.Disconnected:
-                    PendingMessages.Add(message);
-                    break;
             }           
         }
 
@@ -47,23 +50,22 @@ namespace TowerDefence_ClientSide.Proxy
             switch (message.MessageType)
             {
                 case MessageType.Tower:
-                    var towerMessage = message as TowerMessage;
+                    var towerMessage = (TowerMessage)message;
                     HubConnection.SendAsync(towerMessage.Command, towerMessage.PlayerType, towerMessage.TowerType, towerMessage.Coordinates);
                     break;
+                case MessageType.Soldier:
+                    var soldierMessage = (SoldierMessage)message;
+                    HubConnection.SendAsync(soldierMessage.Command, soldierMessage.SoldierType, soldierMessage.PlayerType);
+                    break;
+                case MessageType.Map:
+                    var mapMessage = (MapMessage)message;
+                    HubConnection.SendAsync(mapMessage.Command, mapMessage.MapType);
+                    break;
+                case MessageType.Player:
+                    var playerMessage = (PlayerMessage)message;
+                    HubConnection.SendAsync(playerMessage.Command, playerMessage.PlayerType);
+                    break;
             }
-        }
-
-        public void SubscribeToServer()
-        {
-            HubConnection.On<string>("ReceiveMessage", (message) => {
-                MessageReceivedCallback(message);
-            });
-            HubConnection.StartAsync();
-        }
-
-        public void UnsubscribeFromServer()
-        {
-            HubConnection.StopAsync();
         }
     }
 }
