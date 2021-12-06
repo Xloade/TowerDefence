@@ -13,13 +13,13 @@ namespace TowerDefence_ClientSide.Composite
     public class ShapePlatoon: IShapeComposite, IEnumerable<Shape>
     {
         public PlatoonType PlatoonName { get; set; }
-        public List<IShapeComposite> Shapes = new List<IShapeComposite>();
+        public readonly List<IShapeComposite> Shapes = new List<IShapeComposite>();
 
         public ShapePlatoon(PlatoonType platoonName)
         {
             PlatoonName = platoonName;
         }
-        public List<IShapeComposite> getShapes()
+        public List<IShapeComposite> GetShapes()
         {
             return Shapes;
         }
@@ -29,7 +29,7 @@ namespace TowerDefence_ClientSide.Composite
             Shapes.ForEach((shape) => shape.GroupDraw(gr));
         }
 
-        public bool isShape()
+        public bool IsShape()
         {
             return false;
         }
@@ -48,18 +48,19 @@ namespace TowerDefence_ClientSide.Composite
         {
             try
             {
-                //select next shapes from children > find higher then last > find min
-                //return Shapes.Select(x => x.GetNextShape(last))
-                    //   .Aggregate((best, next) => next != null && best.Info.Id > last && next.Info.Id > best.Info.Id ? next : best);
                 var childAnswers = Shapes.Select(x => x.GetNextShape(last));
-                Shape seed = new Shape();
-                seed.Info = new DrawInfo();
-                seed.Info.Id = long.MaxValue;
-                var BestFromAll = childAnswers.Aggregate(seed ,(best, next) =>
+                var seed = new Shape
+                {
+                    Info = new DrawInfo
+                    {
+                        Id = long.MaxValue
+                    }
+                };
+                var bestFromAll = childAnswers.Aggregate(seed ,(best, next) =>
                     next != null && next.Info.Id > last && next.Info.Id < best.Info.Id ? next : best);
-                return seed == BestFromAll ? null : BestFromAll;
+                return seed == bestFromAll ? null : bestFromAll;
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
                 return null;
             }

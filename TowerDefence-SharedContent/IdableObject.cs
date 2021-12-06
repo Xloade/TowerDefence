@@ -6,12 +6,12 @@ namespace TowerDefence_SharedContent
 {
     public class IdableObject
     {
-        private static long IdCounter = 0;
+        private static long _idCounter = 0;
 
         public IdableObject()
         {
-            Id = IdCounter;
-            IdCounter++;
+            Id = _idCounter;
+            _idCounter++;
         }
         public long Id {get; set; }
     }

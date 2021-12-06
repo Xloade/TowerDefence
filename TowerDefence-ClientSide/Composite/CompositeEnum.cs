@@ -9,7 +9,7 @@ namespace TowerDefence_ClientSide.Composite
 {
     class CompositeEnum : IEnumerator<Shape>
     {
-        private IShapeComposite root;
+        private readonly IShapeComposite root;
         private Shape currShape;
         private long currId;
 
@@ -31,13 +31,7 @@ namespace TowerDefence_ClientSide.Composite
             }
         }
 
-        object IEnumerator.Current
-        {
-            get
-            {
-                return Current;
-            }
-        }
+        object IEnumerator.Current => Current;
 
         public void Dispose()
         {

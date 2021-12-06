@@ -11,21 +11,21 @@ namespace TowerDefence_SharedContent
 {
     public class Map : IMapObserver
     {
-        public string backgroundImageDir;
+        public string BackgroundImageDir;
 
-        public List<Player> players;
+        public List<Player> Players;
 
         public Map()
         {
-            players = new List<Player>();
+            Players = new List<Player>();
         }
 
         public void AddPlayer(PlayerType playerType)
         {
             lock (this)
             {
-                players.RemoveAll((player)=> player.PlayerType == playerType);
-                players.Add(new Player(playerType));
+                Players.RemoveAll((player)=> player.PlayerType == playerType);
+                Players.Add(new Player(playerType));
             }
         }
 
@@ -34,7 +34,7 @@ namespace TowerDefence_SharedContent
         {
             lock (this)
             {
-                return players.Find(player => player.PlayerType == type);
+                return Players.Find(player => player.PlayerType == type);
             }
         }
 
@@ -42,7 +42,7 @@ namespace TowerDefence_SharedContent
         {
             lock (this)
             {
-            return players.Find(player => player.PlayerType != type);
+            return Players.Find(player => player.PlayerType != type);
             }
         }
 
@@ -61,11 +61,11 @@ namespace TowerDefence_SharedContent
             MyConsole.WriteLineWithCount("Observer: Update Map");
             lock (this)
             {
-                foreach (Player player in players)
+                foreach (Player player in Players)
                 {
                     if (player.PlayerType == playerType)
                     {
-                        player.soldiers.Add(soldier);
+                        player.Soldiers.Add(soldier);
                         player.SoldierCurrency -= soldier.BuyPrice[soldier.Level];
                     }
                 }
@@ -77,11 +77,11 @@ namespace TowerDefence_SharedContent
             MyConsole.WriteLineWithCount("Observer: Update Map");
             lock (this)
             {
-                foreach (Player player in players)
+                foreach (Player player in Players)
                 {
                     if (player.PlayerType == playerType)
                     {
-                        player.towers.Add(tower);
+                        player.Towers.Add(tower);
                         player.TowerCurrency -= tower.Price[tower.Level];
                     }
                 }
@@ -92,7 +92,7 @@ namespace TowerDefence_SharedContent
         {
             lock (this)
             {
-                foreach (Player player in players)
+                foreach (Player player in Players)
                 {
                     player.UpdateSoldierMovement();
                 }
@@ -103,11 +103,11 @@ namespace TowerDefence_SharedContent
         {
             lock (this)
             {
-                if (players.Count > 1)
+                if (Players.Count > 1)
                 {
-                    foreach (Player player in players)
+                    foreach (Player player in Players)
                     {
-                        player.UpdateTowerActivity(GetPlayerEnemy(player.PlayerType).soldiers);
+                        player.UpdateTowerActivity(GetPlayerEnemy(player.PlayerType).Soldiers);
                     }
                 }
             }         
@@ -115,9 +115,9 @@ namespace TowerDefence_SharedContent
 
         public void Restart()
         {
-            players.ForEach((player)=> {
-                player.soldiers.Clear();
-                player.towers.Clear();
+            Players.ForEach((player)=> {
+                player.Soldiers.Clear();
+                player.Towers.Clear();
             });
         }
     }

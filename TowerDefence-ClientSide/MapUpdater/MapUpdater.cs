@@ -13,17 +13,15 @@ namespace TowerDefence_ClientSide
 {
     class MapUpdater
     {
-        private LazyImageDictionary imageDictionary = new LazyImageDictionary();
-        private IHaveShapePlatoon ShapePlatoon;
-        private ShapePlatoon DefaultPlatoon;
-        private ShapePlatoon Platoon1;
-        private ShapePlatoon Platoon2;
-        private ShapePlatoon Enemy;
-        private PlayerType CurrentPlayerType;
-        public ShapePlatoon root
-        {
-            get { return ShapePlatoon.Shapes; }
-        }
+        private readonly LazyImageDictionary imageDictionary = new LazyImageDictionary();
+        private readonly IHaveShapePlatoon ShapePlatoon;
+        private readonly ShapePlatoon DefaultPlatoon;
+        private readonly ShapePlatoon Platoon1;
+        private readonly ShapePlatoon Platoon2;
+        private readonly ShapePlatoon Enemy;
+        private readonly PlayerType CurrentPlayerType;
+        public ShapePlatoon Root => ShapePlatoon.Shapes;
+
         public MapUpdater(IHaveShapePlatoon shapePlatoon, PlayerType playerType)
         {
             ShapePlatoon = shapePlatoon;
@@ -33,37 +31,37 @@ namespace TowerDefence_ClientSide
             Platoon1 = new ShapePlatoon(PlatoonType.Platoon1);
             Platoon2 = new ShapePlatoon(PlatoonType.Platoon2);
             Enemy = new ShapePlatoon(PlatoonType.Enemy);
-            root.Shapes.Add(DefaultPlatoon);
-            root.Shapes.Add(Platoon1);
-            root.Shapes.Add(Platoon2);
-            root.Shapes.Add(Enemy);
+            Root.Shapes.Add(DefaultPlatoon);
+            Root.Shapes.Add(Platoon1);
+            Root.Shapes.Add(Platoon2);
+            Root.Shapes.Add(Enemy);
         }
         public void UpdateMap(Map map, out Image bgImage, IPlayerStats playerStats)
         {
             IStats newPlayerStats = new PlayerStats(map.GetPlayer(CurrentPlayerType));
             UpdateStatsView(playerStats, newPlayerStats);
 
-            updateMapColor(map.backgroundImageDir, out bgImage);
+            UpdateMapColor(map.BackgroundImageDir, out bgImage);
 
             GetNewShapes(map);
             DeleteOldShapes(map);
-            root.UpdatePlatoon(PlatoonType.DefaultPlatoon);
+            Root.UpdatePlatoon(PlatoonType.DefaultPlatoon);
         }
 
         private void DeleteOldShapes(Map map)
         {
             List<DrawInfo> allIdableObjects = new List<DrawInfo>();
-            foreach (Player player in map.players)
+            foreach (Player player in map.Players)
             {
-                allIdableObjects.AddRange(player.soldiers);
-                allIdableObjects.AddRange(player.towers);
-                foreach (Tower tower in player.towers)
+                allIdableObjects.AddRange(player.Soldiers);
+                allIdableObjects.AddRange(player.Towers);
+                foreach (Tower tower in player.Towers)
                 {
                     allIdableObjects.AddRange(tower.Ammunition);
                 }
             }
 
-            foreach (Shape shape in root)
+            foreach (Shape shape in Root)
             {
                 DrawInfo newShapeInfo = allIdableObjects.Find(x => x.Id == shape.Info.Id);
                 if (newShapeInfo != null)
@@ -72,19 +70,19 @@ namespace TowerDefence_ClientSide
                 }
                 else
                 {
-                    root.DeleteShape(shape);
+                    Root.DeleteShape(shape);
                 }
             }
         }
 
         private void GetNewShapes(Map map)
         {
-            List<Shape> currentShapes = root.ToList();
-            foreach (Player player in map.players)
+            List<Shape> currentShapes = Root.ToList();
+            foreach (Player player in map.Players)
             {
                 ShapePlatoon platoonToUse = player.PlayerType == CurrentPlayerType ? DefaultPlatoon : Enemy;
-                GetNewSoldiers(player.soldiers, platoonToUse, currentShapes);
-                GetNewTowers(player.towers, platoonToUse, currentShapes);
+                GetNewSoldiers(player.Soldiers, platoonToUse, currentShapes);
+                GetNewTowers(player.Towers, platoonToUse, currentShapes);
             }
 
         }
@@ -94,7 +92,7 @@ namespace TowerDefence_ClientSide
             {
                 if (!currentShapes.Exists(x => x.Info.Id == soldier.Id))
                 {
-                    Shape firstWrap = new Shape(soldier, 100, 100, imageDictionary.get(soldier.Sprite));
+                    Shape firstWrap = new Shape(soldier, 100, 100, imageDictionary.Get(soldier.Sprite));
                     IDraw secondWrap = new LvlDrawDecorator(firstWrap, firstWrap);
                     IDraw thirdWrap = new PlatoonDecorator(secondWrap, firstWrap);
                     IDraw fourthWrap = new HpDrawDecorator(thirdWrap, firstWrap);
@@ -110,7 +108,7 @@ namespace TowerDefence_ClientSide
             {
                 if (!currentShapes.Exists(x => x.Info.Id == tower.Id))
                 {
-                    Shape firstWrap = new Shape(tower, 100, 100, imageDictionary.get(tower.Sprite));
+                    Shape firstWrap = new Shape(tower, 100, 100, imageDictionary.Get(tower.Sprite));
                     IDraw secondWrap = new LvlDrawDecorator(firstWrap, firstWrap);
                     IDraw thirdWrap = new PlatoonDecorator(secondWrap, firstWrap);
                     firstWrap.DecoratedDrawInterface = thirdWrap;
@@ -126,16 +124,16 @@ namespace TowerDefence_ClientSide
             {
                 if (!currentShapes.Exists(x => x.Info.Id == amm.Id))
                 {
-                    Shape temp = AmunitionStore.getAmunitionShape(amm.AmmunitionType);
+                    Shape temp = AmunitionStore.GetAmunitionShape(amm.AmmunitionType);
                     temp.Info = amm;
                     shapePlatoon.Shapes.Add(temp);
                 }
             });
         }
 
-        private void updateMapColor(string image, out Image bgImage)
+        private void UpdateMapColor(string image, out Image bgImage)
         {
-            bgImage = imageDictionary.get(image);
+            bgImage = imageDictionary.Get(image);
         }
 
         private void UpdateStatsView(IPlayerStats playerStats, IStats stats)

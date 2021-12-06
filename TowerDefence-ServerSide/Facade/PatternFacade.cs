@@ -8,44 +8,44 @@ namespace TowerDefence_ServerSide.Facade
 {
     public class PatternFacade
     {
-        private static PatternFacade instance;
+        private static PatternFacade _instance;
 
-        private static MapFactory mapFactory;
-        private static GameElementFactory towerFactory;
+        private static MapFactory _mapFactory;
+        private static GameElementFactory _towerFactory;
 
-        private static Barrack barrack;
-        private static SoldierBuilder builder;
+        private static Barrack _barrack;
+        private static SoldierBuilder _builder;
 
-        private static Command cursorCommand;
+        private static Command _cursorCommand;
 
         public static PatternFacade GetInstance()
         {
-            return instance;
+            return _instance;
         }
 
         public static void CreateInstance()
         {
-            if (instance != null) return;
-            mapFactory = new MapFactory();
-            towerFactory = new TowerFactory();
-            barrack = new Barrack();
+            if (_instance != null) return;
+            _mapFactory = new MapFactory();
+            _towerFactory = new TowerFactory();
+            _barrack = new Barrack();
 
-            instance = new PatternFacade();
+            _instance = new PatternFacade();
         }
 
         public void InitCursorCommand(GameCursor gameCursor)
         {
-            cursorCommand = new CursorCommand(gameCursor);
+            _cursorCommand = new CursorCommand(gameCursor);
         }
 
         public Map CreateMap(string mapType)
         {
-            return mapFactory.CreateMap(mapType);
+            return _mapFactory.CreateMap(mapType);
         }
 
         public Tower CreateTower(PlayerType playerType, TowerType towerType, Point point)
         {
-            return towerFactory.CreateTower(playerType, towerType, point);
+            return _towerFactory.CreateTower(playerType, towerType, point);
         }
 
         public Soldier TrainSoldier(PlayerType playerType, SoldierType soldierType)
@@ -53,13 +53,13 @@ namespace TowerDefence_ServerSide.Facade
             switch (soldierType)
             {
                 case SoldierType.HitpointsSoldier:
-                    builder = new HitpointsSoldierBuilder(playerType, soldierType, 1);
-                    barrack.Train(builder, playerType);
-                    return builder.Soldier;
+                    _builder = new HitpointsSoldierBuilder(playerType, soldierType, 1);
+                    _barrack.Train(_builder, playerType);
+                    return _builder.Soldier;
                 case SoldierType.SpeedSoldier:
-                    builder = new SpeedSoldierBuilder(playerType, soldierType, 1);
-                    barrack.Train(builder, playerType);
-                    return builder.Soldier;
+                    _builder = new SpeedSoldierBuilder(playerType, soldierType, 1);
+                    _barrack.Train(_builder, playerType);
+                    return _builder.Soldier;
                 default:
                     return null;
             }
@@ -67,12 +67,12 @@ namespace TowerDefence_ServerSide.Facade
         
         public void DoCommand(TowerType towerType)
         {
-            cursorCommand.Do(towerType);
+            _cursorCommand.Do(towerType);
         }
 
         public void UndoCommand()
         {
-            cursorCommand.Undo();
+            _cursorCommand.Undo();
         }
     }
 }

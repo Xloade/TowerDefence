@@ -25,9 +25,9 @@ namespace TowerDefence_ServerSide.Tests
         [DataRow("RandromName", "Autumn")]
         public void CreateMap_checksIfcreatedCorrect_allMatches(string mapType, string mapTypeToGetDir)
         {
-            string correctDir = SpritePaths.getMap(mapTypeToGetDir);
+            string correctDir = SpritePaths.GetMap(mapTypeToGetDir);
             Map map = mapFactory.CreateMap(mapType);
-            Assert.AreEqual(map.backgroundImageDir, correctDir);
+            Assert.AreEqual(map.BackgroundImageDir, correctDir);
         }
     }
 }

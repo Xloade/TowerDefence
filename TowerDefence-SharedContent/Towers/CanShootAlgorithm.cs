@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TowerDefence_SharedContent.Towers
 {
-    public interface CanShootAlgorithm
+    public interface ICanShootAlgorithm
     {
         bool CanShoot(Point soldierCoordinates);
     }

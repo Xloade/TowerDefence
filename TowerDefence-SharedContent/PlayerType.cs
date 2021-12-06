@@ -6,7 +6,7 @@ namespace TowerDefence_SharedContent
 {
     public enum PlayerType
     {
-        PLAYER1,
-        PLAYER2
+        Player1,
+        Player2
     }
 }

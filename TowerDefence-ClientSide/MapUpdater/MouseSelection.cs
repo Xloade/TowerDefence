@@ -9,6 +9,6 @@ namespace TowerDefence_ClientSide
     {
         public Point StartPoint { get; set; }
         public Point EndPoint { get; set; }
-        public bool Selected;
+        public bool Selected { get; set; }
     }
 }

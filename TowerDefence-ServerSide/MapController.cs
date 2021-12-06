@@ -15,25 +15,25 @@ namespace TowerDefence_ServerSide
     {
         private List<IMapObserver> mapObservers = new List<IMapObserver>();
 
-        static IHubContext<GameHub> hubContext;
-        public System.Timers.Timer timer = new System.Timers.Timer();
-        public static double timerSpeed = 36; //~30times per second
-        public static bool foundThreading = false;
-        private static MapController instance;
+        static IHubContext<GameHub> _hubContext;
+        public System.Timers.Timer Timer = new System.Timers.Timer();
+        public static double TimerSpeed = 36; //~30times per second
+        public static bool FoundThreading = false;
+        private static MapController _instance;
 
-        public static void setIHubContext(IHubContext<GameHub> context)
+        public static void SetIHubContext(IHubContext<GameHub> context)
         {
-            hubContext = context;
+            _hubContext = context;
         }
 
-        public static MapController getInstance(){
+        public static MapController GetInstance(){
             int random = MyConsole.Random();
             MyConsole.LookForMultiThreads("Singleton", random);
             try
             {
-                lock (instance)
+                lock (_instance)
                 {
-                    return instance;
+                    return _instance;
                 };
             }
             catch
@@ -46,34 +46,34 @@ namespace TowerDefence_ServerSide
             }
 
         }
-        public static void createInstance(){
-            if (instance != null) return;
-            instance = new MapController();
+        public static void CreateInstance(){
+            if (_instance != null) return;
+            _instance = new MapController();
         }
-        public static void removeInstance()
+        public static void RemoveInstance()
         {
-            instance = null;
+            _instance = null;
         }
-        public static void restartInstance()
+        public static void RestartInstance()
         {
-            MapController.removeInstance();
+            MapController.RemoveInstance();
         }
         public MapController()
         {
-            timer.Interval = timerSpeed;
-            timer.Start();
+            Timer.Interval = TimerSpeed;
+            Timer.Start();
 
             SendMapUpdates();     
         }
 
         public void SendMapUpdates()
         {
-            timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
+            Timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
             {
                 Notify();
                 if(mapObservers.Count > 0)
                 {
-                    await hubContext.Clients.All.SendAsync("ReceiveMessage", mapObservers[0].ToJson());
+                    await _hubContext.Clients.All.SendAsync("ReceiveMessage", mapObservers[0].ToJson());
                 }
             };
         }

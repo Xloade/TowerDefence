@@ -14,7 +14,7 @@ namespace TowerDefence_SharedContent.Towers
             Power = new int[] { 2, 3, 5 };
             RateOfFire = new double[] { 20, 20, 20 };
             TowerType = towerType;
-            canShootAlgorithm = new CanLaserShoot();
+            CanShootAlgorithm = new CanLaserShoot();
         }
 
         public LaserTower(int level, int[] price, Point coordinates, int[] range, int[] power, double[] rateOfFire,

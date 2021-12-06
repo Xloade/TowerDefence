@@ -5,11 +5,11 @@ using System.Text;
 
 namespace TowerDefence_SharedContent.Towers
 {
-    public class CanMiniGunShoot : CanShootAlgorithm
+    public class CanMiniGunShoot : ICanShootAlgorithm
     {
-        private int Level;
+        private readonly int Level;
         private Point Coordinates;
-        private int[] Range;
+        private readonly int[] Range;
 
         public CanMiniGunShoot(int level, Point coordinates, int[] range)
         {

@@ -23,44 +23,44 @@ namespace TowerDefence_ServerSide.Tests
         public void Setup()
         {
             var gameHub = new Mock<IHubContext<GameHub>>();
-            MapController.setIHubContext(gameHub.Object);
+            MapController.SetIHubContext(gameHub.Object);
             factory = new MapFactory();
-            MapController.createInstance();
+            MapController.CreateInstance();
             map = factory.CreateMap("Winter");
-            mapController = MapController.getInstance();
+            mapController = MapController.GetInstance();
             mapController.Attach(map);
         }
         [TestMethod()]
         [ExpectedException(typeof(Exception))]
         public void removeInstance_checksIfEmpty_ExceptionTrown()
         {
-            MapController.removeInstance();
-            MapController mapController = MapController.getInstance();
+            MapController.RemoveInstance();
+            MapController mapController = MapController.GetInstance();
             Assert.Fail("Expected Exception");
         }
         [TestMethod()]
         public void createInstance_checksIfCreated_getsMapcontroller()
         {
-            MapController.createInstance();
-            MapController mapController = MapController.getInstance();
+            MapController.CreateInstance();
+            MapController mapController = MapController.GetInstance();
             Assert.IsNotNull(mapController);
         }
         [TestMethod()]
         public void restartInstance_checksIfSoldersRemoved_areRemoved()
         {
-            MapController.createInstance();
-            MapController mapControllerFromSingleton = MapController.getInstance();
+            MapController.CreateInstance();
+            MapController mapControllerFromSingleton = MapController.GetInstance();
             Map mapFromSingleton = factory.CreateMap("Winter");
             mapControllerFromSingleton.Attach(mapFromSingleton);
-            mapFromSingleton.AddPlayer(PlayerType.PLAYER1);
+            mapFromSingleton.AddPlayer(PlayerType.Player1);
             Barrack barrack = new Barrack();
-            HitpointsSoldierBuilder hitpointsSoldierBuilder = new HitpointsSoldierBuilder(PlayerType.PLAYER1, SoldierType.HitpointsSoldier, 1);
-            barrack.Train((SoldierBuilder)hitpointsSoldierBuilder, PlayerType.PLAYER1);
-            mapControllerFromSingleton.AddSoldier(hitpointsSoldierBuilder.Soldier, PlayerType.PLAYER1);
+            HitpointsSoldierBuilder hitpointsSoldierBuilder = new HitpointsSoldierBuilder(PlayerType.Player1, SoldierType.HitpointsSoldier, 1);
+            barrack.Train((SoldierBuilder)hitpointsSoldierBuilder, PlayerType.Player1);
+            mapControllerFromSingleton.AddSoldier(hitpointsSoldierBuilder.Soldier, PlayerType.Player1);
 
-            MapController.restartInstance();
+            MapController.RestartInstance();
 
-            var numOfsoldiers = mapFromSingleton.GetPlayer(PlayerType.PLAYER1).soldiers.Count;
+            var numOfsoldiers = mapFromSingleton.GetPlayer(PlayerType.Player1).Soldiers.Count;
             Assert.AreEqual(0, numOfsoldiers);
         }
         [TestMethod()]
@@ -68,7 +68,7 @@ namespace TowerDefence_ServerSide.Tests
             mapController.Deattach(map);
             
             Assert.ThrowsException<ArgumentOutOfRangeException>(()=>{
-                mapController.AddPlayer(PlayerType.PLAYER1);
+                mapController.AddPlayer(PlayerType.Player1);
             });
         }
     }

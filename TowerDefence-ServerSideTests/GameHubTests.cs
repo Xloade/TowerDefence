@@ -22,59 +22,59 @@ namespace TowerDefence_ServerSide.Tests
         {
             gameHub = new GameHub();
             var gameHubMock = new Mock<Microsoft.AspNetCore.SignalR.IHubContext<GameHub>>();
-            MapController.setIHubContext(gameHubMock.Object);
+            MapController.SetIHubContext(gameHubMock.Object);
             MapFactory factory = new MapFactory();
-            MapController.createInstance();
+            MapController.CreateInstance();
             map = factory.CreateMap("Winter");
-            mapController = MapController.getInstance();
+            mapController = MapController.GetInstance();
             mapController.Attach(map);
-            mapController.AddPlayer(PlayerType.PLAYER1);
+            mapController.AddPlayer(PlayerType.Player1);
         }
         [TestCleanup()]
         public void TestCleanup()
         {
-            MapController.removeInstance();
+            MapController.RemoveInstance();
         }
         [TestMethod()]
-        public void createMapTest()
+        public void CreateMapTest()
         {
-            MapController.removeInstance();
-            gameHub.createMap("Winter");
-            Assert.IsNotNull(MapController.getInstance());
+            MapController.RemoveInstance();
+            gameHub.CreateMap("Winter");
+            Assert.IsNotNull(MapController.GetInstance());
         }
 
         [DataTestMethod()]
         [DataRow(SoldierType.HitpointsSoldier)]
         [DataRow(SoldierType.SpeedSoldier)]
-        public void buySoldierTest(SoldierType soldierType)
+        public void BuySoldierTest(SoldierType soldierType)
         {
 
-            gameHub.buySoldier(PlayerType.PLAYER1, soldierType);
-            Player player = map.GetPlayer(PlayerType.PLAYER1);
-            Assert.AreEqual(soldierType, player.soldiers[player.soldiers.Count - 1].SoldierType);
+            gameHub.BuySoldier(PlayerType.Player1, soldierType);
+            Player player = map.GetPlayer(PlayerType.Player1);
+            Assert.AreEqual(soldierType, player.Soldiers[player.Soldiers.Count - 1].SoldierType);
         }
 
         [TestMethod()]
-        public void buyTowerTest()
+        public void BuyTowerTest()
         {
-            gameHub.buyTower(PlayerType.PLAYER1, TowerType.Minigun, new System.Drawing.Point(100, 100));
-            Assert.AreEqual(1, map.GetPlayer(PlayerType.PLAYER1).towers.Count);
+            gameHub.BuyTower(PlayerType.Player1, TowerType.Minigun, new System.Drawing.Point(100, 100));
+            Assert.AreEqual(1, map.GetPlayer(PlayerType.Player1).Towers.Count);
         }
 
         [TestMethod()]
-        public void restartGameTest()
+        public void RestartGameTest()
         {
-            gameHub.buyTower(PlayerType.PLAYER1, TowerType.Minigun, new System.Drawing.Point(100, 100));
-            gameHub.restartGame();
-            Assert.AreEqual(0, map.GetPlayer(PlayerType.PLAYER1).towers.Count);
+            gameHub.BuyTower(PlayerType.Player1, TowerType.Minigun, new System.Drawing.Point(100, 100));
+            gameHub.RestartGame();
+            Assert.AreEqual(0, map.GetPlayer(PlayerType.Player1).Towers.Count);
         }
 
         [DataTestMethod()]
-        [DataRow(PlayerType.PLAYER1)]
-        [DataRow(PlayerType.PLAYER2)]
-        public void addPlayerTest(PlayerType playerType)
+        [DataRow(PlayerType.Player1)]
+        [DataRow(PlayerType.Player2)]
+        public void AddPlayerTest(PlayerType playerType)
         {
-            gameHub.addPlayer(playerType);
+            gameHub.AddPlayer(playerType);
             Assert.IsNotNull(map.GetPlayer(playerType));
         }
     }
