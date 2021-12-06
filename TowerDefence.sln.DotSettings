@@ -2,6 +2,7 @@
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=73619DA183F8574A92A332B206470078/ReplaceComment/@EntryValue">Abtract properties might not be usefull</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=73619DA183F8574A92A332B206470078/Severity/@EntryValue">WARNING</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/Comment/@EntryValue">override with default get; set;</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/CustomPatternPlaceholder/=Class/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/CustomPatternPlaceholder/=Class/Properties/=ExactType/@EntryIndexedValue">False</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/CustomPatternPlaceholder/=Class/Properties/=Type/@EntryIndexedValue"></s:String>
@@ -15,8 +16,9 @@
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/IsReplacePattern/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/LanguageName/@EntryValue">CSHARP</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/MatchCatchClauseWithoutExceptionFilter/@EntryValue">False</s:Boolean>
-	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/ReplaceComment/@EntryValue">Abstract property might not be usefull</s:String>
-	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/ReplacePattern/@EntryValue">public $Class$ $Rotation$ { get; set; }</s:String>
-	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/SearchPattern/@EntryValue">public abstract $Class$ $Rotation$ { get; set; }</s:String>
+	
+	
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/SearchPattern/@EntryValue">public override $Class$ $Rotation$ { get; set; }</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/Severity/@EntryValue">WARNING</s:String>
-	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/ShortenReferences/@EntryValue">False</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/ShortenReferences/@EntryValue">False</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D4F8134B5285484B85568B53EDA68A88/SuppressionKey/@EntryValue">AAAAAA</s:String></wpf:ResourceDictionary>
