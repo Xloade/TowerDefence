@@ -8,7 +8,6 @@ namespace TowerDefence_ClientSide.Proxy
     {
         private HubConnection HubConnection;
         private List<Message> PendingMessages;
-        public event MessageReceivedHandler MessageReceivedCallback;
 
         public Connection(string serverUrl)
         {
@@ -18,7 +17,8 @@ namespace TowerDefence_ClientSide.Proxy
 
         public void SendMessage(Message message)
         {
-            switch(HubConnection.State)
+            Console.WriteLine("Connection state: " + HubConnection.State);
+            switch (HubConnection.State)
             {
                 case HubConnectionState.Connecting:
                     PendingMessages.Add(message);
@@ -27,26 +27,27 @@ namespace TowerDefence_ClientSide.Proxy
                     PendingMessages.Add(message);
                     break;
                 case HubConnectionState.Connected:
-                    if(PendingMessages.Count > 0)
+                    if (PendingMessages.Count > 0)
                     {
-                       for(int i = 0; i < PendingMessages.Count; i++)
-                       {
+                        for (int i = 0; i < PendingMessages.Count; i++)
+                        {
                             Send(PendingMessages[i]);
                             PendingMessages.RemoveAt(i);
                             i--;
-                       }
-                    } else
+                        }
+                    }
+                    else
                     {
                         Send(message);
                     }
                     break;
-            }           
+            }
         }
 
         public HubConnection GetConnection() => HubConnection;
 
         private void Send(Message message)
-        {
+        {           
             switch (message.MessageType)
             {
                 case MessageType.Tower:
