@@ -1,46 +1,49 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide.Proxy
 {
     public class Connection : IConnection
     {
-        private HubConnection HubConnection;
-        private List<Message> PendingMessages;
+        private readonly HubConnection HubConnection;
+        private readonly List<Message> PendingMessages;
 
         public Connection(string serverUrl)
         {
             HubConnection = new HubConnectionBuilder().WithUrl(serverUrl).Build();
             PendingMessages = new List<Message>();
+
+            HubConnection.Closed += async (error) =>
+            {
+                MyConsole.WriteLineWithCount("Proxy: Connection closed");
+                await Task.Delay(500);
+                await HubConnection.StartAsync();
+            };
+            HubConnection.Reconnected += connectionId =>
+            {
+                MyConsole.WriteLineWithCount("Proxy: Reconnected");
+                for (var i = 0; i < PendingMessages.Count; i++)
+                {
+                    Send(PendingMessages[i]);
+                    PendingMessages.RemoveAt(i);
+                    i--;
+                }
+                return Task.CompletedTask;
+            };
         }
 
         public void SendMessage(Message message)
         {
-            Console.WriteLine("Connection state: " + HubConnection.State);
-            switch (HubConnection.State)
+            try
             {
-                case HubConnectionState.Connecting:
-                    PendingMessages.Add(message);
-                    break;
-                case HubConnectionState.Disconnected:
-                    PendingMessages.Add(message);
-                    break;
-                case HubConnectionState.Connected:
-                    if (PendingMessages.Count > 0)
-                    {
-                        for (int i = 0; i < PendingMessages.Count; i++)
-                        {
-                            Send(PendingMessages[i]);
-                            PendingMessages.RemoveAt(i);
-                            i--;
-                        }
-                    }
-                    else
-                    {
-                        Send(message);
-                    }
-                    break;
+                Send(message);
+            }
+            catch (Exception)
+            {
+                PendingMessages.Add(message);
             }
         }
 

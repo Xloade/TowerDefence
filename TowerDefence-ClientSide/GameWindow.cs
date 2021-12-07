@@ -50,7 +50,6 @@ namespace TowerDefence_ClientSide
             renderTimer.Interval = 10;
             renderTimer.Start();
         }
-
         private void SetupServerConnection(string mapType)
         {
             serverConnection = new ServerConnection(SERVER_URL);
