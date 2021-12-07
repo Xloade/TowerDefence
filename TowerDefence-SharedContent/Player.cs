@@ -14,16 +14,16 @@ namespace TowerDefence_SharedContent
 
         public PlayerType PlayerType { get; set; }
 
-        public List<Soldier> soldiers;
-        public List<Towers.Tower> towers;
+        public List<Soldier> Soldiers;
+        public List<Towers.Tower> Towers;
 
         public Player(PlayerType playerType)
         {
             Hitpoints = 5;
             TowerCurrency = 250;
             SoldierCurrency = 700;
-            soldiers = new List<Soldier>();
-            towers = new List<Towers.Tower>();
+            Soldiers = new List<Soldier>();
+            Towers = new List<Towers.Tower>();
             this.PlayerType = playerType;
         }
 
@@ -33,18 +33,18 @@ namespace TowerDefence_SharedContent
             TowerCurrency = towerCurrency;
             SoldierCurrency = soldierCurrency;
             PlayerType = playerType;
-            this.soldiers = soldiers;
-            this.towers = towers;
+            this.Soldiers = soldiers;
+            this.Towers = towers;
         }
 
         public void UpdateSoldierMovement()
         {
-            for (int i = 0; i < soldiers.Count; i++)
+            for (int i = 0; i < Soldiers.Count; i++)
             {
-                soldiers[i].MoveForward(PlayerType);
-                if (soldiers[i].IsOutOfMap(PlayerType))
+                Soldiers[i].MoveForward(PlayerType);
+                if (Soldiers[i].IsOutOfMap(PlayerType))
                 {
-                    soldiers.RemoveAt(i);
+                    Soldiers.RemoveAt(i);
                     i--;
                 }
             }
@@ -52,7 +52,7 @@ namespace TowerDefence_SharedContent
 
         public void UpdateTowerActivity(List<Soldier> enemySoldiers)
         {
-            foreach(Towers.Tower tower in towers)
+            foreach(Towers.Tower tower in Towers)
             {
                 tower.MoveAmmunition(PlayerType);
                 tower.Scan(enemySoldiers, PlayerType);

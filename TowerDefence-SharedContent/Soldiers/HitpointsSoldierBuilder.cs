@@ -25,7 +25,7 @@ namespace TowerDefence_SharedContent.Soldiers
 
         public override void BuildSprite(PlayerType playerType)
         {
-            soldier.Sprite = SpritePaths.getSoldier(playerType, soldier.SoldierType);
+            soldier.Sprite = SpritePaths.GetSoldier(playerType, soldier.SoldierType);
         }
     }
 }

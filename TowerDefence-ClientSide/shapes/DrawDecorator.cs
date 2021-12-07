@@ -7,21 +7,25 @@ namespace TowerDefence_ClientSide
 {
     abstract class DrawDecorator : IDraw
     {
-        protected IDraw wrapee;
+        protected IDraw Wrapee;
 
-        public float CenterX { get { return wrapee.CenterX; } set { wrapee.CenterX = value; } }
-        public float CenterY { get { return wrapee.CenterY; } set { wrapee.CenterY = value; } }
-        public float Width { get { return wrapee.Width; } set { wrapee.Width = value; } }
-        public float Height { get { return wrapee.Height; } set { wrapee.Height = value; } }
-        public float Rotation { get { return wrapee.Rotation; } set { wrapee.Rotation = value; } }
+        public float CenterX => Wrapee.CenterX;
+        public float CenterY => Wrapee.CenterY;
+        public float Width { get => Wrapee.Width;
+            set => Wrapee.Width = value;
+        }
+        public float Height { get => Wrapee.Height;
+            set => Wrapee.Height = value;
+        }
+        public float Rotation => Wrapee.Rotation;
 
         public DrawDecorator(IDraw component)
         {
-            wrapee = component;
+            Wrapee = component;
         }
         public virtual void Draw(Graphics gr)
         {
-            wrapee.Draw(gr);
+            Wrapee.Draw(gr);
         }
     }
 }

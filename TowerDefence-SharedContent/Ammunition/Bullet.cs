@@ -8,10 +8,9 @@ namespace TowerDefence_SharedContent
 {
     public class Bullet : Ammunition, IMove
     {
-        public override Point Coordinates { get; set; }
         public override int Speed { get; set; }
         public override AmmunitionType AmmunitionType { get; set; }
-        public Bullet(Point towerCoordinates, AmmunitionType ammunitionType, int power) : base(towerCoordinates, ammunitionType, power)
+        public Bullet(Point towerCoordinates, AmmunitionType ammunitionType, int power, PlayerType playerType) : base(towerCoordinates, ammunitionType, power, playerType)
         {
             Coordinates = towerCoordinates;
             Speed = 5;
@@ -20,7 +19,7 @@ namespace TowerDefence_SharedContent
 
         public override bool CanDestroy(Point soldierCoordinates, PlayerType playerType)
         {            
-            if(playerType == PlayerType.PLAYER1)
+            if(playerType == PlayerType.Player1)
                 return soldierCoordinates.X <= this.Coordinates.X;
             else
                 return soldierCoordinates.X >= this.Coordinates.X;
@@ -29,10 +28,10 @@ namespace TowerDefence_SharedContent
         {
             switch (playerType)
             {
-                case PlayerType.PLAYER1:
+                case PlayerType.Player1:
                     Coordinates = new System.Drawing.Point((int)(Coordinates.X + Speed), Coordinates.Y);
                     break;
-                case PlayerType.PLAYER2:
+                case PlayerType.Player2:
                     Coordinates = new System.Drawing.Point((int)(Coordinates.X - Speed), Coordinates.Y);
                     break;
                 default:

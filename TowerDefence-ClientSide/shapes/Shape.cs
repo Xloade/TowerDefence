@@ -1,38 +1,38 @@
 ﻿using System;
 using System.Drawing;
+using TowerDefence_ClientSide.shapes;
 using TowerDefence_SharedContent;
+using TowerDefence_ClientSide.Composite;
 
 namespace TowerDefence_ClientSide
 {
-    public class Shape : IDraw, ICloneable
+    public class Shape : IDraw, ICloneable, Composite.IShapeComposite, IShape
     {
-        public float CenterX { get; set; }
-        public float CenterY { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
-        public float Rotation { get; set; }
 
-        public Image sprite;
+        public PlatoonType PlatoonType { get; set; }
 
-        public Shape(Point center, float width, float height, float rotation, Image sprite) : this(center, width, height, sprite)
-        {
-            Rotation = rotation;
-        }
+        public DrawInfo Info { get; set; }
+        public float CenterX => Info.Coordinates.X;
+        public float CenterY => Info.Coordinates.Y;
+        public float Rotation => Info.Rotation;
 
-        public Shape(Point center, float width, float height, Image sprite) : this(center)
+        public Image SpriteImage;
+
+        public IDraw DecoratedDrawInterface { get; set; }
+
+        public Shape(DrawInfo drawInfo, float width, float height, Image spriteImage)
         {
             Width = width;
             Height = height;
-            this.sprite = (Image)sprite.Clone();
+            this.SpriteImage = (Image)spriteImage.Clone();
+            Info = drawInfo;
+            DecoratedDrawInterface = this;
         }
-
         public Shape()
         {
-        }
-        public Shape(Point center)
-        {
-            CenterX = center.X;
-            CenterY = center.Y;
+
         }
         public void Draw(Graphics gr)
         {
@@ -48,13 +48,13 @@ namespace TowerDefence_ClientSide
                 //Rotate.        
                 grImage.RotateTransform(Rotation);
                 //Move image back.
-                grImage.TranslateTransform(-(float)Width / 2, -(float)Height / 2);
+                grImage.TranslateTransform(-Width / 2, -Height / 2);
                 lock (this)
                 {
                     //bullet prototipe doesnt do deep enough copy
-                    lock (sprite)
+                    lock (SpriteImage)
                     {
-                        grImage.DrawImage(sprite, 0, 0, Width, Height);
+                        grImage.DrawImage(SpriteImage, 0, 0, Width, Height);
                     }
                 }
             }
@@ -65,10 +65,31 @@ namespace TowerDefence_ClientSide
         }
         // piešimas vykdomas išvestinėse klasėse
 
-    public object Clone()
-    {
-        return (Shape)this.MemberwiseClone();
-    }
+        public object Clone()
+        {
+            return (Shape)this.MemberwiseClone();
+        }
+        public void DecoratedDraw(Graphics gr)
+        {
+            DecoratedDrawInterface.Draw(gr);
+        }
+        public void GroupDraw(Graphics gr)
+        {
+            DecoratedDraw(gr);
+        }
 
+        public Shape GetNextShape(long last)
+        {
+            return this;
+        }
+
+        public void DeleteShape(Shape shape)
+        {
+            // Method intentionally left empty.
+        }
+        public void UpdatePlatoon(PlatoonType platoonType)
+        {
+            PlatoonType = platoonType;
+        }
     }
 }

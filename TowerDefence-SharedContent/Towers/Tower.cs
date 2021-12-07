@@ -6,19 +6,18 @@ using TowerDefence_SharedContent.Soldiers;
 
 namespace TowerDefence_SharedContent.Towers
 {
-    public abstract class Tower
+    public class Tower: DrawInfo, ILevel
     {
-        protected CanShootAlgorithm canShootAlgorithm;
-        public abstract int Level { get; set; }
-        public abstract int[] Price  { get; set; }
-        public abstract Point Coordinates { get; set; }
-        public abstract int[] Range { get; set; }
+        protected ICanShootAlgorithm CanShootAlgorithm;
+        public int Level { get; set; }
+        public int[] Price  { get; set; }
+        public int[] Range { get; set; }
         public int[] Power { get; set; }
-        public abstract double[] RateOfFire { get; set; }
-        public abstract string Sprite { get; set; }
-        public abstract List<Ammunition> Ammunition { get; set; }
-        public abstract TowerType TowerType { get; set; }
-        public abstract int ShootingCooldown { get; set; }
+        public double[] RateOfFire { get; set; }
+        public List<Ammunition> Ammunition { get; set; }
+        public TowerType TowerType { get; set; }
+        public int ShootingCooldown { get; set; }
+        public PlayerType PlayerType { get; set; }
 
         public Tower(PlayerType playerType, TowerType towerType, Point coordinates)
         {
@@ -26,12 +25,14 @@ namespace TowerDefence_SharedContent.Towers
             Coordinates = coordinates;
             Ammunition = new List<Ammunition>();
             TowerType = towerType;
-            Sprite = SpritePaths.getTower(playerType, towerType);
+            Sprite = SpritePaths.GetTower(playerType, towerType);
             ShootingCooldown = 0;
+            PlayerType = playerType;
+            Rotation = playerType == PlayerType.Player1 ? 90 : -90;
         }
 
         public Tower(int level, int[] price, Point coordinates, int[] range, int[]power, double[]rateOfFire,
-            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown)
+            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType)
         {
             Level = level;
             Price = price;
@@ -43,6 +44,8 @@ namespace TowerDefence_SharedContent.Towers
             Ammunition = ammunition;
             TowerType = towerType;
             ShootingCooldown = shootingCooldown;
+            PlayerType = playerType;
+            Rotation = playerType == PlayerType.Player1 ? 90 : -90;
         }
 
         public void MoveAmmunition(PlayerType type)
@@ -64,7 +67,7 @@ namespace TowerDefence_SharedContent.Towers
             for (int i = 0; i < soldiers.Count; i++)
             {
                 var soldier = soldiers[i];
-                if (canShootAlgorithm.CanShoot(soldier.Coordinates))
+                if (CanShootAlgorithm.CanShoot(soldier.Coordinates))
                 {
                     Shoot();
                 }
@@ -103,11 +106,11 @@ namespace TowerDefence_SharedContent.Towers
             GameElementFactory ammunitionFactory = new AmmunitionFactory();
             MyConsole.WriteLineWithCount("----- Strategy -----");
             if (this is MiniGunTower)
-                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Bullet, Power[Level]));
+                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Bullet, Power[Level], this.PlayerType));
             else if (this is RocketTower)
-                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Rocket, Power[Level]));
+                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Rocket, Power[Level], this.PlayerType));
             else if  (this is LaserTower)
-                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Laser, Power[Level]));
+                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Laser, Power[Level], this.PlayerType));
         }
     }
 }

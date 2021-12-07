@@ -2,29 +2,29 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using TowerDefence_ClientSide.shapes;
 using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
     class HpDrawDecorator : DrawDecorator
     {
-        private int _fullHp;
-        private int _currentHp;
-        public HpDrawDecorator(IDraw decoratedDraw, int fullHp,  int currentHp) : base(decoratedDraw)
+        private IShape Shape;
+        public HpDrawDecorator(IDraw decoratedDraw, IShape shape) : base(decoratedDraw)
         {
-            _fullHp = fullHp;
-            _currentHp = currentHp;
+            Shape = shape;
         }
         public override void Draw(Graphics gr)
         {
+            IHitpoints hitpoints = (IHitpoints)Shape.Info;
             base.Draw(gr);
             MyConsole.WriteLineWithCount("|   Hp wrapper");
             Bitmap bmp = new Bitmap(50, 10);
 
             using (Graphics grImage = Graphics.FromImage(bmp))
             {
-                int green = (int)(bmp.Width / (_fullHp*1.0) * _currentHp);
-                int red = (int)(bmp.Width / (_fullHp*1.0) * (_fullHp- _currentHp));
+                int green = (int)(bmp.Width / (hitpoints.CurrentLvlHitpoints* 1.0) * hitpoints.CurrentHitpoints);
+                int red = (int)(bmp.Width / (hitpoints.CurrentLvlHitpoints * 1.0) * (hitpoints.CurrentLvlHitpoints - hitpoints.CurrentHitpoints));
 
                 grImage.FillRectangle(Brushes.Green, 0, 0, green, 10);
                 grImage.FillRectangle(Brushes.Red, green, 0, red, 10);

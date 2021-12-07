@@ -4,9 +4,8 @@ using System.Text;
 
 namespace TowerDefence_SharedContent
 {
-    public enum PlayerType
+    public interface ILevel
     {
-        Player1,
-        Player2
+        public abstract int Level { get; set; }
     }
 }

@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using TowerDefence_ClientSide.shapes;
 using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide
 {
     class LvlDrawDecorator : DrawDecorator
     {
-        private int _level;
-        public LvlDrawDecorator(IDraw decoratedDraw, int level) : base(decoratedDraw)
+        private IShape Shape;
+        public LvlDrawDecorator(IDraw decoratedDraw, IShape shape) : base(decoratedDraw)
         {
-            _level = level;
+            Shape = shape;
         }
         public override void Draw(Graphics gr)
         {
+            ILevel level = (ILevel)Shape.Info;
             base.Draw(gr);
             MyConsole.WriteLineWithCount("|   LVL wrapper");
             // Create font and brush.
@@ -28,7 +30,7 @@ namespace TowerDefence_ClientSide
             // Draw string to screen.
             lock (gr)
             {
-                gr.DrawString($"lvl:{_level}", drawFont, drawBrush, CenterX - (Width/2)+10, CenterY + (Height / 2), drawFormat);
+                gr.DrawString($"lvl:{level.Level}", drawFont, drawBrush, CenterX - (Width/2)+10, CenterY + (Height / 2), drawFormat);
             }
         }
     }

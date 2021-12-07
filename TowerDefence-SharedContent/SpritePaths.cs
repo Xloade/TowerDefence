@@ -8,69 +8,58 @@ namespace TowerDefence_SharedContent
 {
     public static class SpritePaths
     {
-        readonly public static string dir = "../../../Sprites";
-        readonly public static string cursorsDir = "../../../Cursors";
-        public static string getTower(PlayerType playerType, TowerType towerType)
+        readonly public static string Dir = "../../../Sprites";
+        readonly public static string CursorsDir = "../../../Cursors";
+        public static string GetTower(PlayerType playerType, TowerType towerType)
         {
-            switch(towerType)
+            return towerType switch
             {
-                case TowerType.Minigun:
-                    return playerType == PlayerType.PLAYER1 ? $"{dir}/bulletTower(Blue).png" : $"{dir}/bulletTower(Red).png";
-                case TowerType.Rocket:
-                    return playerType == PlayerType.PLAYER1 ? $"{dir}/rocketTower(Blue).png" : $"{dir}/rocketTower(Red).png";
-                case TowerType.Laser:
-                    return playerType == PlayerType.PLAYER1 ? $"{dir}/laserTower(Blue).png" : $"{dir}/laserTower(Red).png";
-                default:
-                    return "";
-            }
+                TowerType.Minigun => playerType == PlayerType.Player1 ? $"{Dir}/bulletTower(Blue).png" : $"{Dir}/bulletTower(Red).png",
+                TowerType.Rocket => playerType == PlayerType.Player1 ? $"{Dir}/rocketTower(Blue).png" : $"{Dir}/rocketTower(Red).png",
+                TowerType.Laser => playerType == PlayerType.Player1 ? $"{Dir}/laserTower(Blue).png" : $"{Dir}/laserTower(Red).png",
+                _ => "",
+            };
         }
 
         public static string GetTowerCursor(PlayerType playerType, TowerType towerType)
         {
-            switch (towerType)
+            return towerType switch
             {
-                case TowerType.Minigun:
-                    return playerType == PlayerType.PLAYER1 ? $"{cursorsDir}/bulletTower_blue.cur" : $"{cursorsDir}/bulletTower_red.cur";
-                case TowerType.Rocket:
-                    return playerType == PlayerType.PLAYER1 ? $"{cursorsDir}/rocketTower_blue.cur" : $"{cursorsDir}/rocketTower_red.cur";
-                case TowerType.Laser:
-                    return playerType == PlayerType.PLAYER1 ? $"{cursorsDir}/laserTower_blue.cur" : $"{cursorsDir}/laserTower_red.cur";
-                default:
-                    return "";
-            }
+                TowerType.Minigun => playerType == PlayerType.Player1 ? $"{CursorsDir}/bulletTower_blue.cur" : $"{CursorsDir}/bulletTower_red.cur",
+                TowerType.Rocket => playerType == PlayerType.Player1 ? $"{CursorsDir}/rocketTower_blue.cur" : $"{CursorsDir}/rocketTower_red.cur",
+                TowerType.Laser => playerType == PlayerType.Player1 ? $"{CursorsDir}/laserTower_blue.cur" : $"{CursorsDir}/laserTower_red.cur",
+                _ => "",
+            };
         }
 
-        public static string getSoldier(PlayerType playerType, SoldierType soldierType)
+        public static string GetSoldier(PlayerType playerType, SoldierType soldierType)
         {
-            switch(soldierType)
+            return soldierType switch
             {
-                case SoldierType.HitpointsSoldier:
-                    return playerType == PlayerType.PLAYER1 ? $"{dir}/hpSoldier(Blue).png" : $"{dir}/hpSoldier(Red).png";
-                case SoldierType.SpeedSoldier:
-                    return playerType == PlayerType.PLAYER1 ? $"{dir}/speedSoldier(Blue).png" : $"{dir}/speedSoldier(Red).png";
-                default:
-                    return "";
-            }           
+                SoldierType.HitpointsSoldier => playerType == PlayerType.Player1 ? $"{Dir}/hpSoldier(Blue).png" : $"{Dir}/hpSoldier(Red).png",
+                SoldierType.SpeedSoldier => playerType == PlayerType.Player1 ? $"{Dir}/speedSoldier(Blue).png" : $"{Dir}/speedSoldier(Red).png",
+                _ => "",
+            };
         }        
 
-        public static string getBullet()
+        public static string GetBullet()
         {
-            return $"{dir}/bullet.png";
+            return $"{Dir}/bullet.png";
         }
 
-        public static string getLaser()
+        public static string GetLaser()
         {
-            return $"{dir}/laserBeam.png";
+            return $"{Dir}/laserBeam.png";
         }
 
-        public static string getRocket()
+        public static string GetRocket()
         {
-            return $"{dir}/rocket.png";
+            return $"{Dir}/rocket.png";
         }
 
-        public static string getMap(String mapType)
+        public static string GetMap(String mapType)
         {
-            return $"{dir}/{mapType}Map.png";
+            return $"{Dir}/{mapType}Map.png";
         }
     }
 }

@@ -1,0 +1,80 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using TowerDefence_SharedContent;
+
+namespace TowerDefence_ClientSide.Composite
+{
+    public class ShapePlatoon: IShapeComposite, IEnumerable<Shape>
+    {
+        public PlatoonType PlatoonName { get; set; }
+        public readonly List<IShapeComposite> Shapes = new List<IShapeComposite>();
+
+        public ShapePlatoon(PlatoonType platoonName)
+        {
+            PlatoonName = platoonName;
+        }
+        public List<IShapeComposite> GetShapes()
+        {
+            return Shapes;
+        }
+
+        public void GroupDraw(Graphics gr)
+        {
+            Shapes.ForEach((shape) => shape.GroupDraw(gr));
+        }
+
+        public bool IsShape()
+        {
+            return false;
+        }
+
+        IEnumerator<Shape> IEnumerable<Shape>.GetEnumerator()
+        {
+            return new CompositeEnum(this);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return new CompositeEnum(this);
+        }
+
+        public Shape GetNextShape(long last)
+        {
+            try
+            {
+                var childAnswers = Shapes.Select(x => x.GetNextShape(last));
+                var seed = new Shape
+                {
+                    Info = new DrawInfo
+                    {
+                        Id = long.MaxValue
+                    }
+                };
+                var bestFromAll = childAnswers.Aggregate(seed ,(best, next) =>
+                    next != null && next.Info.Id > last && next.Info.Id < best.Info.Id ? next : best);
+                return seed == bestFromAll ? null : bestFromAll;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+        }
+
+        public void DeleteShape(Shape shape)
+        {
+            Shapes.RemoveAll(x => x == shape);
+            Shapes.FindAll(x => x is ShapePlatoon).ForEach(x => x.DeleteShape(shape));
+        }
+
+        public void UpdatePlatoon(PlatoonType platoonType)
+        {
+            Shapes.ForEach(x => x.UpdatePlatoon(PlatoonName));
+        }
+    }
+}
