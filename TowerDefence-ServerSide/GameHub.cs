@@ -34,14 +34,14 @@ namespace TowerDefence_ServerSide
         {
             MapController mapController = MapController.GetInstance();
             mapController.AddSoldier(facade.TrainSoldier(playerType, soldierType), playerType);
-            MyConsole.WriteLineWithCount($"{playerType.ToString()}: buySoldier");
+            MyConsole.WriteLineWithCount($"{playerType}: buySoldier");
         }
 
         public void BuyTower(PlayerType playerType, TowerType towerType, Point point)
         {
             MapController mapController = MapController.GetInstance();
             mapController.AddTower(facade.CreateTower(playerType, towerType, point), playerType);
-            MyConsole.WriteLineWithCount($"{playerType.ToString()}: buyTower");                   
+            MyConsole.WriteLineWithCount($"{playerType}: buyTower");                   
         }
         public void RestartGame()
         {
@@ -66,13 +66,13 @@ namespace TowerDefence_ServerSide
 
         public void DeleteTower(PlayerType playerType)
         {
-            MyConsole.WriteLineWithCount($"{playerType.ToString()}: deleteTower");
+            MyConsole.WriteLineWithCount($"{playerType}: deleteTower");
 
         }
 
         public void UpgradeSoldier(PlayerType playerType)
         {
-            MyConsole.WriteLineWithCount($"{playerType.ToString()}: upgradeSoldier");
+            MyConsole.WriteLineWithCount($"{playerType}: upgradeSoldier");
         }
     }
 }

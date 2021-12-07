@@ -13,13 +13,14 @@ namespace TowerDefence_ServerSide
 {
     public class MapController : IMapController
     {
-        private List<IMapObserver> mapObservers = new List<IMapObserver>();
+        private readonly List<IMapObserver> mapObservers = new List<IMapObserver>();
 
         static IHubContext<GameHub> _hubContext;
-        public System.Timers.Timer Timer = new System.Timers.Timer();
-        public static double TimerSpeed = 36; //~30times per second
-        public static bool FoundThreading = false;
         private static MapController _instance;
+
+        public System.Timers.Timer Timer { get; set; } = new System.Timers.Timer();
+        public static double TimerSpeed { get; set; } = 36;
+        public static bool FoundThreading { get; set; } = false;
 
         public static void SetIHubContext(IHubContext<GameHub> context)
         {
@@ -34,7 +35,7 @@ namespace TowerDefence_ServerSide
                 lock (_instance)
                 {
                     return _instance;
-                };
+                }
             }
             catch
             {

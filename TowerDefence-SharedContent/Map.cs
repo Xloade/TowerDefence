@@ -11,9 +11,8 @@ namespace TowerDefence_SharedContent
 {
     public class Map : IMapObserver
     {
-        public string BackgroundImageDir;
-
-        public List<Player> Players;
+        public List<Player> Players { get; set; }
+        public string BackgroundImageDir { get; set; }
 
         public Map()
         {
@@ -22,7 +21,8 @@ namespace TowerDefence_SharedContent
 
         public void AddPlayer(PlayerType playerType)
         {
-            lock (this)
+            Map map = this;
+            lock (map)
             {
                 Players.RemoveAll((player)=> player.PlayerType == playerType);
                 Players.Add(new Player(playerType));
@@ -32,7 +32,8 @@ namespace TowerDefence_SharedContent
 
         public Player GetPlayer(PlayerType type)
         {
-            lock (this)
+            Map map = this;
+            lock (map)
             {
                 return Players.Find(player => player.PlayerType == type);
             }
@@ -40,7 +41,8 @@ namespace TowerDefence_SharedContent
 
         public Player GetPlayerEnemy(PlayerType type)
         {
-            lock (this)
+            Map map = this;
+            lock (map)
             {
             return Players.Find(player => player.PlayerType != type);
             }
@@ -49,7 +51,8 @@ namespace TowerDefence_SharedContent
         public string ToJson()
         {
             JObject mapJson;
-            lock (this)
+            Map map = this;
+            lock (map)
             {
                 mapJson = (JObject)JToken.FromObject(this);
             }
@@ -59,7 +62,8 @@ namespace TowerDefence_SharedContent
         public void AddSoldier(Soldier soldier, PlayerType playerType)
         {
             MyConsole.WriteLineWithCount("Observer: Update Map");
-            lock (this)
+            Map map = this;
+            lock (map)
             {
                 foreach (Player player in Players)
                 {
@@ -75,7 +79,8 @@ namespace TowerDefence_SharedContent
         public void AddTower(Towers.Tower tower, PlayerType playerType)
         {
             MyConsole.WriteLineWithCount("Observer: Update Map");
-            lock (this)
+            Map map = this;
+            lock (map)
             {
                 foreach (Player player in Players)
                 {
@@ -90,7 +95,8 @@ namespace TowerDefence_SharedContent
 
         public void UpdateSoldierMovement()
         {
-            lock (this)
+            Map map = this;
+            lock (map)
             {
                 foreach (Player player in Players)
                 {
@@ -101,7 +107,8 @@ namespace TowerDefence_SharedContent
 
         public void UpdateTowerActivity()
         {
-            lock (this)
+            Map map = this;
+            lock (map)
             {
                 if (Players.Count > 1)
                 {

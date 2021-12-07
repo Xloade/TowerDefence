@@ -51,7 +51,7 @@ namespace TowerDefence_ServerSide.Tests
 
             gameHub.BuySoldier(PlayerType.Player1, soldierType);
             Player player = map.GetPlayer(PlayerType.Player1);
-            Assert.AreEqual(soldierType, player.Soldiers[player.Soldiers.Count - 1].SoldierType);
+            Assert.AreEqual(soldierType, player.Soldiers[^1].SoldierType);
         }
 
         [TestMethod()]

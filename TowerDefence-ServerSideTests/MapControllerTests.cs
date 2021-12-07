@@ -32,21 +32,21 @@ namespace TowerDefence_ServerSide.Tests
         }
         [TestMethod()]
         [ExpectedException(typeof(Exception))]
-        public void removeInstance_checksIfEmpty_ExceptionTrown()
+        public void RemoveInstance_checksIfEmpty_ExceptionTrown()
         {
             MapController.RemoveInstance();
-            MapController mapController = MapController.GetInstance();
+            _ = MapController.GetInstance();
             Assert.Fail("Expected Exception");
         }
         [TestMethod()]
-        public void createInstance_checksIfCreated_getsMapcontroller()
+        public void CreateInstance_checksIfCreated_getsMapcontroller()
         {
             MapController.CreateInstance();
             MapController mapController = MapController.GetInstance();
             Assert.IsNotNull(mapController);
         }
         [TestMethod()]
-        public void restartInstance_checksIfSoldersRemoved_areRemoved()
+        public void RestartInstance_checksIfSoldersRemoved_areRemoved()
         {
             MapController.CreateInstance();
             MapController mapControllerFromSingleton = MapController.GetInstance();
@@ -64,7 +64,7 @@ namespace TowerDefence_ServerSide.Tests
             Assert.AreEqual(0, numOfsoldiers);
         }
         [TestMethod()]
-        public void deattach_checksIfPlayerAdded_FailsToAdd(){
+        public void Deattach_checksIfPlayerAdded_FailsToAdd(){
             mapController.Deattach(map);
             
             Assert.ThrowsException<ArgumentOutOfRangeException>(()=>{

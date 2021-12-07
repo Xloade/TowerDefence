@@ -13,9 +13,8 @@ namespace TowerDefence_SharedContent
         public int SoldierCurrency { get; set; }
 
         public PlayerType PlayerType { get; set; }
-
-        public List<Soldier> Soldiers;
-        public List<Towers.Tower> Towers;
+        public List<Tower> Towers { get; set; }
+        public List<Soldier> Soldiers { get; set; }
 
         public Player(PlayerType playerType)
         {

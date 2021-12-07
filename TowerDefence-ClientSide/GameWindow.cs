@@ -38,7 +38,7 @@ namespace TowerDefence_ClientSide
         private string towerToBuy = "";
         private readonly System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
 
-        string IPlayerStats.LifePointsText{ set => LifePointsText.Text = value; }
+        string IPlayerStats.LifePointsText { set => LifePointsText.Text = value; }
 
         string IPlayerStats.TowerCurrencyText { set => TowerCurrencyText.Text = value; }
         string IPlayerStats.SoldierCurrencyText { set => SoldierCurrencyText.Text = value; }
