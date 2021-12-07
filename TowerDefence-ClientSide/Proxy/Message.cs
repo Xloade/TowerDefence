@@ -10,7 +10,7 @@ namespace TowerDefence_ClientSide.Proxy
         public abstract string Command { get; set; }
         public abstract MessageType MessageType { get; set; }
 
-        public Message(string command, MessageType messageType)
+        protected Message(string command, MessageType messageType)
         {
             Command = command;
             MessageType = messageType;

@@ -22,5 +22,10 @@ namespace TowerDefence_ClientSide.Proxy
             TowerType = towerType;
             Coordinates = coordinates;
         }
+
+        public TowerMessage(string command, MessageType messageType, PlayerType playerType) : base(command, messageType)
+        {
+            PlayerType = playerType;
+        }
     }
 }

@@ -30,7 +30,6 @@ namespace TowerDefence_ClientSide
         public ShapePlatoon Shapes { get; set; } = new ShapePlatoon(PlatoonType.Root);
         private readonly MapUpdater mapUpdater;
 
-        HubConnection connection;
         private readonly PlayerType playerType;
         private PlayerStatsShowStatus PlayerStatsShowStatus = PlayerStatsShowStatus.All;
         private CursorState cursorState = CursorState.Default;
@@ -62,7 +61,7 @@ namespace TowerDefence_ClientSide
         }
         private void SetupServerConnection(string mapType)
         {
-            serverConnection = new ServerConnection(SERVER_URL);
+            serverConnection = new ServerConnection(ServerUrl);
             serverConnection.GetConnection().On<string>("ReceiveMessage", ReceiveMessage);
             serverConnection.GetConnection().StartAsync();
 
@@ -79,14 +78,6 @@ namespace TowerDefence_ClientSide
                 Refresh();
             }
             renderTimer.Start();
-        }
-        private void StartSignalR(String mapType)
-        {
-            connection = new HubConnectionBuilder().WithUrl(ServerUrl).Build();
-            connection.On<string>("ReceiveMessage", ReceiveMessage);
-            connection.StartAsync();
-            connection.SendAsync("createMap", mapType);
-            connection.SendAsync("addPlayer", playerType);
         }
 
         private void ReceiveMessage(string updatedMapJson)
@@ -123,18 +114,16 @@ namespace TowerDefence_ClientSide
                     OpenTowerSelection();
                     break;
                 case ButtonDeleteTower:
-                    connection.SendAsync("deleteTower", playerType);
+                    serverConnection.SendMessage(new TowerMessage("deleteTower", MessageType.TowerDelete, playerType));
                     break;
                 case ButtonUpgradeSoldier:
-                    connection.SendAsync("upgradeSoldier", playerType);
+                    serverConnection.SendMessage(new SoldierMessage("upgradeSoldier", MessageType.SoldierUpgrade, playerType));
                     break;
                 case ButtonRestartGame:
-                    connection.SendAsync("restartGame");
+                    serverConnection.SendMessage(new PlayerMessage("restartGame", MessageType.RestartGame));
                     break;
                 case ButtonQuickBuy:
-                    connection.SendAsync("buyTwoSoldier", playerType, SoldierType.HitpointsSoldier);
-                    break;
-                default:
+                    serverConnection.SendMessage(new SoldierMessage("buyTwoSoldier", MessageType.Soldier, playerType, SoldierType.HitpointsSoldier));
                     break;
             }
         }
@@ -175,7 +164,7 @@ namespace TowerDefence_ClientSide
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            graphicalTimer.Stop();
+            GraphicalTimer.Stop();
             serverConnection.GetConnection().StopAsync();
             base.OnFormClosing(e);
         }
@@ -239,8 +228,6 @@ namespace TowerDefence_ClientSide
                     break;
                 case "Speed":
                     serverConnection.SendMessage(new SoldierMessage("buySoldier", MessageType.Soldier, playerType, SoldierType.SpeedSoldier));
-                    break;
-                default:
                     break;
             }
         }

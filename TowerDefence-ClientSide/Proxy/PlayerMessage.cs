@@ -17,5 +17,7 @@ namespace TowerDefence_ClientSide.Proxy
             MessageType = messageType;
             PlayerType = playerType;
         }
+
+        public PlayerMessage(string command, MessageType messageType) : base(command, messageType) {}
     }
 }

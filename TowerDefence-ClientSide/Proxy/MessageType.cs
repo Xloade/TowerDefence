@@ -7,8 +7,11 @@ namespace TowerDefence_ClientSide.Proxy
     public enum MessageType
     {
         Tower,
+        TowerDelete,
         Soldier,
+        SoldierUpgrade,
         Map,
-        Player
+        Player,
+        RestartGame
     }
 }

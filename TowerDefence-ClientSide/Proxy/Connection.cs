@@ -57,9 +57,17 @@ namespace TowerDefence_ClientSide.Proxy
                     var towerMessage = (TowerMessage)message;
                     HubConnection.SendAsync(towerMessage.Command, towerMessage.PlayerType, towerMessage.TowerType, towerMessage.Coordinates);
                     break;
+                case MessageType.TowerDelete:
+                    var deleteTowerMessage = (TowerMessage)message;
+                    HubConnection.SendAsync(deleteTowerMessage.Command, deleteTowerMessage.PlayerType);
+                    break;
                 case MessageType.Soldier:
                     var soldierMessage = (SoldierMessage)message;
                     HubConnection.SendAsync(soldierMessage.Command, soldierMessage.SoldierType, soldierMessage.PlayerType);
+                    break;
+                case MessageType.SoldierUpgrade:
+                    var updaSoldierMessage = (SoldierMessage)message;
+                    HubConnection.SendAsync(updaSoldierMessage.Command, updaSoldierMessage.PlayerType);
                     break;
                 case MessageType.Map:
                     var mapMessage = (MapMessage)message;
@@ -68,6 +76,10 @@ namespace TowerDefence_ClientSide.Proxy
                 case MessageType.Player:
                     var playerMessage = (PlayerMessage)message;
                     HubConnection.SendAsync(playerMessage.Command, playerMessage.PlayerType);
+                    break;
+                case MessageType.RestartGame:
+                    var restartMessage = (PlayerMessage)message;
+                    HubConnection.SendAsync(restartMessage.Command);
                     break;
             }
         }
