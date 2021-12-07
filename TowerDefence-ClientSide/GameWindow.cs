@@ -12,6 +12,7 @@ using TowerDefence_ClientSide.Prototype;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TowerDefence_ClientSide.Composite;
+using TowerDefence_ClientSide.Proxy;
 
 namespace TowerDefence_ClientSide
 {
@@ -29,14 +30,14 @@ namespace TowerDefence_ClientSide
         public ShapePlatoon Shapes { get; set; } = new ShapePlatoon(PlatoonType.Root);
         private readonly MapUpdater mapUpdater;
 
-        HubConnection connection;
         private readonly PlayerType playerType;
         private PlayerStatsShowStatus PlayerStatsShowStatus = PlayerStatsShowStatus.All;
         private CursorState cursorState = CursorState.Default;
         private readonly GameCursor gameCursor;
         private readonly Command cursorCommand;
         private string towerToBuy = "";
-        private readonly System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
+        private System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
+        private ServerConnection serverConnection;
 
         string IPlayerStats.LifePointsText { set => LifePointsText.Text = value; }
 
@@ -52,11 +53,20 @@ namespace TowerDefence_ClientSide
             gameCursor = new GameCursor(this, playerType);
             cursorCommand = new CursorCommand(gameCursor);
             this.playerType = playerType;
-            StartSignalR(mapType);
+            SetupServerConnection(mapType);
             MapParser.CreateInstance();
             renderTimer.Tick += RenderTimer_Tick;
             renderTimer.Interval = 10;
             renderTimer.Start();
+        }
+        private void SetupServerConnection(string mapType)
+        {
+            serverConnection = new ServerConnection(ServerUrl);
+            serverConnection.GetConnection().On<string>("ReceiveMessage", ReceiveMessage);
+            serverConnection.GetConnection().StartAsync();
+
+            serverConnection.SendMessage(new MapMessage("createMap", MessageType.Map, mapType));
+            serverConnection.SendMessage(new PlayerMessage("addPlayer", MessageType.Player, playerType));
         }
 
         private void RenderTimer_Tick(object sender, EventArgs e)
@@ -68,14 +78,6 @@ namespace TowerDefence_ClientSide
                 Refresh();
             }
             renderTimer.Start();
-        }
-        private void StartSignalR(String mapType)
-        {
-            connection = new HubConnectionBuilder().WithUrl(ServerUrl).Build();
-            connection.On<string>("ReceiveMessage", ReceiveMessage);
-            connection.StartAsync();
-            connection.SendAsync("createMap", mapType);
-            connection.SendAsync("addPlayer", playerType);
         }
 
         private void ReceiveMessage(string updatedMapJson)
@@ -112,18 +114,16 @@ namespace TowerDefence_ClientSide
                     OpenTowerSelection();
                     break;
                 case ButtonDeleteTower:
-                    connection.SendAsync("deleteTower", playerType);
+                    serverConnection.SendMessage(new TowerMessage("deleteTower", MessageType.TowerDelete, playerType));
                     break;
                 case ButtonUpgradeSoldier:
-                    connection.SendAsync("upgradeSoldier", playerType);
+                    serverConnection.SendMessage(new SoldierMessage("upgradeSoldier", MessageType.SoldierUpgrade, playerType));
                     break;
                 case ButtonRestartGame:
-                    connection.SendAsync("restartGame");
+                    serverConnection.SendMessage(new PlayerMessage("restartGame", MessageType.RestartGame));
                     break;
                 case ButtonQuickBuy:
-                    connection.SendAsync("buyTwoSoldier", playerType, SoldierType.HitpointsSoldier);
-                    break;
-                default:
+                    serverConnection.SendMessage(new SoldierMessage("buyTwoSoldier", MessageType.Soldier, playerType, SoldierType.HitpointsSoldier));
                     break;
             }
         }
@@ -165,7 +165,7 @@ namespace TowerDefence_ClientSide
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             GraphicalTimer.Stop();
-            connection.StopAsync();
+            serverConnection.GetConnection().StopAsync();
             base.OnFormClosing(e);
         }
 
@@ -206,13 +206,13 @@ namespace TowerDefence_ClientSide
             switch (name)
             {
                 case "Minigun":
-                    connection.SendAsync("buyTower", playerType, TowerType.Minigun, coordinates);
+                    serverConnection.SendMessage(new TowerMessage("buyTower", playerType, TowerType.Minigun, coordinates, MessageType.Tower));
                     break;
                 case "Laser":
-                    connection.SendAsync("buyTower", playerType, TowerType.Laser, coordinates);
+                    serverConnection.SendMessage(new TowerMessage("buyTower", playerType, TowerType.Laser, coordinates, MessageType.Tower));
                     break;
                 case "Rocket":
-                    connection.SendAsync("buyTower", playerType, TowerType.Rocket, coordinates);
+                    serverConnection.SendMessage(new TowerMessage("buyTower", playerType, TowerType.Rocket, coordinates, MessageType.Tower));
                     break;
                 default:
                     break;
@@ -224,12 +224,10 @@ namespace TowerDefence_ClientSide
             switch (name)
             {
                 case "Hitpoints":
-                    connection.SendAsync("buySoldier", playerType, SoldierType.HitpointsSoldier);
+                    serverConnection.SendMessage(new SoldierMessage("buySoldier", MessageType.Soldier, playerType, SoldierType.HitpointsSoldier));
                     break;
                 case "Speed":
-                    connection.SendAsync("buySoldier", playerType, SoldierType.SpeedSoldier);
-                    break;
-                default:
+                    serverConnection.SendMessage(new SoldierMessage("buySoldier", MessageType.Soldier, playerType, SoldierType.SpeedSoldier));
                     break;
             }
         }
