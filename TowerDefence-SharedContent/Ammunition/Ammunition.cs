@@ -8,9 +8,9 @@ namespace TowerDefence_SharedContent
 {
     public abstract class Ammunition : DrawInfo, IMove
     {
-        public abstract int Speed { get; set; }
+        public int Speed { get; set; }
         public int Power { get; set; }
-        public abstract AmmunitionType AmmunitionType { get; set; }
+        public AmmunitionType AmmunitionType { get; set; }
 
         public Ammunition(Point towerCoordinates, AmmunitionType ammunitionType, int power, PlayerType playerType)
         {
