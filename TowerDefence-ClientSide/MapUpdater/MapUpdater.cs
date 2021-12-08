@@ -13,7 +13,7 @@ using TowerDefence_SharedContent.Towers;
 
 namespace TowerDefence_ClientSide
 {
-    class MapUpdater
+    public class MapUpdater
     {
         private LazyImageDictionary imageDictionary = new LazyImageDictionary();
         private IHaveShapePlatoon ShapePlatoon;

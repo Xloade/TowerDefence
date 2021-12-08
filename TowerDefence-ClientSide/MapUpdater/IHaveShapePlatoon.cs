@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TowerDefence_ClientSide.Composite
 {
-    interface IHaveShapePlatoon
+    public interface IHaveShapePlatoon
     {
         public ShapePlatoon Shapes { get; set; }
     }

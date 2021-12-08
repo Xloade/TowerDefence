@@ -38,6 +38,7 @@ namespace TowerDefence_ClientSide
         private string towerToBuy = "";
         private System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
         private SelectionDrawing selectionDrawing = new SelectionDrawing();
+        private PlatoonControl platoonControl;
         string IPlayerStats.LifePointsText{ set { LifePointsText.Text = value; } }
 
         string IPlayerStats.TowerCurrencyText { set { TowerCurrencyText.Text = value; } }
@@ -53,6 +54,8 @@ namespace TowerDefence_ClientSide
             this.playerType = playerType;
             startSignalR(mapType);
             MapParser.CreateInstance();
+            platoonControl = new PlatoonControl(connection, mapUpdater);
+            this.Controls.Add(platoonControl);
             renderTimer.Tick += RenderTimer_Tick;
             renderTimer.Interval = 10;
             renderTimer.Start();
