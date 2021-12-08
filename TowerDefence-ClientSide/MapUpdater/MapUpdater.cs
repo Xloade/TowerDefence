@@ -56,7 +56,7 @@ namespace TowerDefence_ClientSide
 
         public void RemoveOneSelection()
         {
-            root.GetDeepestSelection(true);
+            root.RemoveDeepestSelection();
             UpdatePermaSelection();
         }
         private void UpdatePermaSelection()

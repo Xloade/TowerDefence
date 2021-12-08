@@ -25,7 +25,7 @@ namespace TowerDefence_ClientSide.Composite
             return Shapes;
         }
 
-        public List<Shape> GetDeepestSelection(bool unselect)
+        public List<Shape> RemoveDeepestSelection()
         {
             List<Shape> rez = new List<Shape>();
             var selections =
@@ -41,6 +41,31 @@ namespace TowerDefence_ClientSide.Composite
             foreach (var selection in selectionList.OfType<ShapePlatoon>())
             {
                 rez.AddRange(selection.Shapes.OfType<Shape>());
+                Shapes.Remove(selection);
+
+            }
+            Shapes.AddRange(rez);
+            foreach (var platoon in Shapes.OfType<ShapePlatoon>())
+            {
+                rez.AddRange(platoon.RemoveDeepestSelection());
+            }
+
+            return rez;
+        }
+
+        public List<Shape> GetAllSelections(bool unselect)
+        {
+            List<Shape> rez = new List<Shape>();
+            var selections =
+                from shape in Shapes
+                where shape is ShapePlatoon
+                where ((ShapePlatoon)shape).PlatoonName == PlatoonType.Selected
+                select shape;
+            var selectionList = selections.ToList();
+
+            foreach (var selection in selectionList.OfType<ShapePlatoon>())
+            {
+                rez.AddRange(selection.Shapes.OfType<Shape>());
                 if (unselect)
                 {
                     Shapes.Remove(selection);
@@ -49,7 +74,7 @@ namespace TowerDefence_ClientSide.Composite
             Shapes.AddRange(rez);
             foreach (var platoon in Shapes.OfType<ShapePlatoon>())
             {
-                rez.AddRange(platoon.GetDeepestSelection(unselect));
+                rez.AddRange(platoon.RemoveDeepestSelection());
             }
 
             return rez;
