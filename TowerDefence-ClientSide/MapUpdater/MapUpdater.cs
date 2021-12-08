@@ -50,10 +50,16 @@ namespace TowerDefence_ClientSide
             GetNewShapes(map);
             DeleteOldShapes(map);
             root.UpdatePlatoon(PlatoonType.Root);
+            UpdatePermaSelection();
             UpdateTempSelection(mouseSelection);
-            UpdatePermaSelection(mouseSelection);
         }
-        private void UpdatePermaSelection(MouseSelection selection)
+
+        public void RemoveOneSelection()
+        {
+            root.GetDeepestSelection(true);
+            UpdatePermaSelection();
+        }
+        private void UpdatePermaSelection()
         {
             root.UpdateSelection(PlatoonType.Root);
         }
@@ -65,10 +71,6 @@ namespace TowerDefence_ClientSide
                     shape.CenterY > selection.Top && shape.CenterY < selection.Bot && selection.Selected)
                 {
                     shape.Selected = true;
-                }
-                else
-                {
-                    shape.Selected = false;
                 }
             }
         }

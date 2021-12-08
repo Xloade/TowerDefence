@@ -91,6 +91,7 @@ namespace TowerDefence_ClientSide.Composite
             this.deselectOneButton.Size = new System.Drawing.Size(29, 24);
             this.deselectOneButton.Text = "toolStripButton2";
             this.deselectOneButton.ToolTipText = "remove one selection layer";
+            this.deselectOneButton.Click += new System.EventHandler(this.deselectOneButton_Click);
             // 
             // selectAllButton
             // 

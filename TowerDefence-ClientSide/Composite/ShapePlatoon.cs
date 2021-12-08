@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -24,6 +25,40 @@ namespace TowerDefence_ClientSide.Composite
             return Shapes;
         }
 
+        public List<Shape> GetDeepestSelection(bool unselect)
+        {
+            List<Shape> rez = new List<Shape>();
+            var selections =
+                from shape in Shapes
+                where shape is ShapePlatoon
+                where ((ShapePlatoon) shape).PlatoonName == PlatoonType.Selected
+                where ((ShapePlatoon) shape).Shapes.OfType<ShapePlatoon>()
+                    .Where(x => x.PlatoonName == PlatoonType.Selected)
+                    .ToList().Count == 0
+                select shape;
+            var selectionList = selections.ToList();
+
+            foreach (var selection in selectionList.OfType<ShapePlatoon>())
+            {
+                rez.AddRange(selection.Shapes.OfType<Shape>());
+                if (unselect)
+                {
+                    Shapes.Remove(selection);
+                }
+            }
+            Shapes.AddRange(rez);
+            foreach (var platoon in Shapes.OfType<ShapePlatoon>())
+            {
+                rez.AddRange(platoon.GetDeepestSelection(unselect));
+            }
+
+            return rez;
+        }
+
+        public void RemoveDeepestSelections()
+        {
+
+        }
         public void GroupDraw(Graphics gr)
         {
             Shapes.ForEach((shape) => shape.GroupDraw(gr));

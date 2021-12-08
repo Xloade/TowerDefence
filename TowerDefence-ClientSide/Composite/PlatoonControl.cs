@@ -19,7 +19,12 @@ namespace TowerDefence_ClientSide.Composite
             HubConnection = hubConnection;
             MapUpdater = mapUpdater;
 
-            this.Location = new Point(0, 640);
+            this.Location = new Point(0, 470);
+        }
+
+        private void deselectOneButton_Click(object sender, EventArgs e)
+        {
+            MapUpdater.RemoveOneSelection();
         }
     }
 }
