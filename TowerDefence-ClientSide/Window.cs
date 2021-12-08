@@ -138,7 +138,9 @@ public abstract class Window : Form
         this.Closed += new System.EventHandler(this.Form1_Closed);
         this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
         this.MouseClick += Mouse_Click;
-        
+        this.MouseDown += Mouse_Down;
+        this.MouseUp += Mouse_Up;
+        this.MouseMove += Mouse_Move;
         this.ResumeLayout(false);
     }
     // form load event
@@ -171,6 +173,9 @@ public abstract class Window : Form
 
     protected abstract void status_selection_click(object sender, System.EventArgs e);
     protected virtual void Mouse_Click(object sender, MouseEventArgs e) { }
+    protected virtual void Mouse_Down(object sender, MouseEventArgs e) { }
+    protected virtual void Mouse_Up(object sender, MouseEventArgs e) { }
+    protected virtual void Mouse_Move(object sender, MouseEventArgs e) { }
     protected virtual void graphicalTimer_Tick(object sender, System.EventArgs e) { }
     protected virtual void physicsTimer_Tick(object sender, System.EventArgs e) { }
 

@@ -5,7 +5,9 @@ using TowerDefence_SharedContent;
 using TowerDefence_ClientSide.Composite;
 using System.Drawing;
 using System.Linq;
+using System.Net.NetworkInformation;
 using TowerDefence_ClientSide.Prototype;
+using TowerDefence_ClientSide.shapes;
 using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_SharedContent.Towers;
 
@@ -38,7 +40,7 @@ namespace TowerDefence_ClientSide
             root.Shapes.Add(Platoon2);
             root.Shapes.Add(Enemy);
         }
-        public void UpdateMap(Map map, out Image bgImage, IPlayerStats playerStats)
+        public void UpdateMap(Map map, out Image bgImage, IPlayerStats playerStats,MouseSelection mouseSelection)
         {
             IStats newPlayerStats = new PlayerStats(map.GetPlayer(CurrentPlayerType));
             UpdateStatsView(playerStats, newPlayerStats);
@@ -47,7 +49,32 @@ namespace TowerDefence_ClientSide
 
             GetNewShapes(map);
             DeleteOldShapes(map);
-            root.UpdatePlatoon(PlatoonType.DefaultPlatoon);
+            root.UpdatePlatoon(PlatoonType.Root);
+            UpdateTempSelection(mouseSelection);
+            UpdatePermaSelection(mouseSelection);
+        }
+        private void UpdatePermaSelection(MouseSelection selection)
+        {
+            root.UpdateSelection(PlatoonType.Root);
+        }
+        private void UpdateTempSelection(MouseSelection selection)
+        {
+            foreach (var shape in root)
+            {
+                if (shape.CenterX > selection.Left && shape.CenterX < selection.Right &&
+                    shape.CenterY > selection.Top && shape.CenterY < selection.Bot && selection.Selected)
+                {
+                    shape.Selected = true;
+                }
+                else
+                {
+                    shape.Selected = false;
+                }
+            }
+        }
+        public void SaveSelection(MouseSelection selection)
+        {
+            root.SaveSelection(selection);
         }
 
         private void DeleteOldShapes(Map map)
@@ -98,7 +125,8 @@ namespace TowerDefence_ClientSide
                     IDraw secondWrap = new LvlDrawDecorator(firstWrap, firstWrap);
                     IDraw thirdWrap = new PlatoonDecorator(secondWrap, firstWrap);
                     IDraw fourthWrap = new HpDrawDecorator(thirdWrap, firstWrap);
-                    firstWrap.DecoratedDrawInterface = fourthWrap;
+                    IDraw fithWrap = new SelectDrawDecorator(fourthWrap, firstWrap);
+                    firstWrap.DecoratedDrawInterface = fithWrap;
                     shapePlatoon.Shapes.Add(firstWrap);
                 }
             });
@@ -113,7 +141,8 @@ namespace TowerDefence_ClientSide
                     Shape firstWrap = new Shape(tower, 100, 100, imageDictionary.get(tower.Sprite));
                     IDraw secondWrap = new LvlDrawDecorator(firstWrap, firstWrap);
                     IDraw thirdWrap = new PlatoonDecorator(secondWrap, firstWrap);
-                    firstWrap.DecoratedDrawInterface = thirdWrap;
+                    IDraw fourthWrap = new SelectDrawDecorator(thirdWrap, firstWrap);
+                    firstWrap.DecoratedDrawInterface = fourthWrap;
                     shapePlatoon.Shapes.Add(firstWrap);
                 }
                 GetNewAmmunition(tower.Ammunition, shapePlatoon, currentShapes);

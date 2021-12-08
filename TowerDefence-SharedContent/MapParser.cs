@@ -75,24 +75,33 @@ namespace TowerDefence_SharedContent
             var towerType = token["TowerType"].ToObject<TowerType>();
             var shootingCooldown = token["ShootingCooldown"].ToObject<int>();
             var playerType = token["PlayerType"].ToObject<PlayerType>();
+            var Id = token["Id"].ToObject<long>();
 
             var ammunition = new List<Ammunition>();
             foreach (JToken amm in ammunitionJson)
             {
                 ammunition.Add(ParseAmmunition(amm));
-            }            
+            }
 
+            Tower tower;
             switch (towerType)
             {
                 case TowerType.Minigun:
-                    return new MiniGunTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType);
+                    tower =  new MiniGunTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType);
+                    break;
                 case TowerType.Rocket:
-                    return new RocketTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown,playerType);
+                    tower = new RocketTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown,playerType);
+                    break;
                 case TowerType.Laser:
-                    return new LaserTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType);
+                    tower = new LaserTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType);
+                    break;    
                 default:
-                    return null;
+                    tower = null;
+                    break;
             }
+
+            tower.Id = Id;
+            return tower;
         }
 
         public Ammunition ParseAmmunition(JToken token)

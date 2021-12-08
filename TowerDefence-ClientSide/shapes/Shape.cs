@@ -6,7 +6,7 @@ using TowerDefence_ClientSide.Composite;
 
 namespace TowerDefence_ClientSide
 {
-    public class Shape : IDraw, ICloneable, Composite.IShapeComposite, IShape
+    public class Shape : IDraw, ICloneable, Composite.IShapeComposite, IShape, ISelected
     {
         public float Width { get; set; }
         public float Height { get; set; }
@@ -21,6 +21,7 @@ namespace TowerDefence_ClientSide
         public Image spriteImage;
 
         public IDraw DecoratedDrawInterface { get; set; }
+        public bool Selected { get; set; }
 
         public Shape(DrawInfo drawInfo, float width, float height, Image spriteImage)
         {
@@ -88,5 +89,15 @@ namespace TowerDefence_ClientSide
         {
             PlatoonType = platoonType;
         }
+
+        public void UpdateSelection(PlatoonType platoonType)
+        {
+            if (platoonType == PlatoonType.Selected)
+            {
+                Selected = true;
+            }
+        }
+
+        public void SaveSelection(MouseSelection mouseSelection) { }
     }
 }

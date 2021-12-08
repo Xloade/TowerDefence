@@ -37,7 +37,7 @@ namespace TowerDefence_ClientSide
         private Command cursorCommand;
         private string towerToBuy = "";
         private System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
-
+        private SelectionDrawing selectionDrawing = new SelectionDrawing();
         string IPlayerStats.LifePointsText{ set { LifePointsText.Text = value; } }
 
         string IPlayerStats.TowerCurrencyText { set { TowerCurrencyText.Text = value; } }
@@ -63,7 +63,7 @@ namespace TowerDefence_ClientSide
             renderTimer.Stop();
             if (currentMap != null)
             {
-                mapUpdater.UpdateMap(currentMap, out bgImage, this);
+                mapUpdater.UpdateMap(currentMap, out bgImage, this, selectionDrawing.Selection);
                 Refresh();
             }
             renderTimer.Start();
@@ -99,7 +99,8 @@ namespace TowerDefence_ClientSide
             {
                 shape.DecoratedDraw(gr);
             });*/
-            
+            selectionDrawing.Draw(gr);
+
         }
 
         protected override void btn_Click(object sender, EventArgs e)
@@ -285,6 +286,23 @@ namespace TowerDefence_ClientSide
         {
             Cursor = cursor;
             this.cursorState = cursorState;
+        }
+
+        protected override void Mouse_Down(object sender, MouseEventArgs e)
+        {
+            selectionDrawing.Selection.StartPoint = PointToClient(Cursor.Position);
+            selectionDrawing.Selection.Selected = true;
+        }
+
+        protected override void Mouse_Up(object sender, MouseEventArgs e)
+        {
+            selectionDrawing.Selection.Selected = false;
+            mapUpdater.SaveSelection(selectionDrawing.Selection);
+        }
+
+        protected override void Mouse_Move(object sender, MouseEventArgs e)
+        {
+            selectionDrawing.Selection.EndPoint = PointToClient(Cursor.Position);
         }
     }
 }
