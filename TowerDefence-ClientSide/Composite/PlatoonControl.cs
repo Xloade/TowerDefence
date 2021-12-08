@@ -26,5 +26,15 @@ namespace TowerDefence_ClientSide.Composite
         {
             MapUpdater.RemoveOneSelection();
         }
+
+        private void DeselectAllButton_Click(object sender, EventArgs e)
+        {
+            MapUpdater.RemoveAllSelection();
+        }
+
+        private void selectAllButton_Click(object sender, EventArgs e)
+        {
+            MapUpdater.SelectAll();
+        }
     }
 }

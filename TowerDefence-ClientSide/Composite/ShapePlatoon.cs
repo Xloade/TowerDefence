@@ -53,7 +53,7 @@ namespace TowerDefence_ClientSide.Composite
             return rez;
         }
 
-        public List<Shape> GetAllSelections(bool unselect)
+        public List<Shape> RemoveAllSelections()
         {
             List<Shape> rez = new List<Shape>();
             var selections =
@@ -62,21 +62,23 @@ namespace TowerDefence_ClientSide.Composite
                 where ((ShapePlatoon)shape).PlatoonName == PlatoonType.Selected
                 select shape;
             var selectionList = selections.ToList();
-
+            foreach (var platoon in Shapes.OfType<ShapePlatoon>())
+            {
+                if (platoon.PlatoonName == PlatoonType.Selected)
+                {
+                    rez.AddRange(platoon.RemoveAllSelections());
+                }
+                else
+                {
+                    platoon.RemoveAllSelections();
+                }
+            }
             foreach (var selection in selectionList.OfType<ShapePlatoon>())
             {
                 rez.AddRange(selection.Shapes.OfType<Shape>());
-                if (unselect)
-                {
-                    Shapes.Remove(selection);
-                }
+                Shapes.Remove(selection);
             }
-            Shapes.AddRange(rez);
-            foreach (var platoon in Shapes.OfType<ShapePlatoon>())
-            {
-                rez.AddRange(platoon.RemoveDeepestSelection());
-            }
-
+            if(PlatoonName != PlatoonType.Selected) Shapes.AddRange(rez);
             return rez;
         }
 

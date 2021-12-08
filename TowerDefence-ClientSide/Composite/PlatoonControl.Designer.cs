@@ -102,6 +102,7 @@ namespace TowerDefence_ClientSide.Composite
             this.selectAllButton.Size = new System.Drawing.Size(29, 24);
             this.selectAllButton.Text = "toolStripButton3";
             this.selectAllButton.ToolTipText = "select all";
+            this.selectAllButton.Click += new System.EventHandler(this.selectAllButton_Click);
             // 
             // DeselectAllButton
             // 
@@ -112,6 +113,7 @@ namespace TowerDefence_ClientSide.Composite
             this.DeselectAllButton.Size = new System.Drawing.Size(29, 24);
             this.DeselectAllButton.Text = "toolStripButton4";
             this.DeselectAllButton.ToolTipText = "remove all selection layers";
+            this.DeselectAllButton.Click += new System.EventHandler(this.DeselectAllButton_Click);
             // 
             // toolStripSeparator1
             // 

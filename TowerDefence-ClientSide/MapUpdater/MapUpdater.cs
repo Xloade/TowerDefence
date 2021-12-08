@@ -59,6 +59,11 @@ namespace TowerDefence_ClientSide
             root.RemoveDeepestSelection();
             UpdatePermaSelection();
         }
+        public void RemoveAllSelection()
+        {
+            root.RemoveAllSelections();
+            UpdatePermaSelection();
+        }
         private void UpdatePermaSelection()
         {
             root.UpdateSelection(PlatoonType.Root);
@@ -79,6 +84,13 @@ namespace TowerDefence_ClientSide
             root.SaveSelection(selection);
         }
 
+        public void SelectAll()
+        {
+            MouseSelection mouseSelection = new MouseSelection();
+            mouseSelection.StartPoint = new Point(0, 0);
+            mouseSelection.EndPoint = new Point(int.MaxValue, int.MaxValue);
+            root.SaveSelection(mouseSelection);
+        }
         private void DeleteOldShapes(Map map)
         {
             List<DrawInfo> allIdableObjects = new List<DrawInfo>();
