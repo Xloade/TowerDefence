@@ -8,8 +8,6 @@ namespace TowerDefence_SharedContent
 {
     public class Bullet : Ammunition, IMove
     {
-        public override int Speed { get; set; }
-        public override AmmunitionType AmmunitionType { get; set; }
         public Bullet(Point towerCoordinates, AmmunitionType ammunitionType, int power, PlayerType playerType) : base(towerCoordinates, ammunitionType, power, playerType)
         {
             Coordinates = towerCoordinates;
