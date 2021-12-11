@@ -30,6 +30,7 @@ namespace TowerDefence_SharedContent.Towers.State
         public override void Cooldown()
         {
             MyConsole.WriteLineWithCount("----- State: cooling down state -----");
+            Tower.IsOverheated = true;
             Timer = new System.Timers.Timer();
             Timer.Interval = 5000;
             Timer.Start();
@@ -42,7 +43,11 @@ namespace TowerDefence_SharedContent.Towers.State
             };
         }
 
-        public void OnStateChange() => Tower.State = new PrepareNextShotState(this);
+        public void OnStateChange()
+        {
+            Tower.IsOverheated = false;
+            Tower.State = new PrepareNextShotState(this);
+        }
 
         public override void Check(ICanShootAlgorithm canShootAlgorithm, Point soldierCoordinates)
         {

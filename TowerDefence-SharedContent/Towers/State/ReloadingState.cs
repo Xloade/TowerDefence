@@ -24,6 +24,7 @@ namespace TowerDefence_SharedContent.Towers.State
         public override void Reload()
         {
             MyConsole.WriteLineWithCount("----- State: reloading state -----");
+            Tower.IsReloading = true;
             Timer = new System.Timers.Timer();
             Timer.Interval = 3000;
             Timer.Start();
@@ -46,6 +47,10 @@ namespace TowerDefence_SharedContent.Towers.State
             throw new NotImplementedException();
         }
 
-        public void OnStateChange() => Tower.State = new PrepareNextShotState(this);
+        public void OnStateChange()
+        {
+            Tower.IsReloading = false;
+            Tower.State = new PrepareNextShotState(this);
+        }
     }
 }

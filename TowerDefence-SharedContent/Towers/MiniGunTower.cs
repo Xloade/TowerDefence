@@ -15,7 +15,7 @@ namespace TowerDefence_SharedContent.Towers
             RateOfFire = new double[] { 10, 15, 20, };
             TowerType = towerType;
             CanShootAlgorithm = new CanMiniGunShoot(Level, Coordinates, Range);
-            MaxMagazineSize = 3;
+            MaxMagazineSize = 20;
         }
 
         public MiniGunTower(int level, int[] price, Point coordinates, int[] range, int[] power, double[] rateOfFire,

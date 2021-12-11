@@ -18,11 +18,11 @@ namespace TowerDefence_ClientSide.shapes
             string text;
             if (Shape.Info.IsReloading)
             {
-                text = "Reloading..";
+                text = "Reloading";
             }
             else if (Shape.Info.IsOverheated)
             {
-                text = "Cooling down..";
+                text = "Cooling down";
             }
             else text = "";
 
@@ -39,7 +39,7 @@ namespace TowerDefence_ClientSide.shapes
             // Draw string to screen.
             lock (gr)
             {
-                gr.DrawString($"{text}", drawFont, drawBrush, CenterX - (Width / 2) + 25, CenterY - (Height / 2) - 10, drawFormat);
+                gr.DrawString($"{text}", drawFont, drawBrush, CenterX + (Width / 2), CenterY - (Height / 2) - 10, drawFormat);
             }
         }
     }

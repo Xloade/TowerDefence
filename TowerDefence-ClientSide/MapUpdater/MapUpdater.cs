@@ -112,8 +112,8 @@ namespace TowerDefence_ClientSide
                     Shape firstWrap = new Shape(tower, 100, 100, imageDictionary.Get(tower.Sprite));
                     IDraw secondWrap = new LvlDrawDecorator(firstWrap, firstWrap);
                     IDraw thirdWrap = new PlatoonDecorator(secondWrap, firstWrap);
-                    //IDraw fourthWrap = new StateDecorator(thirdWrap, firstWrap);
-                    firstWrap.DecoratedDrawInterface = thirdWrap;
+                    IDraw fourthWrap = new StateDecorator(thirdWrap, firstWrap);
+                    firstWrap.DecoratedDrawInterface = fourthWrap;
                     shapePlatoon.Shapes.Add(firstWrap);
                 }
                 GetNewAmmunition(tower.Ammunition, shapePlatoon, currentShapes);
