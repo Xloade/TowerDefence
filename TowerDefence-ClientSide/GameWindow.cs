@@ -193,9 +193,11 @@ namespace TowerDefence_ClientSide
         protected override void Soldier_selection_click(object sender, EventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
-            if (comboBox.SelectedItem == null) return;
-            BuySoldier(comboBox.SelectedItem.ToString());
-            comboBox.Visible = false;
+            if (comboBox.SelectedItem != null)
+            {
+                BuySoldier(comboBox.SelectedItem.ToString());
+                comboBox.Visible = false;
+            }
         }
 
         private void BuyTower(string name, Point coordinates)
@@ -221,10 +223,10 @@ namespace TowerDefence_ClientSide
             switch (name)
             {
                 case "Hitpoints":
-                    serverConnection.SendMessage(new SoldierMessage("buySoldier", MessageType.Soldier, playerType, SoldierType.HitpointsSoldier));
+                    serverConnection.SendMessage(new SoldierMessage("BuySoldier", MessageType.Soldier, playerType, SoldierType.HitpointsSoldier));
                     break;
                 case "Speed":
-                    serverConnection.SendMessage(new SoldierMessage("buySoldier", MessageType.Soldier, playerType, SoldierType.SpeedSoldier));
+                    serverConnection.SendMessage(new SoldierMessage("BuySoldier", MessageType.Soldier, playerType, SoldierType.SpeedSoldier));
                     break;
             }
         }
@@ -232,37 +234,39 @@ namespace TowerDefence_ClientSide
         protected override void Status_selection_click(object sender, EventArgs e)
         {
             var comboBox = (ComboBox)sender;
-            if (comboBox.SelectedItem == null) return;
-            switch (comboBox.SelectedItem.ToString())
+            if (comboBox.SelectedItem != null)
             {
-                case "All":
-                    PlayerStatsShowStatus = PlayerStatsShowStatus.All;
-                    LifePointsText.Visible = true;
-                    TowerCurrencyText.Visible = true;
-                    SoldierCurrencyText.Visible = true;
-                    MyConsole.WriteLineWithCount("Adapter: show all");
-                    break;
-                case "Lifepoints":                        
-                    PlayerStatsShowStatus = PlayerStatsShowStatus.Lifepoints;
-                    LifePointsText.Visible = true;
-                    TowerCurrencyText.Visible = false;
-                    SoldierCurrencyText.Visible = false;
-                    MyConsole.WriteLineWithCount("Adapter: show lifepoints");
-                    break;
-                case "Tower Currency":
-                    PlayerStatsShowStatus = PlayerStatsShowStatus.TowerCurrency;
-                    LifePointsText.Visible = false;
-                    TowerCurrencyText.Visible = true;
-                    SoldierCurrencyText.Visible = false;
-                    MyConsole.WriteLineWithCount("Adapter: show tower currency");
-                    break;
-                case "Soldier Currency":                        
-                    PlayerStatsShowStatus = PlayerStatsShowStatus.SoldierCurrency;
-                    LifePointsText.Visible = false;
-                    TowerCurrencyText.Visible = false;
-                    SoldierCurrencyText.Visible = true;
-                    MyConsole.WriteLineWithCount("Adapter: show soldier currency");
-                    break;
+                switch (comboBox.SelectedItem.ToString())
+                {
+                    case "All":
+                        PlayerStatsShowStatus = PlayerStatsShowStatus.All;
+                        LifePointsText.Visible = true;
+                        TowerCurrencyText.Visible = true;
+                        SoldierCurrencyText.Visible = true;
+                        MyConsole.WriteLineWithCount("Adapter: show all");
+                        break;
+                    case "Lifepoints":
+                        PlayerStatsShowStatus = PlayerStatsShowStatus.Lifepoints;
+                        LifePointsText.Visible = true;
+                        TowerCurrencyText.Visible = false;
+                        SoldierCurrencyText.Visible = false;
+                        MyConsole.WriteLineWithCount("Adapter: show lifepoints");
+                        break;
+                    case "Tower Currency":
+                        PlayerStatsShowStatus = PlayerStatsShowStatus.TowerCurrency;
+                        LifePointsText.Visible = false;
+                        TowerCurrencyText.Visible = true;
+                        SoldierCurrencyText.Visible = false;
+                        MyConsole.WriteLineWithCount("Adapter: show tower currency");
+                        break;
+                    case "Soldier Currency":
+                        PlayerStatsShowStatus = PlayerStatsShowStatus.SoldierCurrency;
+                        LifePointsText.Visible = false;
+                        TowerCurrencyText.Visible = false;
+                        SoldierCurrencyText.Visible = true;
+                        MyConsole.WriteLineWithCount("Adapter: show soldier currency");
+                        break;
+                }
             }
         }
 
