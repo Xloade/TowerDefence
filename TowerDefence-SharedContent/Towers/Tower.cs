@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.Serialization;
+using System.ServiceModel.Channels;
 using System.Text;
+using Newtonsoft.Json;
 using TowerDefence_SharedContent.Soldiers;
+using TowerDefence_SharedContent.Towers.State;
 
 namespace TowerDefence_SharedContent.Towers
 {
@@ -14,10 +18,19 @@ namespace TowerDefence_SharedContent.Towers
         public int[] Range { get; set; }
         public int[] Power { get; set; }
         public double[] RateOfFire { get; set; }
+
         public List<Ammunition> Ammunition { get; set; }
         public TowerType TowerType { get; set; }
         public int ShootingCooldown { get; set; }
         public PlayerType PlayerType { get; set; }
+        public int MaxMagazineSize { get; set; }
+        public int ShotsFired { get; set; }
+        public bool IsReloading { get; set; }
+        public bool IsOverheated { get; set; }
+
+        [JsonIgnore]
+        [IgnoreDataMember]
+        public TowerState State { get; set; }
 
         public Tower(PlayerType playerType, TowerType towerType, Point coordinates)
         {
@@ -29,10 +42,12 @@ namespace TowerDefence_SharedContent.Towers
             ShootingCooldown = 0;
             PlayerType = playerType;
             Rotation = playerType == PlayerType.Player1 ? 90 : -90;
+            State = new PrepareNextShotState(this);
+            ShotsFired = 0;
         }
 
         public Tower(int level, int[] price, Point coordinates, int[] range, int[]power, double[]rateOfFire,
-            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType)
+            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType, bool isReloading, bool isOverheated)
         {
             Level = level;
             Price = price;
@@ -46,6 +61,8 @@ namespace TowerDefence_SharedContent.Towers
             ShootingCooldown = shootingCooldown;
             PlayerType = playerType;
             Rotation = playerType == PlayerType.Player1 ? 90 : -90;
+            IsReloading = isReloading;
+            IsOverheated = isOverheated;
         }
 
         public void MoveAmmunition(PlayerType type)
@@ -67,9 +84,17 @@ namespace TowerDefence_SharedContent.Towers
             for (int i = 0; i < soldiers.Count; i++)
             {
                 var soldier = soldiers[i];
-                if (CanShootAlgorithm.CanShoot(soldier.Coordinates))
+                switch (State)
                 {
-                    Shoot();
+                    case ShootingState _:
+                        State.Shoot();
+                        break;
+                    case ReloadingState _:
+                        State.Reload();
+                        break;
+                    case PrepareNextShotState _:
+                        State.Check(CanShootAlgorithm, soldier.Coordinates);
+                        break;
                 }
                 for (int k = 0; k < Ammunition.Count; k++)
                 {
@@ -94,23 +119,6 @@ namespace TowerDefence_SharedContent.Towers
                     }
                 }
             }
-        }
-
-        public void Shoot()
-        {
-            if(ShootingCooldown > 0)
-            {
-                return;
-            }
-            ShootingCooldown = (int)(600/RateOfFire[Level]);
-            GameElementFactory ammunitionFactory = new AmmunitionFactory();
-            MyConsole.WriteLineWithCount("----- Strategy -----");
-            if (this is MiniGunTower)
-                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Bullet, Power[Level], this.PlayerType));
-            else if (this is RocketTower)
-                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Rocket, Power[Level], this.PlayerType));
-            else if  (this is LaserTower)
-                Ammunition.Add(ammunitionFactory.CreateAmmunition(this.Coordinates, AmmunitionType.Laser, Power[Level], this.PlayerType));
         }
     }
 }

@@ -15,11 +15,12 @@ namespace TowerDefence_SharedContent.Towers
             RateOfFire = new double[] { 10, 15, 20, };
             TowerType = towerType;
             CanShootAlgorithm = new CanMiniGunShoot(Level, Coordinates, Range);
+            MaxMagazineSize = 3;
         }
 
         public MiniGunTower(int level, int[] price, Point coordinates, int[] range, int[] power, double[] rateOfFire,
-            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType) : base(level, price, coordinates, range, power, rateOfFire,
-            sprite, ammunition, towerType, shootingCooldown, playerType)
+            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType, bool isReloading, bool isOverheated) : base(level, price, coordinates, range, power, rateOfFire,
+            sprite, ammunition, towerType, shootingCooldown, playerType, isReloading, isOverheated)
         {
         }
     }

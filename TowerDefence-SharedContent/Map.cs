@@ -50,13 +50,18 @@ namespace TowerDefence_SharedContent
 
         public string ToJson()
         {
-            JObject mapJson;
+            string mapJson;
             Map map = this;
             lock (map)
             {
-                mapJson = (JObject)JToken.FromObject(this);
+                //mapJson = (JObject)JToken.FromObject(this);
+                mapJson = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
             }
-            return mapJson.ToString();
+
+            return mapJson;
         }
 
         public void AddSoldier(Soldier soldier, PlayerType playerType)
