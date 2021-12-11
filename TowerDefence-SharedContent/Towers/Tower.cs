@@ -26,8 +26,6 @@ namespace TowerDefence_SharedContent.Towers
         public int MaxMagazineSize { get; set; }
         public int ShotsFired { get; set; }
         public int OverheatLevel { get; set; }
-        public bool IsReloading { get; set; }
-        public bool IsOverheated { get; set; }
 
         [JsonIgnore]
         [IgnoreDataMember]

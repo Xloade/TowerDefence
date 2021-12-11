@@ -6,6 +6,7 @@ using TowerDefence_ClientSide.Composite;
 using System.Drawing;
 using System.Linq;
 using TowerDefence_ClientSide.Prototype;
+using TowerDefence_ClientSide.shapes;
 using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_SharedContent.Towers;
 
@@ -111,6 +112,7 @@ namespace TowerDefence_ClientSide
                     Shape firstWrap = new Shape(tower, 100, 100, imageDictionary.Get(tower.Sprite));
                     IDraw secondWrap = new LvlDrawDecorator(firstWrap, firstWrap);
                     IDraw thirdWrap = new PlatoonDecorator(secondWrap, firstWrap);
+                    //IDraw fourthWrap = new StateDecorator(thirdWrap, firstWrap);
                     firstWrap.DecoratedDrawInterface = thirdWrap;
                     shapePlatoon.Shapes.Add(firstWrap);
                 }
