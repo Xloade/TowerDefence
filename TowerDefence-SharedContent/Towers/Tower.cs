@@ -25,6 +25,7 @@ namespace TowerDefence_SharedContent.Towers
         public PlayerType PlayerType { get; set; }
         public int MaxMagazineSize { get; set; }
         public int ShotsFired { get; set; }
+        public int OverheatLevel { get; set; }
         public bool IsReloading { get; set; }
         public bool IsOverheated { get; set; }
 
@@ -67,21 +68,19 @@ namespace TowerDefence_SharedContent.Towers
 
         public void MoveAmmunition(PlayerType type)
         {
-            for (int i = 0; i < Ammunition.Count; i++)
+            for (var i = 0; i < Ammunition.Count; i++)
             {
                 Ammunition[i].MoveForward(type);
-                if (Ammunition[i].IsOutOfMap(type))
-                {
-                    Ammunition.Remove(Ammunition[i]);
-                    i--;
-                }
+                if (!Ammunition[i].IsOutOfMap(type)) continue;
+                Ammunition.Remove(Ammunition[i]);
+                i--;
             }
         }
 
         public void Scan(List<Soldier> soldiers, PlayerType playerType)
         {
             ShootingCooldown--;
-            for (int i = 0; i < soldiers.Count; i++)
+            for (var i = 0; i < soldiers.Count; i++)
             {
                 var soldier = soldiers[i];
                 switch (State)
@@ -92,31 +91,31 @@ namespace TowerDefence_SharedContent.Towers
                     case ReloadingState _:
                         State.Reload();
                         break;
+                    case OverheatState _:
+                        State.Cooldown();
+                        break;
                     case PrepareNextShotState _:
                         State.Check(CanShootAlgorithm, soldier.Coordinates);
                         break;
                 }
-                for (int k = 0; k < Ammunition.Count; k++)
+                for (var k = 0; k < Ammunition.Count; k++)
                 {
-                    if (this.Ammunition[k].CanDestroy(soldier.Coordinates, playerType))
+                    if (!Ammunition[k].CanDestroy(soldier.Coordinates, playerType)) continue;
+                    soldier.CurrentHitpoints -= Ammunition[k].Power;
+                    if (soldier.CurrentHitpoints <= 0)
                     {
-                        soldier.CurrentHitpoints -= Ammunition[k].Power;
-                        if (soldier.CurrentHitpoints <= 0)
+                        soldiers.RemoveAt(i);
+                        i--;
+                        if (TowerType == TowerType.Laser)
                         {
-                            soldiers.RemoveAt(i);
-                            i--;
-                            if (TowerType == TowerType.Laser)
-                            {
-                                Ammunition.Clear();
-                                k = 0;
-                            }
-                        }
-                        if (TowerType != TowerType.Laser)
-                        {
-                            Ammunition.RemoveAt(k);
-                            k--;
+                            Ammunition.Clear();
+                            k = 0;
                         }
                     }
+
+                    if (TowerType == TowerType.Laser) continue;
+                    Ammunition.RemoveAt(k);
+                    k--;
                 }
             }
         }

@@ -44,7 +44,7 @@ namespace TowerDefence_SharedContent
             Map map = this;
             lock (map)
             {
-            return Players.Find(player => player.PlayerType != type);
+                return Players.Find(player => player.PlayerType != type);
             }
         }
 

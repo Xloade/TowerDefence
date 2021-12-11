@@ -14,6 +14,5 @@ namespace TowerDefence_SharedContent.Towers.State
         public abstract void Reload();
         public abstract void Cooldown();
         public abstract void Check(ICanShootAlgorithm canShootAlgorithm, Point soldierCoordinates);
-        public abstract void StateChangeCheck();
     }
 }

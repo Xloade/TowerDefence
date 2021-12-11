@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TowerDefence_SharedContent.Towers.State
 {
-    public class ShootingState : TowerState
+    public class ShootingState : TowerState, IStateChange
     {
         public ShootingState(Tower tower)
         {
@@ -34,9 +34,10 @@ namespace TowerDefence_SharedContent.Towers.State
                     Tower.Ammunition.Add(ammunitionFactory.CreateAmmunition(Tower.Coordinates, AmmunitionType.Laser, Tower.Power[Tower.Level], Tower.PlayerType));
                     break;
             }
-
+            MyConsole.WriteLineWithCount("----- State: shot state -----");
             Tower.ShotsFired++;
-            StateChangeCheck();
+            Tower.OverheatLevel++;
+            OnStateChange();
         }
 
         public override void Reload()
@@ -57,16 +58,16 @@ namespace TowerDefence_SharedContent.Towers.State
             }
         }
 
-        public override void StateChangeCheck()
+        public void OnStateChange()
         {
             if (Tower.MaxMagazineSize == Tower.ShotsFired)
             {
                 Tower.State = new ReloadingState(this);
             }
-            //else if (Tower.ShootingCooldown == 30)
-            //{
-            //    Tower.State = new OverheatState(this);
-            //}
+            else if (Tower.OverheatLevel == 30)
+            {
+                Tower.State = new OverheatState(this);
+            }
         }
     }
 }

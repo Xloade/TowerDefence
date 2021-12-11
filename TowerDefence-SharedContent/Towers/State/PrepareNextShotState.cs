@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TowerDefence_SharedContent.Towers.State
 {
-    public class PrepareNextShotState : TowerState
+    public class PrepareNextShotState : TowerState, IStateChange
     {
         public PrepareNextShotState(Tower tower)
         {
@@ -20,7 +20,8 @@ namespace TowerDefence_SharedContent.Towers.State
 
         public override void Check(ICanShootAlgorithm canShootAlgorithm, Point soldierCoordinates)
         {
-            if (canShootAlgorithm.CanShoot(soldierCoordinates)) StateChangeCheck();
+            MyConsole.WriteLineWithCount("----- State: prepare next shot state -----");
+            if (canShootAlgorithm.CanShoot(soldierCoordinates)) OnStateChange();
         }
 
         public override void Reload()
@@ -33,6 +34,6 @@ namespace TowerDefence_SharedContent.Towers.State
             throw new NotImplementedException();
         }
 
-        public override void StateChangeCheck() => Tower.State = new ShootingState(this);
+        public void OnStateChange() => Tower.State = new ShootingState(this);
     }
 }

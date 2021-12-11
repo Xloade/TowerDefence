@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Timers;
+using Timer = System.Threading.Timer;
 
 namespace TowerDefence_SharedContent.Towers.State
 {
     public class OverheatState : TowerState
     {
+        private System.Timers.Timer Timer;
         public OverheatState(Tower tower)
         {
             Tower = tower;
@@ -26,13 +29,20 @@ namespace TowerDefence_SharedContent.Towers.State
 
         public override void Cooldown()
         {
-            throw new NotImplementedException();
+            MyConsole.WriteLineWithCount("----- State: cooling down state -----");
+            Timer = new System.Timers.Timer();
+            Timer.Interval = 5000;
+            Timer.Start();
+            Timer.Elapsed += (object source, ElapsedEventArgs e) =>
+            {
+                Tower.OverheatLevel = 0;
+                OnStateChange();
+                Timer.Stop();
+                Timer.Close();
+            };
         }
 
-        public override void StateChangeCheck()
-        {
-            throw new NotImplementedException();
-        }
+        public void OnStateChange() => Tower.State = new PrepareNextShotState(this);
 
         public override void Check(ICanShootAlgorithm canShootAlgorithm, Point soldierCoordinates)
         {

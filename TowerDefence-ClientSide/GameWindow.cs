@@ -142,14 +142,15 @@ namespace TowerDefence_ClientSide
 
         protected override void Mouse_Click(object sender, MouseEventArgs e)
         {
-            if (cursorState == CursorState.Modified && e.Button == MouseButtons.Left && CanBuyTower())
+            switch (cursorState)
             {
-                BuyTower(towerToBuy, PointToClient(Cursor.Position));
-                cursorCommand.Undo();
-                //connection.SendAsync("SendMessage", playerType.ToString(), "explotion", new string[] { e.X.ToString(), e.Y.ToString() });
-            } else if(cursorState == CursorState.Modified && e.Button == MouseButtons.Right)
-            {
-                cursorCommand.Undo();
+                case CursorState.Modified when e.Button == MouseButtons.Left && CanBuyTower():
+                    BuyTower(towerToBuy, PointToClient(Cursor.Position));
+                    cursorCommand.Undo();
+                    break;
+                case CursorState.Modified when e.Button == MouseButtons.Right:
+                    cursorCommand.Undo();
+                    break;
             }
         }
 
@@ -172,12 +173,10 @@ namespace TowerDefence_ClientSide
         protected override void Tower_selection_click(object sender, EventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
-            if (comboBox.SelectedItem != null)
-            {
-                comboBox.Visible = false;
-                cursorCommand.Do(GetTowerType(comboBox.SelectedItem.ToString()));
-                towerToBuy = comboBox.SelectedItem.ToString();
-            }
+            if (comboBox.SelectedItem == null) return;
+            comboBox.Visible = false;
+            cursorCommand.Do(GetTowerType(comboBox.SelectedItem.ToString()));
+            towerToBuy = comboBox.SelectedItem.ToString();
         }
 
         private TowerType GetTowerType(string name)
@@ -194,11 +193,9 @@ namespace TowerDefence_ClientSide
         protected override void Soldier_selection_click(object sender, EventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
-            if (comboBox.SelectedItem != null)
-            {
-                BuySoldier(comboBox.SelectedItem.ToString());
-                comboBox.Visible = false;
-            }
+            if (comboBox.SelectedItem == null) return;
+            BuySoldier(comboBox.SelectedItem.ToString());
+            comboBox.Visible = false;
         }
 
         private void BuyTower(string name, Point coordinates)
@@ -234,40 +231,38 @@ namespace TowerDefence_ClientSide
 
         protected override void Status_selection_click(object sender, EventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
-            if (comboBox.SelectedItem != null)
+            var comboBox = (ComboBox)sender;
+            if (comboBox.SelectedItem == null) return;
+            switch (comboBox.SelectedItem.ToString())
             {
-                switch (comboBox.SelectedItem.ToString())
-                {
-                    case "All":
-                        PlayerStatsShowStatus = PlayerStatsShowStatus.All;
-                        LifePointsText.Visible = true;
-                        TowerCurrencyText.Visible = true;
-                        SoldierCurrencyText.Visible = true;
-                        MyConsole.WriteLineWithCount("Adapter: show all");
-                        break;
-                    case "Lifepoints":                        
-                        PlayerStatsShowStatus = PlayerStatsShowStatus.Lifepoints;
-                        LifePointsText.Visible = true;
-                        TowerCurrencyText.Visible = false;
-                        SoldierCurrencyText.Visible = false;
-                        MyConsole.WriteLineWithCount("Adapter: show lifepoints");
-                        break;
-                    case "Tower Currency":
-                        PlayerStatsShowStatus = PlayerStatsShowStatus.TowerCurrency;
-                        LifePointsText.Visible = false;
-                        TowerCurrencyText.Visible = true;
-                        SoldierCurrencyText.Visible = false;
-                        MyConsole.WriteLineWithCount("Adapter: show tower currency");
-                        break;
-                    case "Soldier Currency":                        
-                        PlayerStatsShowStatus = PlayerStatsShowStatus.SoldierCurrency;
-                        LifePointsText.Visible = false;
-                        TowerCurrencyText.Visible = false;
-                        SoldierCurrencyText.Visible = true;
-                        MyConsole.WriteLineWithCount("Adapter: show soldier currency");
-                        break;
-                }
+                case "All":
+                    PlayerStatsShowStatus = PlayerStatsShowStatus.All;
+                    LifePointsText.Visible = true;
+                    TowerCurrencyText.Visible = true;
+                    SoldierCurrencyText.Visible = true;
+                    MyConsole.WriteLineWithCount("Adapter: show all");
+                    break;
+                case "Lifepoints":                        
+                    PlayerStatsShowStatus = PlayerStatsShowStatus.Lifepoints;
+                    LifePointsText.Visible = true;
+                    TowerCurrencyText.Visible = false;
+                    SoldierCurrencyText.Visible = false;
+                    MyConsole.WriteLineWithCount("Adapter: show lifepoints");
+                    break;
+                case "Tower Currency":
+                    PlayerStatsShowStatus = PlayerStatsShowStatus.TowerCurrency;
+                    LifePointsText.Visible = false;
+                    TowerCurrencyText.Visible = true;
+                    SoldierCurrencyText.Visible = false;
+                    MyConsole.WriteLineWithCount("Adapter: show tower currency");
+                    break;
+                case "Soldier Currency":                        
+                    PlayerStatsShowStatus = PlayerStatsShowStatus.SoldierCurrency;
+                    LifePointsText.Visible = false;
+                    TowerCurrencyText.Visible = false;
+                    SoldierCurrencyText.Visible = true;
+                    MyConsole.WriteLineWithCount("Adapter: show soldier currency");
+                    break;
             }
         }
 

@@ -6,7 +6,7 @@ using System.Timers;
 
 namespace TowerDefence_SharedContent.Towers.State
 {
-    public class ReloadingState : TowerState
+    public class ReloadingState : TowerState, IStateChange
     {
         private System.Timers.Timer Timer;
         public ReloadingState(Tower tower)
@@ -23,16 +23,17 @@ namespace TowerDefence_SharedContent.Towers.State
 
         public override void Reload()
         {
+            MyConsole.WriteLineWithCount("----- State: reloading state -----");
             Timer = new System.Timers.Timer();
             Timer.Interval = 3000;
             Timer.Start();
             Timer.Elapsed += (object source, ElapsedEventArgs e) =>
             {
                 Tower.ShotsFired = 0;
-                StateChangeCheck();
+                OnStateChange();
+                Timer.Stop();
+                Timer.Close();
             };
-            Timer.Stop();
-            Timer.Close();
         }
 
         public override void Cooldown()
@@ -45,6 +46,6 @@ namespace TowerDefence_SharedContent.Towers.State
             throw new NotImplementedException();
         }
 
-        public override void StateChangeCheck() => Tower.State = new PrepareNextShotState(this);
+        public void OnStateChange() => Tower.State = new PrepareNextShotState(this);
     }
 }
