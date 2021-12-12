@@ -81,6 +81,10 @@ namespace TowerDefence_ClientSide.Proxy
                     var restartMessage = (PlayerMessage)message;
                     HubConnection.SendAsync(restartMessage.Command);
                     break;
+                case MessageType.PauseGame:
+                    var pauseMessage = (PlayerMessage)message;
+                    HubConnection.SendAsync(pauseMessage.Command);
+                    break;
             }
         }
     }

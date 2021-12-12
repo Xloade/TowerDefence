@@ -8,6 +8,7 @@ using TowerDefence_SharedContent.Towers;
 using System.Threading;
 using System.Drawing;
 using System.Runtime.Serialization;
+using TowerDefence_ServerSide.Mediator;
 
 namespace TowerDefence_ServerSide
 {
@@ -22,18 +23,21 @@ namespace TowerDefence_ServerSide
         public static double TimerSpeed { get; set; } = 36;
         public static bool FoundThreading { get; set; } = false;
 
+        private static IMediator _mediator;
+
         public static void SetIHubContext(IHubContext<GameHub> context)
         {
             _hubContext = context;
         }
 
-        public static MapController GetInstance(){
+        public static MapController GetInstance(IMediator mediator){
             int random = MyConsole.Random();
             MyConsole.LookForMultiThreads("Singleton", random);
             try
             {
                 lock (_instance)
                 {
+                    _mediator = mediator;
                     return _instance;
                 }
             }
@@ -72,7 +76,7 @@ namespace TowerDefence_ServerSide
             Timer.Elapsed += async (Object source, System.Timers.ElapsedEventArgs e) =>
             {
                 Notify();
-                if(mapObservers.Count > 0)
+                if(mapObservers.Count > 0 && !_mediator.Paused())
                 {
                     await _hubContext.Clients.All.SendAsync("ReceiveMessage", mapObservers[0].ToJson());
                 }
@@ -125,7 +129,7 @@ namespace TowerDefence_ServerSide
         {
             lock (mapObservers)
             {
-                if(mapObservers.Count > 0)
+                if(mapObservers.Count > 0 && !_mediator.Paused())
                 {
                     mapObservers[0].UpdateSoldierMovement();
                     mapObservers[0].UpdateTowerActivity();
@@ -134,6 +138,11 @@ namespace TowerDefence_ServerSide
         }
         public void Restart(){
             mapObservers[0].Restart();
+        }
+
+        public void Pause()
+        {
+            _mediator.Pause();
         }
     }
 }
