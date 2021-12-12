@@ -30,7 +30,7 @@ namespace TowerDefence_ClientSide
             // Draw string to screen.
             lock (gr)
             {
-                gr.DrawString($"lvl:{level.Level}", drawFont, drawBrush, CenterX - (Width/2)+10, CenterY + (Height / 2), drawFormat);
+                gr.DrawString($"lvl:{level.Level}", drawFont, drawBrush, CenterX - (Width/2) + 10, CenterY + (Height / 2), drawFormat);
             }
         }
     }

@@ -15,12 +15,14 @@ namespace TowerDefence_SharedContent
             AmmunitionType = ammunitionType;
         }
 
-        public override bool CanDestroy(Point soldierCoordinates, PlayerType playerType)
+        public sealed override bool Player1Destroy(Point soldierCoordinates)
         {
-            if (playerType == PlayerType.Player1) 
-                return soldierCoordinates.X >= this.Coordinates.X && soldierCoordinates.X < 800;
-            else 
-                return soldierCoordinates.X <= this.Coordinates.X && soldierCoordinates.X > 100;
+            return soldierCoordinates.X >= this.Coordinates.X && soldierCoordinates.X < 800;
+        }
+
+        public sealed override bool Player2Destroy(Point soldierCoordinates)
+        {
+            return soldierCoordinates.X <= this.Coordinates.X && soldierCoordinates.X > 100;
         }
 
         public override void MoveForward(PlayerType playerType)

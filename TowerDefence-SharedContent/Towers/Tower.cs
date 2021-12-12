@@ -69,6 +69,7 @@ namespace TowerDefence_SharedContent.Towers
             for (var i = 0; i < Ammunition.Count; i++)
             {
                 Ammunition[i].MoveForward(type);
+
                 if (!Ammunition[i].IsOutOfMap(type)) continue;
                 Ammunition.Remove(Ammunition[i]);
                 i--;
@@ -117,5 +118,7 @@ namespace TowerDefence_SharedContent.Towers
                 }
             }
         }
+
+       
     }
 }

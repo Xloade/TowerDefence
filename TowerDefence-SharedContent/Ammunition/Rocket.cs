@@ -16,11 +16,16 @@ namespace TowerDefence_SharedContent
             Speed = 5;
             AmmunitionType = ammunitionType;
             Width = 300;
-        }     
+        }
 
-        public override bool CanDestroy(Point soldierCoordinates, PlayerType playerType)
+        public sealed override bool Player1Destroy(Point soldierCoordinates)
         {
             return soldierCoordinates.X <= this.Coordinates.X + this.Width / 2 && soldierCoordinates.X >= this.Coordinates.X - this.Width / 2;
+        }
+
+        public sealed override bool Player2Destroy(Point soldierCoordinates)
+        {
+            return Player1Destroy(soldierCoordinates);
         }
 
         public override void MoveForward(PlayerType playerType)

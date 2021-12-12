@@ -15,13 +15,17 @@ namespace TowerDefence_SharedContent
             AmmunitionType = ammunitionType;
         }
 
-        public override bool CanDestroy(Point soldierCoordinates, PlayerType playerType)
-        {            
-            if(playerType == PlayerType.Player1)
-                return soldierCoordinates.X <= this.Coordinates.X;
-            else
-                return soldierCoordinates.X >= this.Coordinates.X;
+
+        public sealed override bool Player1Destroy(Point soldierCoordinates)
+        {
+            return soldierCoordinates.X <= this.Coordinates.X;
         }
+
+        public sealed override bool Player2Destroy(Point soldierCoordinates)
+        {
+            return soldierCoordinates.X >= this.Coordinates.X;
+        }
+
         public override void MoveForward(PlayerType playerType)
         {
             switch (playerType)
@@ -36,6 +40,5 @@ namespace TowerDefence_SharedContent
                     break;
             }
         }
-
     }
 }
