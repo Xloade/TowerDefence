@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.SignalR.Client;
 using TowerDefence_SharedContent.Towers;
@@ -12,6 +13,7 @@ using TowerDefence_ClientSide.Prototype;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TowerDefence_ClientSide.Composite;
+using TowerDefence_ClientSide.Interpreter;
 using TowerDefence_ClientSide.Proxy;
 
 namespace TowerDefence_ClientSide
@@ -45,6 +47,15 @@ namespace TowerDefence_ClientSide
         string IPlayerStats.SoldierCurrencyText { set => SoldierCurrencyText.Text = value; }
 
         PlayerStatsShowStatus IPlayerStats.PlayerStatsShowStatus => PlayerStatsShowStatus;
+
+        private readonly List<Expression> expressions = new List<Expression>
+        {
+            new BuyExpression(),
+            new UpgradeExpression(),
+            new DeleteExpression(),
+            new ElementExpression(),
+            new ElementTypeExpression()
+        };
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
             1000, 700, ButtonBuySoldier, ButtonBuyTower, ButtonRestartGame, ButtonDeleteTower, ButtonUpgradeSoldier, ButtonQuickBuy)
@@ -152,6 +163,30 @@ namespace TowerDefence_ClientSide
                     cursorCommand.Undo();
                     break;
             }
+        }
+
+        protected override void Command_input_submitted(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (CommandInput.Text.Length > 0)
+                {
+                    var context = new Context(CommandInput.Text);
+                    expressions.ForEach(ex =>
+                    {
+                        ex.Interpret(context);
+                    });
+                    if (!context.IsEmpty()) ExecuteCommandFromInput(context);
+                }
+            }
+        }
+
+        private void ExecuteCommandFromInput(Context context)
+        {
+            if (context.CommandName == "buy")
+            {
+                BuySoldier(CultureInfo.InvariantCulture.TextInfo.ToTitleCase(context.ElementType));
+            } 
         }
 
         private bool CanBuyTower()

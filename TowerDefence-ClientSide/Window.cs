@@ -20,6 +20,7 @@ public abstract class Window : Form
     protected Label TowerCurrencyText;
     protected Label SoldierCurrencyText;
     protected ComboBox StatusSelectionBox;
+    protected TextBox CommandInput = new TextBox();
 
     protected Window(params string[] btnNames) : base()
     {
@@ -48,7 +49,18 @@ public abstract class Window : Form
         CreateButtonsLine(btnNames);
         CreateStatusLine();
         this.Text = title;
+        CreateCommandInput();
         InitializeComponent();
+    }
+
+    private void CreateCommandInput()
+    {
+        CommandInput.Width = 150;
+        CommandInput.Height = 50;
+        CommandInput.PlaceholderText = "Execute command";
+        CommandInput.Location = new Point(20, 450);
+        CommandInput.KeyDown += Command_input_submitted;
+        this.Controls.Add(CommandInput);
     }
 
     private void CreateStatusLine()
@@ -156,6 +168,8 @@ public abstract class Window : Form
         this.Closed += new System.EventHandler(this.Form1_Closed);
         this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
         this.MouseClick += Mouse_Click;
+
+
         
         this.ResumeLayout(false);
     }
@@ -186,7 +200,7 @@ public abstract class Window : Form
     protected virtual void Mouse_Click(object sender, MouseEventArgs e) { }
     protected virtual void GraphicalTimer_Tick(object sender, System.EventArgs e) { }
     protected virtual void PhysicsTimer_Tick(object sender, System.EventArgs e) { }
-
+    protected abstract void Command_input_submitted(object sender, KeyEventArgs e);
     protected void ClearArea()
     {
         Graphics gr = Graphics.FromImage(DrawArea);
