@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using TowerDefence_ClientSide.Composite;
 using TowerDefence_ClientSide.Interpreter;
 using TowerDefence_ClientSide.Proxy;
+using TowerDefence_ClientSide.Visitor;
 
 namespace TowerDefence_ClientSide
 {
@@ -26,6 +27,8 @@ namespace TowerDefence_ClientSide
         private const string ButtonDeleteTower = "Delete tower";
         private const string ButtonUpgradeSoldier = "Upgrade soldier";
         private const string ButtonQuickBuy = "Quick buy two";
+        private const string ButtonUpgradeSoldiers = "Upgrade Soldiers";
+        private const string ButtonUpgradeTowers = "Upgrade Towers";
         private const string ServerUrl = "https://localhost:5001/GameHub";
         Map currentMap;
 
@@ -40,6 +43,7 @@ namespace TowerDefence_ClientSide
         private string towerToBuy = "";
         private System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
         private ServerConnection serverConnection;
+        private Upgrades upgrades = new Upgrades();
 
         string IPlayerStats.LifePointsText { set => LifePointsText.Text = value; }
 
@@ -58,7 +62,7 @@ namespace TowerDefence_ClientSide
         };
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
-            1000, 700, ButtonBuySoldier, ButtonBuyTower, ButtonRestartGame, ButtonDeleteTower, ButtonUpgradeSoldier, ButtonQuickBuy)
+            1000, 700, ButtonBuySoldier, ButtonBuyTower, ButtonRestartGame, ButtonDeleteTower, ButtonUpgradeSoldier, ButtonQuickBuy, ButtonUpgradeSoldiers, ButtonUpgradeTowers)
         {
             mapUpdater = new MapUpdater(this,playerType);
             gameCursor = new GameCursor(this, playerType);
@@ -124,11 +128,14 @@ namespace TowerDefence_ClientSide
                 case ButtonBuyTower:
                     OpenTowerSelection();
                     break;
+                case ButtonUpgradeSoldiers:
+                    OpenSoldierUpgradeSelection();
+                    break;
+                case ButtonUpgradeTowers:
+                    OpenTowerUpgradeSelection();
+                    break;
                 case ButtonDeleteTower:
                     serverConnection.SendMessage(new TowerMessage("deleteTower", MessageType.TowerDelete, playerType));
-                    break;
-                case ButtonUpgradeSoldier:
-                    serverConnection.SendMessage(new SoldierMessage("upgradeSoldier", MessageType.SoldierUpgrade, playerType));
                     break;
                 case ButtonRestartGame:
                     serverConnection.SendMessage(new PlayerMessage("restartGame", MessageType.RestartGame));
@@ -149,6 +156,18 @@ namespace TowerDefence_ClientSide
         {
             SoldierSelectionBox.Visible = true;
             SoldierSelectionBox.DroppedDown = true;
+        }
+
+        private void OpenSoldierUpgradeSelection()
+        {
+            UpgradeSoldiersSelectionBox.Visible = true;
+            UpgradeSoldiersSelectionBox.DroppedDown = true;
+        }
+
+        private void OpenTowerUpgradeSelection()
+        {
+            UpgradeTowersSelectionBox.Visible = true;
+            UpgradeTowersSelectionBox.DroppedDown = true;
         }
 
         protected override void Mouse_Click(object sender, MouseEventArgs e)
@@ -235,6 +254,44 @@ namespace TowerDefence_ClientSide
             }
         }
 
+        protected override void Upgrade_Soldier_selection_click(object sender, EventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            if (comboBox.SelectedItem != null)
+            {
+                switch (comboBox.SelectedItem.ToString())
+                {
+                    case "Speed":
+                        upgrades.Accept(new SpeedUpgradeVisitor());
+                        break;
+                    case "Hitpoints":
+                        upgrades.Accept(new HitpointsUpgradeVisitor());
+                        break;
+                }
+                Upgrade(upgrades.upgrades.Find(upgrade => upgrade is SoldierUpgrade));
+                comboBox.Visible = false;
+            }
+        }
+
+        protected override void Upgrade_Tower_selection_click(object sender, EventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            if (comboBox.SelectedItem != null)
+            {
+                switch (comboBox.SelectedItem.ToString())
+                {
+                    case "Gun":
+                        upgrades.Accept(new GunUpgradeVisitor());
+                        break;
+                    case "Rate Of Fire":
+                        upgrades.Accept(new RateOfFireUpgradeVisitor());
+                        break;
+                }
+                Upgrade(upgrades.upgrades.Find(upgrade => upgrade is TowerUpgrade));
+                comboBox.Visible = false;
+            }
+        }
+
         private void BuyTower(string name, Point coordinates)
         {
             switch (name)
@@ -264,6 +321,11 @@ namespace TowerDefence_ClientSide
                     serverConnection.SendMessage(new SoldierMessage("BuySoldier", MessageType.Soldier, playerType, SoldierType.SpeedSoldier));
                     break;
             }
+        }
+
+        private void Upgrade(Upgrade upgrade)
+        {
+            serverConnection.SendMessage(new UpgradeMessage(upgrade.Message, MessageType.Upgrade, upgrade.UpgradeType, playerType));
         }
 
         protected override void Status_selection_click(object sender, EventArgs e)

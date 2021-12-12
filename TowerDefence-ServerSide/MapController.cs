@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Timers;
 using TowerDefence_SharedContent;
 using TowerDefence_SharedContent.Soldiers;
@@ -101,6 +102,16 @@ namespace TowerDefence_ServerSide
             {
                 mapObservers[0].AddPlayer(playerType);
             }
+        }
+
+        public void UpgradeSoldier(UpgradeType upgradeType)
+        {
+
+        }
+
+        public void UpgradeTower(UpgradeType upgradeType)
+        {
+
         }
 
         public void Attach(IMapObserver mapObserver)
