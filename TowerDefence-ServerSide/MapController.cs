@@ -16,7 +16,7 @@ namespace TowerDefence_ServerSide
     public class MapController : IMapController
     {
         private readonly List<IMapObserver> mapObservers = new List<IMapObserver>();
-        private Dictionary<PlayerType, UpgradeType> upgrades = new Dictionary<PlayerType, UpgradeType>();
+        private List<DirectUpgrade> upgrades = new List<DirectUpgrade>();
 
         static IHubContext<GameHub> _hubContext;
         private static MapController _instance;
@@ -108,9 +108,9 @@ namespace TowerDefence_ServerSide
 
         public void Upgrade(UpgradeType upgradeType, PlayerType playerType)
         {
-            if (!upgrades.Contains(new KeyValuePair<PlayerType, UpgradeType>(playerType, upgradeType)))
+            if (!upgrades.Contains(new DirectUpgrade(playerType, upgradeType)))
             {
-                upgrades.Add(playerType, upgradeType);
+                upgrades.Add(new DirectUpgrade(playerType, upgradeType));
             }
         }
 
@@ -142,7 +142,7 @@ namespace TowerDefence_ServerSide
                     {
                         foreach (var upgrade in upgrades)
                         {
-                            mapObservers[0].Upgrade(upgrade.Value, upgrade.Key);
+                            mapObservers[0].Upgrade(upgrade.UpgradeType, upgrade.PlayerType);
                         }
                     }
                     mapObservers[0].UpdateSoldierMovement();

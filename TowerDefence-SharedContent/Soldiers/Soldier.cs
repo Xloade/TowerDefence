@@ -56,16 +56,12 @@ namespace TowerDefence_SharedContent.Soldiers
         {
             if (upgradeType == UpgradeType.Hitpoints)
             {
-                if (SoldierType == SoldierType.HitpointsSoldier)
-                {
-                    Hitpoints = new int[] {15, 25, 35};
-                }
-                else
-                {
-                    Hitpoints = new int[] { 10, 15, 20};
-                }
+                Hitpoints = SoldierType == SoldierType.HitpointsSoldier ? new int[] {15, 25, 35} : new int[] { 10, 15, 20};
             }
-            else if (upgradeType == UpgradeType.Speed) Speed = 8;
+            else if (upgradeType == UpgradeType.Speed)
+            {
+                Speed = SoldierType == SoldierType.SpeedSoldier ? 4 : 2;
+            }
         }
     }
 }

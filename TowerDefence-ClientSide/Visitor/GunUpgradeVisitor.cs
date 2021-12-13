@@ -12,7 +12,7 @@ namespace TowerDefence_ClientSide.Visitor
             var upgrade = (Upgrade) element;
             upgrade.UpgradeType = UpgradeType.Gun;
 
-            MyConsole.WriteLineWithCount("Visitor: HitpointsUpgradeVisitor");
+            MyConsole.WriteLineWithCount("Visitor: GunUpgradeVisitor");
         }
     }
 }

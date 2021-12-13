@@ -62,7 +62,7 @@ namespace TowerDefence_ClientSide
         };
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
-            1000, 700, ButtonBuySoldier, ButtonBuyTower, ButtonRestartGame, ButtonDeleteTower, ButtonUpgradeSoldier, ButtonQuickBuy, ButtonUpgradeSoldiers, ButtonUpgradeTowers)
+            1000, 700, ButtonBuySoldier, ButtonBuyTower, ButtonUpgradeSoldiers, ButtonUpgradeTowers, ButtonRestartGame, ButtonDeleteTower, ButtonUpgradeSoldier, ButtonQuickBuy)
         {
             mapUpdater = new MapUpdater(this,playerType);
             gameCursor = new GameCursor(this, playerType);

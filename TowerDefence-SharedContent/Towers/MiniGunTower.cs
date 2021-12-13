@@ -12,7 +12,7 @@ namespace TowerDefence_SharedContent.Towers
             Price = new int[] { 10, 25, 40 };
             Range = new int[] { 400, 400, 400 };
             Power = new int[] { 5, 10, 15 };
-            RateOfFire = new double[] { 10, 15, 20, };
+            RateOfFire = new double[] { 10, 15, 20 };
             TowerType = towerType;
             CanShootAlgorithm = new CanMiniGunShoot(Level, Coordinates, Range);
             MaxMagazineSize = 20;
