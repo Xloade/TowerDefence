@@ -119,6 +119,16 @@ namespace TowerDefence_SharedContent.Towers
             }
         }
 
-       
+        public void Upgrade(UpgradeType upgradeType)
+        {
+            if (upgradeType == UpgradeType.Gun)
+            {
+                //for every tower type
+            }
+            else if(upgradeType == UpgradeType.RateOfFire)
+            {
+                //for every tower type
+            }
+        }
     }
 }

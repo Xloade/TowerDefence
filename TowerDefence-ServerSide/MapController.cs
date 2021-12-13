@@ -8,6 +8,7 @@ using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_SharedContent.Towers;
 using System.Threading;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace TowerDefence_ServerSide
@@ -15,6 +16,7 @@ namespace TowerDefence_ServerSide
     public class MapController : IMapController
     {
         private readonly List<IMapObserver> mapObservers = new List<IMapObserver>();
+        private Dictionary<PlayerType, UpgradeType> upgrades = new Dictionary<PlayerType, UpgradeType>();
 
         static IHubContext<GameHub> _hubContext;
         private static MapController _instance;
@@ -104,14 +106,12 @@ namespace TowerDefence_ServerSide
             }
         }
 
-        public void UpgradeSoldier(UpgradeType upgradeType)
+        public void Upgrade(UpgradeType upgradeType, PlayerType playerType)
         {
-
-        }
-
-        public void UpgradeTower(UpgradeType upgradeType)
-        {
-
+            if (!upgrades.Contains(new KeyValuePair<PlayerType, UpgradeType>(playerType, upgradeType)))
+            {
+                upgrades.Add(playerType, upgradeType);
+            }
         }
 
         public void Attach(IMapObserver mapObserver)
@@ -138,6 +138,13 @@ namespace TowerDefence_ServerSide
             {
                 if(mapObservers.Count > 0)
                 {
+                    if (upgrades.Count > 0)
+                    {
+                        foreach (var upgrade in upgrades)
+                        {
+                            mapObservers[0].Upgrade(upgrade.Value, upgrade.Key);
+                        }
+                    }
                     mapObservers[0].UpdateSoldierMovement();
                     mapObservers[0].UpdateTowerActivity();
                 }

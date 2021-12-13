@@ -47,6 +47,12 @@ namespace TowerDefence_ServerSide
         public void UpgradeSoldier(PlayerType playerType, UpgradeType upgradeType)
         {
             MapController mapController = MapController.GetInstance();
+            mapController.Upgrade(upgradeType, playerType);
+        }
+        public void UpgradeTower(PlayerType playerType, UpgradeType upgradeType)
+        {
+            MapController mapController = MapController.GetInstance();
+            mapController.Upgrade(upgradeType, playerType);
         }
         public void RestartGame()
         {
@@ -73,11 +79,6 @@ namespace TowerDefence_ServerSide
         {
             MyConsole.WriteLineWithCount($"{playerType}: deleteTower");
 
-        }
-
-        public void UpgradeSoldier(PlayerType playerType)
-        {
-            MyConsole.WriteLineWithCount($"{playerType}: upgradeSoldier");
         }
     }
 }

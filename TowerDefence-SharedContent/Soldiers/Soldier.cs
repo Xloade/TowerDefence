@@ -51,5 +51,21 @@ namespace TowerDefence_SharedContent.Soldiers
                 _ => false,
             };
         }
+
+        public void Upgrade(UpgradeType upgradeType)
+        {
+            if (upgradeType == UpgradeType.Hitpoints)
+            {
+                if (SoldierType == SoldierType.HitpointsSoldier)
+                {
+                    Hitpoints = new int[] {15, 25, 35};
+                }
+                else
+                {
+                    Hitpoints = new int[] { 10, 15, 20};
+                }
+            }
+            else if (upgradeType == UpgradeType.Speed) Speed = 8;
+        }
     }
 }

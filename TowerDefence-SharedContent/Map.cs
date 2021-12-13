@@ -48,6 +48,16 @@ namespace TowerDefence_SharedContent
             }
         }
 
+        public void Upgrade(UpgradeType upgradeType, PlayerType playerType)
+        {
+            Map map = this;
+            lock (map)
+            {
+                var player = map.Players.Find(player => player.PlayerType == playerType);
+                player?.Upgrade(upgradeType);
+            }
+        }
+
         public string ToJson()
         {
             string mapJson;
