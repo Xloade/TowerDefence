@@ -6,9 +6,9 @@ using TowerDefence_SharedContent.Soldiers;
 
 namespace TowerDefence_SharedContent.Towers
 {
-    public class Tower: DrawInfo, Ilevel
+    public class Tower: DrawInfo, ILevel
     {
-        protected CanShootAlgorithm canShootAlgorithm;
+        protected ICanShootAlgorithm CanShootAlgorithm;
         public int Level { get; set; }
         public int[] Price  { get; set; }
         public int[] Range { get; set; }
@@ -25,10 +25,10 @@ namespace TowerDefence_SharedContent.Towers
             Coordinates = coordinates;
             Ammunition = new List<Ammunition>();
             TowerType = towerType;
-            Sprite = SpritePaths.getTower(playerType, towerType);
+            Sprite = SpritePaths.GetTower(playerType, towerType);
             ShootingCooldown = 0;
             PlayerType = playerType;
-            Rotation = playerType == PlayerType.PLAYER1 ? 90 : -90;
+            Rotation = playerType == PlayerType.Player1 ? 90 : -90;
         }
 
         public Tower(int level, int[] price, Point coordinates, int[] range, int[]power, double[]rateOfFire,
@@ -45,7 +45,7 @@ namespace TowerDefence_SharedContent.Towers
             TowerType = towerType;
             ShootingCooldown = shootingCooldown;
             PlayerType = playerType;
-            Rotation = playerType == PlayerType.PLAYER1 ? 90 : -90;
+            Rotation = playerType == PlayerType.Player1 ? 90 : -90;
         }
 
         public void MoveAmmunition(PlayerType type)
@@ -67,7 +67,7 @@ namespace TowerDefence_SharedContent.Towers
             for (int i = 0; i < soldiers.Count; i++)
             {
                 var soldier = soldiers[i];
-                if (canShootAlgorithm.CanShoot(soldier.Coordinates))
+                if (CanShootAlgorithm.CanShoot(soldier.Coordinates))
                 {
                     Shoot();
                 }

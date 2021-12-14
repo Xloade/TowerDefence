@@ -7,16 +7,16 @@ namespace TowerDefence_SharedContent
 {
     static public class MyConsole
     {
-        private static List<string> writeOnce = new List<string>();
-        private static Dictionary<string, int> writeWithCount = new Dictionary<string, int>();
-        static private Timer timer = new Timer();
-        static private Dictionary<string, List<int>> randomIds = new Dictionary<string, List<int>>();
-        static Random rnd = new Random();
+        private static List<string> _writeOnce = new List<string>();
+        private static Dictionary<string, int> _writeWithCount = new Dictionary<string, int>();
+        static private Timer _timer = new Timer();
+        static private Dictionary<string, List<int>> _randomIds = new Dictionary<string, List<int>>();
+        static Random _rnd = new Random();
         static MyConsole()
         {
-            timer.Interval = 1000;
-            timer.Elapsed += Timer_Elapsed;
-            timer.Start();
+            _timer.Interval = 1000;
+            _timer.Elapsed += Timer_Elapsed;
+            _timer.Start();
         }
 
         private static void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -26,42 +26,42 @@ namespace TowerDefence_SharedContent
 
         public static void WriteLineOnce(string message)
         {
-            lock (writeOnce)
+            lock (_writeOnce)
             {
-                if(!writeOnce.Contains(message))
+                if(!_writeOnce.Contains(message))
                 {
-                    writeOnce.Add(message);
+                    _writeOnce.Add(message);
                 }
             }
         }
         public static void WriteLineWithCount(string message)
         {
-            lock (writeWithCount)
+            lock (_writeWithCount)
             {
-                if (writeWithCount.ContainsKey(message))
+                if (_writeWithCount.ContainsKey(message))
                 {
-                    writeWithCount[message]++;
+                    _writeWithCount[message]++;
                 }
                 else
                 {
-                    writeWithCount.Add(message, 1);
+                    _writeWithCount.Add(message, 1);
                 }
             }
         }
         private static void UpdateConsole()
         {
             Console.Clear();
-            lock (writeWithCount)
+            lock (_writeWithCount)
             {
-                foreach (KeyValuePair<string, int> kvp in writeWithCount)
+                foreach (KeyValuePair<string, int> kvp in _writeWithCount)
                 {
                     Console.WriteLine($"{kvp.Key} ({kvp.Value})");
                 }
             }
             Console.WriteLine("-----------------------------------------");
-            lock (writeOnce)
+            lock (_writeOnce)
             {
-                foreach (string message in writeOnce)
+                foreach (string message in _writeOnce)
                 {
                     Console.WriteLine(message);
                 }
@@ -69,13 +69,13 @@ namespace TowerDefence_SharedContent
         }
         static public bool LookForMultiThreads(string message, int randomId)
         {
-            lock (randomIds)
+            lock (_randomIds)
             {
-                if (!randomIds.ContainsKey(message))
+                if (!_randomIds.ContainsKey(message))
                 {
-                    randomIds.Add(message, new List<int>());
+                    _randomIds.Add(message, new List<int>());
                 }
-                List<int> currentRandIds = randomIds[message];
+                List<int> currentRandIds = _randomIds[message];
                 if (currentRandIds.Contains(randomId))
                 {
                     if (currentRandIds[currentRandIds.Count - 1] != randomId)
@@ -94,9 +94,9 @@ namespace TowerDefence_SharedContent
         }
         public static int Random()
         {
-            lock (rnd)
+            lock (_rnd)
             {
-                return rnd.Next();
+                return _rnd.Next();
             }
         }
     }

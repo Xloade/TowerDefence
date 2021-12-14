@@ -13,7 +13,7 @@ namespace TowerDefence_ClientSide.Prototype
             Width = 50;
             Height = 500;
             LazyImageDictionary lazyImageDictionary = new LazyImageDictionary();
-            this.spriteImage = lazyImageDictionary.get(SpritePaths.getLaser());
+            this.SpriteImage = lazyImageDictionary.Get(SpritePaths.GetLaser());
         }
     }
 }

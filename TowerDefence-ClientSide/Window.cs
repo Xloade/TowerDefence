@@ -6,47 +6,55 @@ using TowerDefence_SharedContent;
 public abstract class Window : Form
 {
     protected Bitmap DrawArea;
-    protected Image bgImage;
-    protected Timer graphicalTimer { get; private set; }
+    protected Image BgImage;
+
+    protected Timer GraphicalTimer { get; private set; }
     private System.ComponentModel.IContainer components = null;
 
-    protected ComboBox towerSelectionBox;
-    protected ComboBox soldierSelectionBox;
+    protected ComboBox TowerSelectionBox;
+    protected ComboBox SoldierSelectionBox;
 
-    private string[] statusNames = new string[] { "Lifepoints", "Tower Currency", "Soldier Currency" };
+    private readonly string[] statusNames = new string[] { "Lifepoints", "Tower Currency", "Soldier Currency" };
 
     protected Label LifePointsText;
     protected Label TowerCurrencyText;
     protected Label SoldierCurrencyText;
     protected ComboBox StatusSelectionBox;
 
-    public Window(params string[] btnNames) : base()
+    protected Window(params string[] btnNames) : base()
     {
         DrawArea = new Bitmap(600, 400,
              System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-        bgImage = new Bitmap(1000, 700,
+        BgImage = new Bitmap(1000, 700,
              System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-        createButtonsLine(btnNames);
-        this.Text = "KTU IF 2018";
+        CreateButtonsLine(btnNames);
+        Text = "KTU IF 2021";
         InitializeComponent();
     }
-    public Window(string bgImagePath, string title,
+
+    public sealed override string Text
+    {
+        get => base.Text;
+        set => base.Text = value;
+    }
+
+    protected Window(string bgImagePath, string title,
                      int width, int height,
                     params string[] btnNames) : base()
     {
-        this.bgImage = Image.FromFile(SpritePaths.getMap("Summer"));
+        this.BgImage = Image.FromFile(SpritePaths.GetMap("Summer"));
         DrawArea = new Bitmap(width, height,
              System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-        createButtonsLine(btnNames);
-        createStatusLine();
+        CreateButtonsLine(btnNames);
+        CreateStatusLine();
         this.Text = title;
         InitializeComponent();
     }
 
-    private void createStatusLine()
+    private void CreateStatusLine()
     {
-        int margin = 20;
-        int x = margin;
+        var margin = 20;
+        var x = margin;
         foreach(var name in statusNames)
         {
             switch(name)
@@ -68,10 +76,12 @@ public abstract class Window : Form
             }
         }
 
-        StatusSelectionBox = new ComboBox();
-        StatusSelectionBox.Location = new Point(x, DrawArea.Height - 700);
+        StatusSelectionBox = new ComboBox
+        {
+            Location = new Point(x, DrawArea.Height - 700)
+        };
         StatusSelectionBox.Items.AddRange(new string[] { "All", "Lifepoints", "Tower Currency", "Soldier Currency" });
-        StatusSelectionBox.DropDownClosed += new EventHandler(status_selection_click);
+        StatusSelectionBox.DropDownClosed += new EventHandler(Status_selection_click);
         StatusSelectionBox.SelectedIndex = 0;
         this.Controls.Add(StatusSelectionBox);
     }
@@ -87,36 +97,42 @@ public abstract class Window : Form
         return textWidth;
     }
 
-    private void createButtonsLine(params string[] btnNames)
+    private void CreateButtonsLine(params string[] btnNames)
     {
         int margin = 20;
         int btnX = margin;
         foreach (string name in btnNames)
         {
-            Button btn = new Button();
-            btn.Name = name;
-            btn.Text = name;
+            Button btn = new Button
+            {
+                Name = name,
+                Text = name
+            };
             int btnWidth = name.Length * 10 + 4;
             btn.Location = new Point(btnX, DrawArea.Height-200);
             btn.Size = new Size(btnWidth, 20);
-            btn.Click += new EventHandler(btn_Click);
+            btn.Click += new EventHandler(Btn_Click);
             this.Controls.Add(btn);
             if(name.Equals("Buy tower"))
             {
-                towerSelectionBox = new ComboBox();
-                towerSelectionBox.Location = new Point(btnX, DrawArea.Height - 220);
-                towerSelectionBox.Items.AddRange(new string[] { "Minigun", "Rocket", "Laser"});
-                towerSelectionBox.DropDownClosed += new EventHandler(tower_selection_click);
-                this.Controls.Add(towerSelectionBox);
-                towerSelectionBox.Visible = false;
+                TowerSelectionBox = new ComboBox
+                {
+                    Location = new Point(btnX, DrawArea.Height - 220)
+                };
+                TowerSelectionBox.Items.AddRange(new string[] { "Minigun", "Rocket", "Laser"});
+                TowerSelectionBox.DropDownClosed += new EventHandler(Tower_selection_click);
+                this.Controls.Add(TowerSelectionBox);
+                TowerSelectionBox.Visible = false;
             } else if(name.Equals("Buy soldier"))
             {
-                soldierSelectionBox = new ComboBox();
-                soldierSelectionBox.Location = new Point(btnX, DrawArea.Height - 220);
-                soldierSelectionBox.Items.AddRange(new string[] { "Hitpoints", "Speed" });
-                soldierSelectionBox.DropDownClosed += new EventHandler(soldier_selection_click);
-                this.Controls.Add(soldierSelectionBox);
-                soldierSelectionBox.Visible = false;
+                SoldierSelectionBox = new ComboBox
+                {
+                    Location = new Point(btnX, DrawArea.Height - 220)
+                };
+                SoldierSelectionBox.Items.AddRange(new string[] { "Hitpoints", "Speed" });
+                SoldierSelectionBox.DropDownClosed += new EventHandler(Soldier_selection_click);
+                this.Controls.Add(SoldierSelectionBox);
+                SoldierSelectionBox.Visible = false;
             }
             btnX += margin + btnWidth;
         }
@@ -126,10 +142,12 @@ public abstract class Window : Form
         this.SuspendLayout();
         this.components = new System.ComponentModel.Container();
 
-        this.graphicalTimer = new System.Windows.Forms.Timer(this.components);
-        this.graphicalTimer.Enabled = false;
-        this.graphicalTimer.Interval = 16;
-        this.graphicalTimer.Tick += new System.EventHandler(this.graphicalTimer_Tick);
+        this.GraphicalTimer = new System.Windows.Forms.Timer(this.components)
+        {
+            Enabled = false,
+            Interval = 16
+        };
+        this.GraphicalTimer.Tick += new System.EventHandler(this.GraphicalTimer_Tick);
 
         this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
         this.ClientSize = new System.Drawing.Size(
@@ -160,24 +178,19 @@ public abstract class Window : Form
     }
     // Form paint event
     protected abstract void Form1_Paint(object sender, PaintEventArgs e);
-    //{
-    //    Graphics gr = e.Graphics;
-    //    gr.DrawImage(DrawArea, 0, 0, DrawArea.Width, DrawArea.Height);
-    //    gr.Dispose();
-    //}
 
-    protected abstract void btn_Click(object sender, System.EventArgs e);
+    protected abstract void Btn_Click(object sender, System.EventArgs e);
 
-    protected abstract void tower_selection_click(object sender, System.EventArgs e);
-    protected abstract void soldier_selection_click(object sender, System.EventArgs e);
+    protected abstract void Tower_selection_click(object sender, System.EventArgs e);
+    protected abstract void Soldier_selection_click(object sender, System.EventArgs e);
 
-    protected abstract void status_selection_click(object sender, System.EventArgs e);
+    protected abstract void Status_selection_click(object sender, System.EventArgs e);
     protected virtual void Mouse_Click(object sender, MouseEventArgs e) { }
     protected virtual void Mouse_Down(object sender, MouseEventArgs e) { }
     protected virtual void Mouse_Up(object sender, MouseEventArgs e) { }
     protected virtual void Mouse_Move(object sender, MouseEventArgs e) { }
-    protected virtual void graphicalTimer_Tick(object sender, System.EventArgs e) { }
-    protected virtual void physicsTimer_Tick(object sender, System.EventArgs e) { }
+    protected virtual void GraphicalTimer_Tick(object sender, System.EventArgs e) { }
+    protected virtual void PhysicsTimer_Tick(object sender, System.EventArgs e) { }
 
     protected void ClearArea()
     {

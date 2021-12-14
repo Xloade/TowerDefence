@@ -14,7 +14,7 @@ namespace TowerDefence_ClientSide
             this.images = new Dictionary<string, Image>();
         }
 
-        public Image get(string path)
+        public Image Get(string path)
         {
             if (!images.ContainsKey(path))
             {

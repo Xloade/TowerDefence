@@ -14,7 +14,7 @@ namespace TowerDefence_SharedContent.Towers
             Power = new int[] { 15, 20, 25 };
             RateOfFire = new double[] { 5, 6, 8 };
             TowerType = towerType;
-            canShootAlgorithm = new CanRocketShoot(Level, Coordinates, Range);
+            CanShootAlgorithm = new CanRocketShoot(Level, Coordinates, Range);
         }
 
         public RocketTower(int level, int[] price, Point coordinates, int[] range, int[] power, double[] rateOfFire,

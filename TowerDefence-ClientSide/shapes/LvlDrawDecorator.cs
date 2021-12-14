@@ -16,7 +16,7 @@ namespace TowerDefence_ClientSide
         }
         public override void Draw(Graphics gr)
         {
-            Ilevel Level = (Ilevel)Shape.Info;
+            ILevel level = (ILevel)Shape.Info;
             base.Draw(gr);
             MyConsole.WriteLineWithCount("|   LVL wrapper");
             // Create font and brush.
@@ -30,7 +30,7 @@ namespace TowerDefence_ClientSide
             // Draw string to screen.
             lock (gr)
             {
-                gr.DrawString($"lvl:{Level.Level}", drawFont, drawBrush, CenterX - (Width/2)+10, CenterY + (Height / 2), drawFormat);
+                gr.DrawString($"lvl:{level.Level}", drawFont, drawBrush, CenterX - (Width/2)+10, CenterY + (Height / 2), drawFormat);
             }
         }
     }

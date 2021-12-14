@@ -8,10 +8,7 @@ namespace TowerDefence_SharedContent.Soldiers
     {
         protected Soldier soldier;
 
-        public Soldier Soldier
-        {
-            get { return soldier; }
-        }
+        public Soldier Soldier => soldier;
 
         public abstract void BuildSpeed();
         public abstract void BuildHitpoints();

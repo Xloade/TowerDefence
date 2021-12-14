@@ -7,7 +7,7 @@ namespace TowerDefence_ClientSide.Composite
 {
     public interface IShapeComposite
     {
-        public bool isShape()
+        public bool IsShape()
         {
             return true;
         }

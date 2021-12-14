@@ -11,45 +11,48 @@ namespace TowerDefence_SharedContent
 {
     public class Map : IMapObserver
     {
-        public string backgroundImageDir;
-
-        public List<Player> players;
+        public List<Player> Players { get; set; }
+        public string BackgroundImageDir { get; set; }
 
         public Map()
         {
-            players = new List<Player>();
+            Players = new List<Player>();
         }
 
         public void AddPlayer(PlayerType playerType)
         {
-            lock (this)
+            Map map = this;
+            lock (map)
             {
-                players.RemoveAll((player)=> player.PlayerType == playerType);
-                players.Add(new Player(playerType));
+                Players.RemoveAll((player)=> player.PlayerType == playerType);
+                Players.Add(new Player(playerType));
             }
         }
 
 
         public Player GetPlayer(PlayerType type)
         {
-            lock (this)
+            Map map = this;
+            lock (map)
             {
-                return players.Find(player => player.PlayerType == type);
+                return Players.Find(player => player.PlayerType == type);
             }
         }
 
         public Player GetPlayerEnemy(PlayerType type)
         {
-            lock (this)
+            Map map = this;
+            lock (map)
             {
-            return players.Find(player => player.PlayerType != type);
+            return Players.Find(player => player.PlayerType != type);
             }
         }
 
         public string ToJson()
         {
             JObject mapJson;
-            lock (this)
+            Map map = this;
+            lock (map)
             {
                 mapJson = (JObject)JToken.FromObject(this);
             }
@@ -59,13 +62,14 @@ namespace TowerDefence_SharedContent
         public void AddSoldier(Soldier soldier, PlayerType playerType)
         {
             MyConsole.WriteLineWithCount("Observer: Update Map");
-            lock (this)
+            Map map = this;
+            lock (map)
             {
-                foreach (Player player in players)
+                foreach (Player player in Players)
                 {
                     if (player.PlayerType == playerType)
                     {
-                        player.soldiers.Add(soldier);
+                        player.Soldiers.Add(soldier);
                         player.SoldierCurrency -= soldier.BuyPrice[soldier.Level];
                     }
                 }
@@ -75,13 +79,14 @@ namespace TowerDefence_SharedContent
         public void AddTower(Towers.Tower tower, PlayerType playerType)
         {
             MyConsole.WriteLineWithCount("Observer: Update Map");
-            lock (this)
+            Map map = this;
+            lock (map)
             {
-                foreach (Player player in players)
+                foreach (Player player in Players)
                 {
                     if (player.PlayerType == playerType)
                     {
-                        player.towers.Add(tower);
+                        player.Towers.Add(tower);
                         player.TowerCurrency -= tower.Price[tower.Level];
                     }
                 }
@@ -90,9 +95,10 @@ namespace TowerDefence_SharedContent
 
         public void UpdateSoldierMovement()
         {
-            lock (this)
+            Map map = this;
+            lock (map)
             {
-                foreach (Player player in players)
+                foreach (Player player in Players)
                 {
                     player.UpdateSoldierMovement();
                 }
@@ -101,13 +107,14 @@ namespace TowerDefence_SharedContent
 
         public void UpdateTowerActivity()
         {
-            lock (this)
+            Map map = this;
+            lock (map)
             {
-                if (players.Count > 1)
+                if (Players.Count > 1)
                 {
-                    foreach (Player player in players)
+                    foreach (Player player in Players)
                     {
-                        player.UpdateTowerActivity(GetPlayerEnemy(player.PlayerType).soldiers);
+                        player.UpdateTowerActivity(GetPlayerEnemy(player.PlayerType).Soldiers);
                     }
                 }
             }         
@@ -115,9 +122,9 @@ namespace TowerDefence_SharedContent
 
         public void Restart()
         {
-            players.ForEach((player)=> {
-                player.soldiers.Clear();
-                player.towers.Clear();
+            Players.ForEach((player)=> {
+                player.Soldiers.Clear();
+                player.Towers.Clear();
             });
         }
     }

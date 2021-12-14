@@ -14,11 +14,11 @@ namespace TowerDefence_ClientSide
         public PlatoonType PlatoonType { get; set; }
 
         public DrawInfo Info { get; set; }
-        public float CenterX { get{ return Info.Coordinates.X; } }
-        public float CenterY { get { return Info.Coordinates.Y; } }
-        public float Rotation { get { return Info.Rotation; } }
+        public float CenterX => Info.Coordinates.X;
+        public float CenterY => Info.Coordinates.Y;
+        public float Rotation => Info.Rotation;
 
-        public Image spriteImage;
+        public Image SpriteImage;
 
         public IDraw DecoratedDrawInterface { get; set; }
         public bool Selected { get; set; }
@@ -27,7 +27,7 @@ namespace TowerDefence_ClientSide
         {
             Width = width;
             Height = height;
-            this.spriteImage = (Image)spriteImage.Clone();
+            this.SpriteImage = (Image)spriteImage.Clone();
             Info = drawInfo;
             DecoratedDrawInterface = this;
         }
@@ -49,13 +49,13 @@ namespace TowerDefence_ClientSide
                 //Rotate.        
                 grImage.RotateTransform(Rotation);
                 //Move image back.
-                grImage.TranslateTransform(-(float)Width / 2, -(float)Height / 2);
+                grImage.TranslateTransform(-Width / 2, -Height / 2);
                 lock (this)
                 {
                     //bullet prototipe doesnt do deep enough copy
-                    lock (spriteImage)
+                    lock (SpriteImage)
                     {
-                        grImage.DrawImage(spriteImage, 0, 0, Width, Height);
+                        grImage.DrawImage(SpriteImage, 0, 0, Width, Height);
                     }
                 }
             }
@@ -84,7 +84,10 @@ namespace TowerDefence_ClientSide
             return this;
         }
 
-        public void DeleteShape(Shape shape){}
+        public void DeleteShape(Shape shape)
+        {
+            // Method intentionally left empty.
+        }
         public void UpdatePlatoon(PlatoonType platoonType)
         {
             PlatoonType = platoonType;

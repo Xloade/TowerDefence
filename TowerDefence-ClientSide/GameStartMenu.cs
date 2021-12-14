@@ -21,11 +21,11 @@ namespace TowerDefence_ClientSide
         {
             if(comboBox1.SelectedItem == null)
             {
-                ConnectToServer(PlayerType.PLAYER1, "NotSelected");
+                ConnectToServer(PlayerType.Player1, "NotSelected");
             }
             else
             {
-                ConnectToServer(PlayerType.PLAYER1, comboBox1.SelectedItem.ToString());
+                ConnectToServer(PlayerType.Player1, comboBox1.SelectedItem.ToString());
             }
             
         }
@@ -38,11 +38,11 @@ namespace TowerDefence_ClientSide
         {
             if (comboBox1.SelectedItem == null)
             {
-                ConnectToServer(PlayerType.PLAYER2, "NotSelected");
+                ConnectToServer(PlayerType.Player2, "NotSelected");
             }
             else
             {
-                ConnectToServer(PlayerType.PLAYER2, comboBox1.SelectedItem.ToString());
+                ConnectToServer(PlayerType.Player2, comboBox1.SelectedItem.ToString());
             }
         }
         private void ConnectToServer(PlayerType player, String mapType)

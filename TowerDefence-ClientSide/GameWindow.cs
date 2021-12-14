@@ -12,53 +12,65 @@ using TowerDefence_ClientSide.Prototype;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TowerDefence_ClientSide.Composite;
+using TowerDefence_ClientSide.Proxy;
 
 namespace TowerDefence_ClientSide
 {
     public class GameWindow : Window, ICursorChange, IPlayerStats, IHaveShapePlatoon
     {
-        private const string BUTTON_BUY_SOLDIER = "Buy soldier";
-        private const string BUTTON_BUY_TOWER = "Buy tower";
-        private const string BUTTON_RESTART_GAME = "Restart game";
-        private const string BUTTON_DELETE_TOWER = "Delete tower";
-        private const string BUTTON_UPGRADE_SOLDIER = "Upgrade soldier";
-        private const string BUTTON_QUICK_BUY = "Quick buy two";
-        private const string SERVER_URL = "https://localhost:5001/GameHub";
+        private const string ButtonBuySoldier = "Buy soldier";
+        private const string ButtonBuyTower = "Buy tower";
+        private const string ButtonRestartGame = "Restart game";
+        private const string ButtonDeleteTower = "Delete tower";
+        private const string ButtonUpgradeSoldier = "Upgrade soldier";
+        private const string ButtonQuickBuy = "Quick buy two";
+        private const string ServerUrl = "https://localhost:5001/GameHub";
         Map currentMap;
 
         public ShapePlatoon Shapes { get; set; } = new ShapePlatoon(PlatoonType.Root);
-        private MapUpdater mapUpdater;
+        private readonly MapUpdater mapUpdater;
 
-        HubConnection connection;
-        private PlayerType playerType;
+        private readonly PlayerType playerType;
         private PlayerStatsShowStatus PlayerStatsShowStatus = PlayerStatsShowStatus.All;
         private CursorState cursorState = CursorState.Default;
-        private GameCursor gameCursor;
-        private Command cursorCommand;
+        private readonly GameCursor gameCursor;
+        private readonly Command cursorCommand;
         private string towerToBuy = "";
         private System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
         private SelectionDrawing selectionDrawing = new SelectionDrawing();
         private PlatoonControl platoonControl;
-        string IPlayerStats.LifePointsText{ set { LifePointsText.Text = value; } }
+        private ServerConnection serverConnection;
 
-        string IPlayerStats.TowerCurrencyText { set { TowerCurrencyText.Text = value; } }
-        string IPlayerStats.SoldierCurrencyText { set { SoldierCurrencyText.Text = value; } }
+        string IPlayerStats.LifePointsText { set => LifePointsText.Text = value; }
 
-        PlayerStatsShowStatus IPlayerStats.PlayerStatsShowStatus { get { return PlayerStatsShowStatus; }}
+        string IPlayerStats.TowerCurrencyText { set => TowerCurrencyText.Text = value; }
+        string IPlayerStats.SoldierCurrencyText { set => SoldierCurrencyText.Text = value; }
+
+        PlayerStatsShowStatus IPlayerStats.PlayerStatsShowStatus => PlayerStatsShowStatus;
+
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
-            1000, 700, BUTTON_BUY_SOLDIER, BUTTON_BUY_TOWER, BUTTON_RESTART_GAME, BUTTON_DELETE_TOWER, BUTTON_UPGRADE_SOLDIER, BUTTON_QUICK_BUY)
+            1000, 700, ButtonBuySoldier, ButtonBuyTower, ButtonRestartGame, ButtonDeleteTower, ButtonUpgradeSoldier, ButtonQuickBuy)
         {
             mapUpdater = new MapUpdater(this,playerType);
             gameCursor = new GameCursor(this, playerType);
             cursorCommand = new CursorCommand(gameCursor);
             this.playerType = playerType;
-            startSignalR(mapType);
+            SetupServerConnection(mapType);
             MapParser.CreateInstance();
-            platoonControl = new PlatoonControl(connection, mapUpdater);
+            platoonControl = new PlatoonControl(serverConnection, mapUpdater);
             this.Controls.Add(platoonControl);
             renderTimer.Tick += RenderTimer_Tick;
             renderTimer.Interval = 10;
             renderTimer.Start();
+        }
+        private void SetupServerConnection(string mapType)
+        {
+            serverConnection = new ServerConnection(ServerUrl);
+            serverConnection.GetConnection().On<string>("ReceiveMessage", ReceiveMessage);
+            serverConnection.GetConnection().StartAsync();
+
+            serverConnection.SendMessage(new MapMessage("createMap", MessageType.Map, mapType));
+            serverConnection.SendMessage(new PlayerMessage("addPlayer", MessageType.Player, playerType));
         }
 
         private void RenderTimer_Tick(object sender, EventArgs e)
@@ -66,32 +78,22 @@ namespace TowerDefence_ClientSide
             renderTimer.Stop();
             if (currentMap != null)
             {
-                mapUpdater.UpdateMap(currentMap, out bgImage, this, selectionDrawing.Selection);
+                mapUpdater.UpdateMap(currentMap, out BgImage, this, selectionDrawing.Selection);
                 Refresh();
             }
             renderTimer.Start();
         }
 
-        
-        private void startSignalR(String mapType)
-        {
-            connection = new HubConnectionBuilder().WithUrl(SERVER_URL).Build();
-            connection.On<string>("ReceiveMessage", ReceiveMessage);
-            connection.StartAsync();
-            connection.SendAsync("createMap", mapType);
-            connection.SendAsync("addPlayer", playerType);
-        }
-
         private void ReceiveMessage(string updatedMapJson)
         {
-            MapParser mapParser = MapParser.getInstance();
+            MapParser mapParser = MapParser.GetInstance();
             currentMap = mapParser.Parse(updatedMapJson);
         }
 
         protected override void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics gr = e.Graphics;
-            gr.DrawImage(bgImage, 0, 0, DrawArea.Width, DrawArea.Height);
+            gr.DrawImage(BgImage, 0, 0, DrawArea.Width, DrawArea.Height);
             gr.SmoothingMode = SmoothingMode.HighSpeed;
 
             foreach (Shape shape in Shapes)
@@ -106,43 +108,41 @@ namespace TowerDefence_ClientSide
 
         }
 
-        protected override void btn_Click(object sender, EventArgs e)
+        protected override void Btn_Click(object sender, EventArgs e)
         {
             switch (((Button)sender).Name)
             {
-                case BUTTON_BUY_SOLDIER:
+                case ButtonBuySoldier:
                     OpenSoldierSelection();
                     break;
-                case BUTTON_BUY_TOWER:
+                case ButtonBuyTower:
                     OpenTowerSelection();
                     break;
-                case BUTTON_DELETE_TOWER:
-                    connection.SendAsync("deleteTower", playerType);
+                case ButtonDeleteTower:
+                    serverConnection.SendMessage(new TowerMessage("deleteTower", MessageType.TowerDelete, playerType));
                     break;
-                case BUTTON_UPGRADE_SOLDIER:
-                    connection.SendAsync("upgradeSoldier", playerType);
+                case ButtonUpgradeSoldier:
+                    serverConnection.SendMessage(new SoldierMessage("upgradeSoldier", MessageType.SoldierUpgrade, playerType));
                     break;
-                case BUTTON_RESTART_GAME:
-                    connection.SendAsync("restartGame");
+                case ButtonRestartGame:
+                    serverConnection.SendMessage(new PlayerMessage("restartGame", MessageType.RestartGame));
                     break;
-                case BUTTON_QUICK_BUY:
-                    connection.SendAsync("buyTwoSoldier", playerType, SoldierType.HitpointsSoldier);
-                    break;
-                default:
+                case ButtonQuickBuy:
+                    serverConnection.SendMessage(new SoldierMessage("buyTwoSoldier", MessageType.Soldier, playerType, SoldierType.HitpointsSoldier));
                     break;
             }
         }
 
         private void OpenTowerSelection()
         {
-            towerSelectionBox.Visible = true;
-            towerSelectionBox.DroppedDown = true;
+            TowerSelectionBox.Visible = true;
+            TowerSelectionBox.DroppedDown = true;
         }
 
         private void OpenSoldierSelection()
         {
-            soldierSelectionBox.Visible = true;
-            soldierSelectionBox.DroppedDown = true;
+            SoldierSelectionBox.Visible = true;
+            SoldierSelectionBox.DroppedDown = true;
         }
 
         protected override void Mouse_Click(object sender, MouseEventArgs e)
@@ -160,24 +160,21 @@ namespace TowerDefence_ClientSide
 
         private bool CanBuyTower()
         {
-            switch(playerType)
+            return playerType switch
             {
-                case PlayerType.PLAYER1:
-                    return PointToClient(Cursor.Position).X < 550;
-                case PlayerType.PLAYER2:
-                    return PointToClient(Cursor.Position).X > 550;
-                default:
-                    return false;
-            }
+                PlayerType.Player1 => PointToClient(Cursor.Position).X < 550,
+                PlayerType.Player2 => PointToClient(Cursor.Position).X > 550,
+                _ => false,
+            };
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            graphicalTimer.Stop();
-            connection.StopAsync();
+            GraphicalTimer.Stop();
+            serverConnection.GetConnection().StopAsync();
             base.OnFormClosing(e);
         }
 
-        protected override void tower_selection_click(object sender, EventArgs e)
+        protected override void Tower_selection_click(object sender, EventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
             if (comboBox.SelectedItem != null)
@@ -190,20 +187,16 @@ namespace TowerDefence_ClientSide
 
         private TowerType GetTowerType(string name)
         {
-            switch (name)
+            return name switch
             {
-                case "Minigun":
-                    return TowerType.Minigun;
-                case "Laser":
-                    return TowerType.Laser;
-                case "Rocket":
-                    return TowerType.Rocket;
-                default:
-                    return TowerType.Empty;
-            }
+                "Minigun" => TowerType.Minigun,
+                "Laser" => TowerType.Laser,
+                "Rocket" => TowerType.Rocket,
+                _ => TowerType.Empty,
+            };
         }
 
-        protected override void soldier_selection_click(object sender, EventArgs e)
+        protected override void Soldier_selection_click(object sender, EventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
             if (comboBox.SelectedItem != null)
@@ -218,13 +211,13 @@ namespace TowerDefence_ClientSide
             switch (name)
             {
                 case "Minigun":
-                    connection.SendAsync("buyTower", playerType, TowerType.Minigun, coordinates);
+                    serverConnection.SendMessage(new TowerMessage("buyTower", playerType, TowerType.Minigun, coordinates, MessageType.Tower));
                     break;
                 case "Laser":
-                    connection.SendAsync("buyTower", playerType, TowerType.Laser, coordinates);
+                    serverConnection.SendMessage(new TowerMessage("buyTower", playerType, TowerType.Laser, coordinates, MessageType.Tower));
                     break;
                 case "Rocket":
-                    connection.SendAsync("buyTower", playerType, TowerType.Rocket, coordinates);
+                    serverConnection.SendMessage(new TowerMessage("buyTower", playerType, TowerType.Rocket, coordinates, MessageType.Tower));
                     break;
                 default:
                     break;
@@ -236,17 +229,15 @@ namespace TowerDefence_ClientSide
             switch (name)
             {
                 case "Hitpoints":
-                    connection.SendAsync("buySoldier", playerType, SoldierType.HitpointsSoldier);
+                    serverConnection.SendMessage(new SoldierMessage("buySoldier", MessageType.Soldier, playerType, SoldierType.HitpointsSoldier));
                     break;
                 case "Speed":
-                    connection.SendAsync("buySoldier", playerType, SoldierType.SpeedSoldier);
-                    break;
-                default:
+                    serverConnection.SendMessage(new SoldierMessage("buySoldier", MessageType.Soldier, playerType, SoldierType.SpeedSoldier));
                     break;
             }
         }
 
-        protected override void status_selection_click(object sender, EventArgs e)
+        protected override void Status_selection_click(object sender, EventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
             if (comboBox.SelectedItem != null)

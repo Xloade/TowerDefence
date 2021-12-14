@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TowerDefence_SharedContent
 {
-    public interface Type
+    public interface IType
     {
 
     }

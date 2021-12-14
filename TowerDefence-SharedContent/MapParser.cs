@@ -11,22 +11,22 @@ namespace TowerDefence_SharedContent
 {
     public class MapParser
     {
-        private static MapParser instance;
+        private static MapParser _instance;
 
         public static void CreateInstance()
         {
-            if (instance != null) return;
-            instance = new MapParser();
+            if (_instance != null) return;
+            _instance = new MapParser();
         }
 
-        public static MapParser getInstance()
+        public static MapParser GetInstance()
         {
             try
             {
-                lock (instance)
+                lock (_instance)
                 {
-                    return instance;
-                };
+                    return _instance;
+                }
             }
             catch
             {
@@ -37,9 +37,9 @@ namespace TowerDefence_SharedContent
         public Map Parse(string json)
         {
             var result = JObject.Parse(json);
-            var players = result["players"].Children();
+            var players = result["Players"].Children();
             Map map = new Map();
-            map.backgroundImageDir = result["backgroundImageDir"].ToObject<string>();
+            map.BackgroundImageDir = result["BackgroundImageDir"].ToObject<string>();
 
             foreach (JToken player in players)
             {
@@ -47,8 +47,8 @@ namespace TowerDefence_SharedContent
                 var towerCurrency = player["TowerCurrency"].ToObject<int>();
                 var soldierCurrency = player["SoldierCurrency"].ToObject<int>();
                 var playerType = player["PlayerType"].ToObject<PlayerType>();
-                var soldiers = player["soldiers"].ToObject<List<Soldier>>();
-                var towersJson = player["towers"].Children();
+                var soldiers = player["Soldiers"].ToObject<List<Soldier>>();
+                var towersJson = player["Towers"].Children();
                 
 
                 var towers = new List<Towers.Tower>();
@@ -58,7 +58,7 @@ namespace TowerDefence_SharedContent
                 }
 
                 Player parsedPlayer = new Player(hitpoints, towerCurrency, soldierCurrency, playerType, soldiers, towers);
-                map.players.Add(parsedPlayer);
+                map.Players.Add(parsedPlayer);
             }
             return map;
         }
@@ -82,24 +82,14 @@ namespace TowerDefence_SharedContent
             {
                 ammunition.Add(ParseAmmunition(amm));
             }
-
-            Tower tower;
-            switch (towerType)
+ 
+            Tower tower = towerType switch
             {
-                case TowerType.Minigun:
-                    tower =  new MiniGunTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType);
-                    break;
-                case TowerType.Rocket:
-                    tower = new RocketTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown,playerType);
-                    break;
-                case TowerType.Laser:
-                    tower = new LaserTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType);
-                    break;    
-                default:
-                    tower = null;
-                    break;
-            }
-
+                TowerType.Minigun => new MiniGunTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType),
+                TowerType.Rocket => new RocketTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType),
+                TowerType.Laser => new LaserTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType),
+                _ => null,
+            };
             tower.Id = Id;
             return tower;
         }
@@ -107,17 +97,13 @@ namespace TowerDefence_SharedContent
         public Ammunition ParseAmmunition(JToken token)
         {
             var type = token["AmmunitionType"].ToObject<AmmunitionType>();
-            switch (type)
+            return type switch
             {
-                case AmmunitionType.Bullet:
-                    return JsonConvert.DeserializeObject<Bullet>(token.ToString());
-                case AmmunitionType.Rocket:
-                    return JsonConvert.DeserializeObject<Rocket>(token.ToString());
-                case AmmunitionType.Laser:
-                    return JsonConvert.DeserializeObject<Laser>(token.ToString());
-                default:
-                    return null;
-            }
+                AmmunitionType.Bullet => JsonConvert.DeserializeObject<Bullet>(token.ToString()),
+                AmmunitionType.Rocket => JsonConvert.DeserializeObject<Rocket>(token.ToString()),
+                AmmunitionType.Laser => JsonConvert.DeserializeObject<Laser>(token.ToString()),
+                _ => null,
+            };
         }
     }
 }

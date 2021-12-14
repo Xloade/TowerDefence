@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TowerDefence_SharedContent.Towers
 {
-    public class CanRocketShoot : CanShootAlgorithm
+    public class CanRocketShoot : ICanShootAlgorithm
     {
         private int Level;
         private Point Coordinates;

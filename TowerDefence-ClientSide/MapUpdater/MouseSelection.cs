@@ -46,6 +46,6 @@ namespace TowerDefence_ClientSide
             }
         }
 
-        public bool Selected;
+        public bool Selected { get; set; }
     }
 }

@@ -16,15 +16,15 @@ namespace TowerDefence_ClientSide
         }
         public override void Draw(Graphics gr)
         {
-            IHitpoints Hitpoints = (IHitpoints)Shape.Info;
+            IHitpoints hitpoints = (IHitpoints)Shape.Info;
             base.Draw(gr);
             MyConsole.WriteLineWithCount("|   Hp wrapper");
             Bitmap bmp = new Bitmap(50, 10);
 
             using (Graphics grImage = Graphics.FromImage(bmp))
             {
-                int green = (int)(bmp.Width / (Hitpoints.CurrentLvlHitpoints* 1.0) * Hitpoints.CurrentHitpoints);
-                int red = (int)(bmp.Width / (Hitpoints.CurrentLvlHitpoints * 1.0) * (Hitpoints.CurrentLvlHitpoints - Hitpoints.CurrentHitpoints));
+                int green = (int)(bmp.Width / (hitpoints.CurrentLvlHitpoints* 1.0) * hitpoints.CurrentHitpoints);
+                int red = (int)(bmp.Width / (hitpoints.CurrentLvlHitpoints * 1.0) * (hitpoints.CurrentLvlHitpoints - hitpoints.CurrentHitpoints));
 
                 grImage.FillRectangle(Brushes.Green, 0, 0, green, 10);
                 grImage.FillRectangle(Brushes.Red, green, 0, red, 10);

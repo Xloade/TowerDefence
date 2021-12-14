@@ -46,7 +46,7 @@ namespace TowerDefence_ServerSide
             app.UseAuthorization();
 
             var hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
-            MapController.setIHubContext(hubContext);
+            MapController.SetIHubContext(hubContext);
             PatternFacade.CreateInstance();
             app.UseEndpoints(endpoints =>
             {
