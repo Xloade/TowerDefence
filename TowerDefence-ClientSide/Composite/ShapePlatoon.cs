@@ -81,6 +81,28 @@ namespace TowerDefence_ClientSide.Composite
             if(PlatoonName != PlatoonType.Selected) Shapes.AddRange(rez);
             return rez;
         }
+        //return most root selected platoon
+        public List<ShapePlatoon> RemoveAllRootSelections()
+        {
+            var selections =
+                from shape in Shapes
+                where shape is ShapePlatoon
+                where ((ShapePlatoon)shape).PlatoonName == PlatoonType.Selected
+                select shape;
+            var selectionList = selections.OfType<ShapePlatoon>().ToList();
+            List<ShapePlatoon> rez = new List<ShapePlatoon>();
+            rez.AddRange(selectionList);
+            foreach (var selection in selectionList)
+            {
+                Shapes.Remove(selection);
+            }
+            foreach (var shape in Shapes.OfType<ShapePlatoon>())
+            {
+                rez.AddRange(shape.RemoveAllRootSelections());
+            }
+
+            return rez;
+        }
 
         public void RemoveDeepestSelections()
         {

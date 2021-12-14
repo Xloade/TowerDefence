@@ -37,5 +37,30 @@ namespace TowerDefence_ClientSide.Composite
         {
             MapUpdater.SelectAll();
         }
+
+        private void addToOneButton_Click(object sender, EventArgs e)
+        {
+            MapUpdater.TransferSelectToPlatoon(PlatoonType.Platoon1);
+        }
+
+        private void removeFromOneButton_Click(object sender, EventArgs e)
+        {
+            MapUpdater.TransferFromPlatoonToPlatoon(PlatoonType.Platoon1, PlatoonType.DefaultPlatoon);
+        }
+
+        private void addToTwoButton_Click(object sender, EventArgs e)
+        {
+            MapUpdater.TransferSelectToPlatoon(PlatoonType.Platoon2);
+        }
+
+        private void removeFromTwoButton_Click(object sender, EventArgs e)
+        {
+            MapUpdater.TransferFromPlatoonToPlatoon(PlatoonType.Platoon2, PlatoonType.DefaultPlatoon);
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            MapUpdater.TransferSelectToPlatoon(PlatoonType.DefaultPlatoon);
+        }
     }
 }

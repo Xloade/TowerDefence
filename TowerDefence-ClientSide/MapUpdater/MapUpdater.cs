@@ -6,6 +6,7 @@ using TowerDefence_ClientSide.Composite;
 using System.Drawing;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Windows.Forms;
 using TowerDefence_ClientSide.Prototype;
 using TowerDefence_ClientSide.shapes;
 using TowerDefence_SharedContent.Soldiers;
@@ -204,6 +205,30 @@ namespace TowerDefence_ClientSide
                     playerStats.LifePointsText = $"Lifepoints: {soldierCurrency}";
                     break;
             }
+        }
+
+        private ShapePlatoon GetPlatoon(PlatoonType type)
+        {
+            return type switch
+            {
+                PlatoonType.Root => Root,
+                PlatoonType.Platoon1 => Platoon1,
+                PlatoonType.Platoon2 => Platoon2,
+                PlatoonType.DefaultPlatoon => DefaultPlatoon,
+                _ => null,
+            };
+        }
+        public void TransferSelectToPlatoon(PlatoonType type)
+        {
+            GetPlatoon(type).Shapes.AddRange(Root.RemoveAllRootSelections());
+            Root.UpdatePlatoon(PlatoonType.DefaultPlatoon);
+        }
+
+        public void TransferFromPlatoonToPlatoon(PlatoonType donor, PlatoonType recipient)
+        {
+            GetPlatoon(recipient).Shapes.AddRange(GetPlatoon(donor).Shapes);
+            GetPlatoon(donor).Shapes.Clear();
+            Root.UpdatePlatoon(PlatoonType.DefaultPlatoon);
         }
     }
 }
