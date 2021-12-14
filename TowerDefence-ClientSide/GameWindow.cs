@@ -272,11 +272,6 @@ namespace TowerDefence_ClientSide
             }
         }
 
-        private void Upgrade(Upgrade upgrade)
-        {
-            serverConnection.SendMessage(new UpgradeMessage(upgrade.Message, MessageType.Upgrade, upgrade.UpgradeType, playerType));
-        }
-
         protected override void Status_selection_click(object sender, EventArgs e)
         {
             var comboBox = (ComboBox)sender;
