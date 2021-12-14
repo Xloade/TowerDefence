@@ -19,7 +19,7 @@ namespace TowerDefence_SharedContent.Soldiers
 
         public override void BuildSpeed()
         {
-            soldier.Speed = 2;
+            soldier.Speeds = new double[] { 2, 3, 4 };
         }
 
         public override void BuildSprite(PlayerType playerType)

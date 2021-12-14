@@ -10,7 +10,7 @@ using TowerDefence_SharedContent.Towers.State;
 
 namespace TowerDefence_SharedContent.Towers
 {
-    public class Tower: DrawInfo, ILevel
+    public class Tower: DrawInfo, ILevel, IUpgradable
     {
         protected ICanShootAlgorithm CanShootAlgorithm;
         public int Level { get; set; }
@@ -119,6 +119,20 @@ namespace TowerDefence_SharedContent.Towers
             }
         }
 
-       
+        public void Upgrade()
+        {
+            if (Level > 1) return;
+            Level++;
+        }
+
+        public int UpgradePrice
+        {
+            get => Level > 1 ? 0 : Price[Level + 1];
+        }
+
+        public bool isUpgrable
+        {
+            get => Level <= 1;
+        }
     }
 }
