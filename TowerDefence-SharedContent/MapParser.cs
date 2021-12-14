@@ -76,6 +76,8 @@ namespace TowerDefence_SharedContent
             var shootingCooldown = token["ShootingCooldown"].ToObject<int>();
             var playerType = token["PlayerType"].ToObject<PlayerType>();
             var Id = token["Id"].ToObject<long>();
+            var isReloading = token["IsReloading"].ToObject<bool>();
+            var isOverheated = token["IsReloading"].ToObject<bool>();
 
             var ammunition = new List<Ammunition>();
             foreach (JToken amm in ammunitionJson)
@@ -85,9 +87,9 @@ namespace TowerDefence_SharedContent
  
             Tower tower = towerType switch
             {
-                TowerType.Minigun => new MiniGunTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType),
-                TowerType.Rocket => new RocketTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType),
-                TowerType.Laser => new LaserTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType),
+                TowerType.Minigun => new MiniGunTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType, isReloading, isOverheated),
+                TowerType.Rocket => new RocketTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType, isReloading, isOverheated),
+                TowerType.Laser => new LaserTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType, isReloading, isOverheated),
                 _ => null,
             };
             tower.Id = Id;

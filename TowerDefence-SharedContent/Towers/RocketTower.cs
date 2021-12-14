@@ -15,11 +15,12 @@ namespace TowerDefence_SharedContent.Towers
             RateOfFire = new double[] { 5, 6, 8 };
             TowerType = towerType;
             CanShootAlgorithm = new CanRocketShoot(Level, Coordinates, Range);
+            MaxMagazineSize = 3;
         }
 
         public RocketTower(int level, int[] price, Point coordinates, int[] range, int[] power, double[] rateOfFire,
-            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType) : base(level, price, coordinates, range, power, rateOfFire,
-            sprite, ammunition, towerType, shootingCooldown, playerType)
+            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType, bool isReloading, bool isOverheated) : base(level, price, coordinates, range, power, rateOfFire,
+            sprite, ammunition, towerType, shootingCooldown, playerType, isReloading, isOverheated)
         {
         }
     }

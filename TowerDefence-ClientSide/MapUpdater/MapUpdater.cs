@@ -80,6 +80,7 @@ namespace TowerDefence_ClientSide
         public void SaveSelection(MouseSelection selection)
         {
             Root.SaveSelection(selection);
+            Root.UpdatePlatoon(PlatoonType.DefaultPlatoon);
         }
 
         public void SelectAll()
@@ -154,7 +155,8 @@ namespace TowerDefence_ClientSide
                     IDraw secondWrap = new LvlDrawDecorator(firstWrap, firstWrap);
                     IDraw thirdWrap = new PlatoonDecorator(secondWrap, firstWrap);
                     IDraw fourthWrap = new SelectDrawDecorator(thirdWrap, firstWrap);
-                    firstWrap.DecoratedDrawInterface = fourthWrap;
+                    IDraw fifthWrap = new StateDecorator(fourthWrap, firstWrap);
+                    firstWrap.DecoratedDrawInterface = fifthWrap;
                     shapePlatoon.Shapes.Add(firstWrap);
                 }
                 GetNewAmmunition(tower.Ammunition, shapePlatoon, currentShapes);

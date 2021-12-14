@@ -21,8 +21,24 @@ namespace TowerDefence_SharedContent
         }
 
         public abstract void MoveForward(PlayerType playerType);
-        
-        public abstract bool CanDestroy(Point soldierCoordinates, PlayerType playerType);
+
+        public bool CanDestroy(Point soldierCoordinates, PlayerType playerType)
+        {
+            if (playerType == PlayerType.Player1)
+                return Player1Destroy(soldierCoordinates);
+            else
+                return Player2Destroy(soldierCoordinates);
+        }
+
+        public virtual bool Player1Destroy(Point soldierCoordinates)
+        {
+            return false;
+        }
+
+        public virtual bool Player2Destroy(Point soldierCoordinates)
+        {
+            return false;
+        }
 
         public bool IsOutOfMap(PlayerType playerType)
         {

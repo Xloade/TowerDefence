@@ -1,24 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
-using TowerDefence_ClientSide.shapes;
+using System.Text;
 using TowerDefence_SharedContent;
 
-namespace TowerDefence_ClientSide
+namespace TowerDefence_ClientSide.shapes
 {
-    class PlatoonDecorator : DrawDecorator
+    class StateDecorator : DrawDecorator
     {
         private IShape Shape;
-        public PlatoonDecorator(IDraw decoratedDraw, IShape shape) : base(decoratedDraw)
+        public StateDecorator(IDraw decoratedDraw, IShape shape) : base(decoratedDraw)
         {
             Shape = shape;
         }
         public override void Draw(Graphics gr)
         {
-            string platoon = Shape.PlatoonType.ToString();
+            string text;
+            if (Shape.Info.IsReloading)
+            {
+                text = "Reloading";
+            }
+            else if (Shape.Info.IsOverheated)
+            {
+                text = "Cooling down";
+            }
+            else text = "";
+
             base.Draw(gr);
-            MyConsole.WriteLineWithCount("|   platoon wrapper");
+            MyConsole.WriteLineWithCount("|   state wrapper");
             // Create font and brush.
             Font drawFont = new Font("Arial", 10);
             SolidBrush drawBrush = new SolidBrush(Color.Black);
@@ -30,7 +39,7 @@ namespace TowerDefence_ClientSide
             // Draw string to screen.
             lock (gr)
             {
-                gr.DrawString($"{platoon}", drawFont, drawBrush, CenterX + (Width / 2) + 50, CenterY + (Height / 2), drawFormat);
+                gr.DrawString($"{text}", drawFont, drawBrush, CenterX + (Width / 2), CenterY - (Height / 2) - 10, drawFormat);
             }
         }
     }

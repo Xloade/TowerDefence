@@ -10,5 +10,7 @@ namespace TowerDefence_SharedContent
         public Point Coordinates { get; set; }
         public string Sprite { get; set; }
         public float Rotation { get; set; }
+        public bool IsReloading { get; set; }
+        public bool IsOverheated { get; set; }
     }
 }

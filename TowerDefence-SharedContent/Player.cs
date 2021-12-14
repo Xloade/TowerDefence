@@ -51,7 +51,7 @@ namespace TowerDefence_SharedContent
 
         public void UpdateTowerActivity(List<Soldier> enemySoldiers)
         {
-            foreach(Towers.Tower tower in Towers)
+            foreach(var tower in Towers)
             {
                 tower.MoveAmmunition(PlayerType);
                 tower.Scan(enemySoldiers, PlayerType);

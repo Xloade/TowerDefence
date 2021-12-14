@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.SignalR.Client;
 using TowerDefence_SharedContent.Towers;
@@ -12,6 +13,7 @@ using TowerDefence_ClientSide.Prototype;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TowerDefence_ClientSide.Composite;
+using TowerDefence_ClientSide.Interpreter;
 using TowerDefence_ClientSide.Proxy;
 
 namespace TowerDefence_ClientSide
@@ -47,6 +49,15 @@ namespace TowerDefence_ClientSide
         string IPlayerStats.SoldierCurrencyText { set => SoldierCurrencyText.Text = value; }
 
         PlayerStatsShowStatus IPlayerStats.PlayerStatsShowStatus => PlayerStatsShowStatus;
+
+        private readonly List<Expression> expressions = new List<Expression>
+        {
+            new BuyExpression(),
+            new UpgradeExpression(),
+            new DeleteExpression(),
+            new ElementExpression(),
+            new ElementTypeExpression()
+        };
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
             1000, 700, ButtonBuySoldier, ButtonBuyTower, ButtonRestartGame, ButtonDeleteTower, ButtonUpgradeSoldier, ButtonQuickBuy)
@@ -147,15 +158,40 @@ namespace TowerDefence_ClientSide
 
         protected override void Mouse_Click(object sender, MouseEventArgs e)
         {
-            if (cursorState == CursorState.Modified && e.Button == MouseButtons.Left && CanBuyTower())
+            switch (cursorState)
             {
-                BuyTower(towerToBuy, PointToClient(Cursor.Position));
-                cursorCommand.Undo();
-                //connection.SendAsync("SendMessage", playerType.ToString(), "explotion", new string[] { e.X.ToString(), e.Y.ToString() });
-            } else if(cursorState == CursorState.Modified && e.Button == MouseButtons.Right)
-            {
-                cursorCommand.Undo();
+                case CursorState.Modified when e.Button == MouseButtons.Left && CanBuyTower():
+                    BuyTower(towerToBuy, PointToClient(Cursor.Position));
+                    cursorCommand.Undo();
+                    break;
+                case CursorState.Modified when e.Button == MouseButtons.Right:
+                    cursorCommand.Undo();
+                    break;
             }
+        }
+
+        protected override void Command_input_submitted(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (CommandInput.Text.Length > 0)
+                {
+                    var context = new Context(CommandInput.Text);
+                    expressions.ForEach(ex =>
+                    {
+                        ex.Interpret(context);
+                    });
+                    if (!context.IsEmpty()) ExecuteCommandFromInput(context);
+                }
+            }
+        }
+
+        private void ExecuteCommandFromInput(Context context)
+        {
+            if (context.CommandName == "buy")
+            {
+                BuySoldier(CultureInfo.InvariantCulture.TextInfo.ToTitleCase(context.ElementType));
+            } 
         }
 
         private bool CanBuyTower()
@@ -177,12 +213,10 @@ namespace TowerDefence_ClientSide
         protected override void Tower_selection_click(object sender, EventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
-            if (comboBox.SelectedItem != null)
-            {
-                comboBox.Visible = false;
-                cursorCommand.Do(GetTowerType(comboBox.SelectedItem.ToString()));
-                towerToBuy = comboBox.SelectedItem.ToString();
-            }
+            if (comboBox.SelectedItem == null) return;
+            comboBox.Visible = false;
+            cursorCommand.Do(GetTowerType(comboBox.SelectedItem.ToString()));
+            towerToBuy = comboBox.SelectedItem.ToString();
         }
 
         private TowerType GetTowerType(string name)
@@ -229,17 +263,17 @@ namespace TowerDefence_ClientSide
             switch (name)
             {
                 case "Hitpoints":
-                    serverConnection.SendMessage(new SoldierMessage("buySoldier", MessageType.Soldier, playerType, SoldierType.HitpointsSoldier));
+                    serverConnection.SendMessage(new SoldierMessage("BuySoldier", MessageType.Soldier, playerType, SoldierType.HitpointsSoldier));
                     break;
                 case "Speed":
-                    serverConnection.SendMessage(new SoldierMessage("buySoldier", MessageType.Soldier, playerType, SoldierType.SpeedSoldier));
+                    serverConnection.SendMessage(new SoldierMessage("BuySoldier", MessageType.Soldier, playerType, SoldierType.SpeedSoldier));
                     break;
             }
         }
 
         protected override void Status_selection_click(object sender, EventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
+            var comboBox = (ComboBox)sender;
             if (comboBox.SelectedItem != null)
             {
                 switch (comboBox.SelectedItem.ToString())
@@ -251,7 +285,7 @@ namespace TowerDefence_ClientSide
                         SoldierCurrencyText.Visible = true;
                         MyConsole.WriteLineWithCount("Adapter: show all");
                         break;
-                    case "Lifepoints":                        
+                    case "Lifepoints":
                         PlayerStatsShowStatus = PlayerStatsShowStatus.Lifepoints;
                         LifePointsText.Visible = true;
                         TowerCurrencyText.Visible = false;
@@ -265,7 +299,7 @@ namespace TowerDefence_ClientSide
                         SoldierCurrencyText.Visible = false;
                         MyConsole.WriteLineWithCount("Adapter: show tower currency");
                         break;
-                    case "Soldier Currency":                        
+                    case "Soldier Currency":
                         PlayerStatsShowStatus = PlayerStatsShowStatus.SoldierCurrency;
                         LifePointsText.Visible = false;
                         TowerCurrencyText.Visible = false;
