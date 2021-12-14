@@ -42,6 +42,8 @@ namespace TowerDefence_ClientSide
         private readonly Command cursorCommand;
         private string towerToBuy = "";
         private System.Windows.Forms.Timer renderTimer = new System.Windows.Forms.Timer();
+        private SelectionDrawing selectionDrawing = new SelectionDrawing();
+        private PlatoonControl platoonControl;
         private ServerConnection serverConnection;
         private Upgrades upgrades = new Upgrades();
 
@@ -70,6 +72,8 @@ namespace TowerDefence_ClientSide
             this.playerType = playerType;
             SetupServerConnection(mapType);
             MapParser.CreateInstance();
+            platoonControl = new PlatoonControl(serverConnection, mapUpdater, playerType);
+            this.Controls.Add(platoonControl);
             renderTimer.Tick += RenderTimer_Tick;
             renderTimer.Interval = 10;
             renderTimer.Start();
@@ -89,7 +93,7 @@ namespace TowerDefence_ClientSide
             renderTimer.Stop();
             if (currentMap != null)
             {
-                mapUpdater.UpdateMap(currentMap, out BgImage, this);
+                mapUpdater.UpdateMap(currentMap, out BgImage, this, selectionDrawing.Selection);
                 Refresh();
             }
             renderTimer.Start();
@@ -115,7 +119,8 @@ namespace TowerDefence_ClientSide
             {
                 shape.DecoratedDraw(gr);
             });*/
-            
+            selectionDrawing.Draw(gr);
+
         }
 
         protected override void Btn_Click(object sender, EventArgs e)
@@ -315,6 +320,23 @@ namespace TowerDefence_ClientSide
         {
             Cursor = cursor;
             this.cursorState = cursorState;
+        }
+
+        protected override void Mouse_Down(object sender, MouseEventArgs e)
+        {
+            selectionDrawing.Selection.StartPoint = PointToClient(Cursor.Position);
+            selectionDrawing.Selection.Selected = true;
+        }
+
+        protected override void Mouse_Up(object sender, MouseEventArgs e)
+        {
+            selectionDrawing.Selection.Selected = false;
+            mapUpdater.SaveSelection(selectionDrawing.Selection);
+        }
+
+        protected override void Mouse_Move(object sender, MouseEventArgs e)
+        {
+            selectionDrawing.Selection.EndPoint = PointToClient(Cursor.Position);
         }
     }
 }

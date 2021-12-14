@@ -23,5 +23,9 @@
     <ProjectReference Include="..\TowerDefence-SharedContent\TowerDefence-SharedContent.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
 
 </Project>

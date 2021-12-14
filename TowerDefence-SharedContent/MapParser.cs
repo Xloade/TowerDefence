@@ -75,6 +75,7 @@ namespace TowerDefence_SharedContent
             var towerType = token["TowerType"].ToObject<TowerType>();
             var shootingCooldown = token["ShootingCooldown"].ToObject<int>();
             var playerType = token["PlayerType"].ToObject<PlayerType>();
+            var Id = token["Id"].ToObject<long>();
             var isReloading = token["IsReloading"].ToObject<bool>();
             var isOverheated = token["IsReloading"].ToObject<bool>();
 
@@ -83,14 +84,16 @@ namespace TowerDefence_SharedContent
             {
                 ammunition.Add(ParseAmmunition(amm));
             }
-
-            return towerType switch
+ 
+            Tower tower = towerType switch
             {
                 TowerType.Minigun => new MiniGunTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType, isReloading, isOverheated),
                 TowerType.Rocket => new RocketTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType, isReloading, isOverheated),
                 TowerType.Laser => new LaserTower(level, price, coordinates, range, power, rateOfFire, sprite, ammunition, towerType, shootingCooldown, playerType, isReloading, isOverheated),
                 _ => null,
             };
+            tower.Id = Id;
+            return tower;
         }
 
         public Ammunition ParseAmmunition(JToken token)

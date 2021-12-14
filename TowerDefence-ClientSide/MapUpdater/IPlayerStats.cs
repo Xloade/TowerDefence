@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TowerDefence_ClientSide
 {
-    interface IPlayerStats
+    public interface IPlayerStats
     {
         public string LifePointsText { set; }
         public string TowerCurrencyText { set; }

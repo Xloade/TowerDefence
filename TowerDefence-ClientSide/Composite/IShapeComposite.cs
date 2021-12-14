@@ -17,5 +17,7 @@ namespace TowerDefence_ClientSide.Composite
         public Shape GetNextShape(long last);
         public void DeleteShape(Shape shape);
         public void UpdatePlatoon(PlatoonType platoonType);
+        public void UpdateSelection(PlatoonType platoonType);
+        public void SaveSelection(MouseSelection mouseSelection);
     }
 }
