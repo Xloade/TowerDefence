@@ -19,6 +19,8 @@ public abstract class Window : Form
     protected Label LifePointsText;
     protected Label TowerCurrencyText;
     protected Label SoldierCurrencyText;
+    protected Label SpeedLabel;
+    protected Label MemoryLabel;
     protected ComboBox StatusSelectionBox;
     protected TextBox CommandInput = new TextBox();
 
@@ -50,6 +52,7 @@ public abstract class Window : Form
         CreateStatusLine();
         this.Text = title;
         CreateCommandInput();
+        CreateAnalyticsLabels();
         InitializeComponent();
     }
 
@@ -61,6 +64,21 @@ public abstract class Window : Form
         CommandInput.Location = new Point(20, 450);
         CommandInput.KeyDown += Command_input_submitted;
         this.Controls.Add(CommandInput);
+    }
+
+    private void CreateAnalyticsLabels()
+    {
+        SpeedLabel = new Label();
+        SpeedLabel.ForeColor = Color.Black;
+        SpeedLabel.Location = new Point(620, DrawArea.Height - 700);
+        SpeedLabel.Size = new Size(180, 20);
+        this.Controls.Add(SpeedLabel);
+
+        MemoryLabel = new Label();
+        MemoryLabel.ForeColor = Color.Black;
+        MemoryLabel.Location = new Point(620, DrawArea.Height - 680);
+        MemoryLabel.Size = new Size(180, 20);
+        this.Controls.Add(MemoryLabel);
     }
 
     private void CreateStatusLine()

@@ -45,6 +45,7 @@ namespace TowerDefence_ClientSide
         private ServerConnection serverConnection;
         private AnalyticsFactory analyticsFactory = new AnalyticsFactory();
         private Analytics speeAnalytics;
+        private Analytics memoryAnalytics;
 
         string IPlayerStats.LifePointsText { set => LifePointsText.Text = value; }
 
@@ -73,6 +74,7 @@ namespace TowerDefence_ClientSide
             MapParser.CreateInstance();
             platoonControl = new PlatoonControl(serverConnection, mapUpdater);
             speeAnalytics = analyticsFactory.GetAnalytics(AnalyticsType.Speed);
+            memoryAnalytics = analyticsFactory.GetAnalytics(AnalyticsType.Memory);
             this.Controls.Add(platoonControl);
             renderTimer.Tick += RenderTimer_Tick;
             renderTimer.Interval = 10;
@@ -92,6 +94,7 @@ namespace TowerDefence_ClientSide
         {
             renderTimer.Stop();
             speeAnalytics.Start();
+            memoryAnalytics.Start();
             if (currentMap != null)
             {
                 mapUpdater.UpdateMap(currentMap, out BgImage, this, selectionDrawing.Selection);
@@ -99,6 +102,9 @@ namespace TowerDefence_ClientSide
             }
             renderTimer.Start();
             speeAnalytics.Finish();
+            memoryAnalytics.Finish();
+            SpeedLabel.Text = "Render speed (ticks): " + speeAnalytics.Result;
+            MemoryLabel.Text = "Memory consumption: " + memoryAnalytics.Result + "KB";
         }
 
         private void ReceiveMessage(string updatedMapJson)

@@ -17,14 +17,15 @@ namespace TowerDefence_ClientSide.FlyWeight
 
         public override void Start()
         {
+            stopwatch.Reset();
             stopwatch.Start();
         }
 
         public override void Finish()
         {
             stopwatch.Stop();
-            MyConsole.WriteLineWithCount("Flyweight: Rendering speed: " + stopwatch.Elapsed);
-            stopwatch.Reset();
+            Result = stopwatch.ElapsedTicks.ToString();
+            MyConsole.WriteLineWithCount("Flyweight: speed test");
         }
     }
 }
