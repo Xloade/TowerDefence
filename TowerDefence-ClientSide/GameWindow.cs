@@ -68,7 +68,7 @@ namespace TowerDefence_ClientSide
             this.playerType = playerType;
             SetupServerConnection(mapType);
             MapParser.CreateInstance();
-            platoonControl = new PlatoonControl(serverConnection, mapUpdater);
+            platoonControl = new PlatoonControl(serverConnection, mapUpdater, playerType);
             this.Controls.Add(platoonControl);
             renderTimer.Tick += RenderTimer_Tick;
             renderTimer.Interval = 10;
@@ -133,7 +133,7 @@ namespace TowerDefence_ClientSide
                     serverConnection.SendMessage(new TowerMessage("deleteTower", MessageType.TowerDelete, playerType));
                     break;
                 case ButtonUpgradeSoldier:
-                    serverConnection.SendMessage(new SoldierMessage("upgradeSoldier", MessageType.SoldierUpgrade, playerType));
+                    serverConnection.SendMessage(new SoldierMessage("upgradeSoldier", MessageType.Upgrade, playerType));
                     break;
                 case ButtonRestartGame:
                     serverConnection.SendMessage(new PlayerMessage("restartGame", MessageType.RestartGame));

@@ -77,7 +77,7 @@ namespace TowerDefence_ClientSide.Composite
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(43, 24);
+            this.toolStripLabel1.Size = new System.Drawing.Size(68, 24);
             this.toolStripLabel1.Text = "selection";
             // 
             // deselectOneButton
@@ -122,12 +122,13 @@ namespace TowerDefence_ClientSide.Composite
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(43, 24);
+            this.toolStripLabel2.Size = new System.Drawing.Size(67, 24);
             this.toolStripLabel2.Text = "platoons";
             // 
             // toolStripButton1
             // 
             this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = global::TowerDefence_ClientSide.Properties.Resources._d3;
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(29, 24);
@@ -186,7 +187,7 @@ namespace TowerDefence_ClientSide.Composite
             // toolStripLabel3
             // 
             this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(36, 24);
+            this.toolStripLabel3.Size = new System.Drawing.Size(56, 24);
             this.toolStripLabel3.Text = "actions";
             // 
             // upgradeButton
@@ -198,6 +199,7 @@ namespace TowerDefence_ClientSide.Composite
             this.upgradeButton.Size = new System.Drawing.Size(29, 24);
             this.upgradeButton.Text = "toolStripButton7";
             this.upgradeButton.ToolTipText = "upgrade selected";
+            this.upgradeButton.Click += new System.EventHandler(this.upgradeButton_Click);
             // 
             // PlatoonControl
             // 

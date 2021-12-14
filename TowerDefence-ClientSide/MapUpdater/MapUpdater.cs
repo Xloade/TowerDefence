@@ -230,5 +230,10 @@ namespace TowerDefence_ClientSide
             GetPlatoon(donor).Shapes.Clear();
             Root.UpdatePlatoon(PlatoonType.DefaultPlatoon);
         }
+
+        public List<Shape> GetSelectedShapes()
+        {
+            return Root.OfType<Shape>().Where(x => x.Selected).ToList();
+        }
     }
 }
