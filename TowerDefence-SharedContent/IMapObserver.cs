@@ -13,7 +13,6 @@ namespace TowerDefence_SharedContent
         void AddTower(Towers.Tower tower, PlayerType playerType);
         void UpdateSoldierMovement();
         void UpdateTowerActivity();
-        void Upgrade(UpgradeType upgradeType, PlayerType playerType);
         string ToJson();
         void Restart();
     }

@@ -57,23 +57,5 @@ namespace TowerDefence_SharedContent
                 tower.Scan(enemySoldiers, PlayerType);
             }
         }
-
-        public void Upgrade(UpgradeType upgradeType)
-        {
-            if (upgradeType == UpgradeType.Gun || upgradeType == UpgradeType.RateOfFire)
-            {
-                foreach (var tower in Towers)
-                {
-                    tower.Upgrade(upgradeType);
-                }
-            }
-            else
-            {
-                foreach (var soldier in Soldiers)
-                {
-                    soldier.Upgrade(upgradeType);
-                }
-            }
-        }
     }
 }

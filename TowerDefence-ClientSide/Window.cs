@@ -13,8 +13,6 @@ public abstract class Window : Form
 
     protected ComboBox TowerSelectionBox;
     protected ComboBox SoldierSelectionBox;
-    protected ComboBox UpgradeSoldiersSelectionBox;
-    protected ComboBox UpgradeTowersSelectionBox;
 
     private readonly string[] statusNames = new string[] { "Lifepoints", "Tower Currency", "Soldier Currency" };
 
@@ -149,26 +147,6 @@ public abstract class Window : Form
                     this.Controls.Add(SoldierSelectionBox);
                     SoldierSelectionBox.Visible = false;
                     break;
-                case "Upgrade Soldiers":
-                    UpgradeSoldiersSelectionBox = new ComboBox
-                    {
-                        Location = new Point(btnX, DrawArea.Height - 220)
-                    };
-                    UpgradeSoldiersSelectionBox.Items.AddRange(new string[] { "Hitpoints", "Speed" });
-                    UpgradeSoldiersSelectionBox.DropDownClosed += new EventHandler(Upgrade_Soldier_selection_click);
-                    this.Controls.Add(UpgradeSoldiersSelectionBox);
-                    UpgradeSoldiersSelectionBox.Visible = false;
-                    break;
-                case "Upgrade Towers":
-                    UpgradeTowersSelectionBox = new ComboBox
-                    {
-                        Location = new Point(btnX, DrawArea.Height - 220)
-                    };
-                    UpgradeTowersSelectionBox.Items.AddRange(new string[] { "Gun", "Rate Of Fire" });
-                    UpgradeTowersSelectionBox.DropDownClosed += new EventHandler(Upgrade_Tower_selection_click);
-                    this.Controls.Add(SoldierSelectionBox);
-                    UpgradeTowersSelectionBox.Visible = false;
-                    break;
             }
             btnX += margin + btnWidth;
         }
@@ -219,8 +197,6 @@ public abstract class Window : Form
 
     protected abstract void Tower_selection_click(object sender, System.EventArgs e);
     protected abstract void Soldier_selection_click(object sender, System.EventArgs e);
-    protected abstract void Upgrade_Soldier_selection_click(object sender, System.EventArgs e);
-    protected abstract void Upgrade_Tower_selection_click(object sender, System.EventArgs e);
     protected abstract void Status_selection_click(object sender, System.EventArgs e);
     protected virtual void Mouse_Click(object sender, MouseEventArgs e) { }
     protected virtual void GraphicalTimer_Tick(object sender, System.EventArgs e) { }

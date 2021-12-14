@@ -106,14 +106,6 @@ namespace TowerDefence_ServerSide
             }
         }
 
-        public void Upgrade(UpgradeType upgradeType, PlayerType playerType)
-        {
-            if (!upgrades.Contains(new DirectUpgrade(playerType, upgradeType)))
-            {
-                upgrades.Add(new DirectUpgrade(playerType, upgradeType));
-            }
-        }
-
         public void Attach(IMapObserver mapObserver)
         {
             MyConsole.WriteLineWithCount("Observer: Attach map observer");
@@ -138,13 +130,6 @@ namespace TowerDefence_ServerSide
             {
                 if(mapObservers.Count > 0)
                 {
-                    if (upgrades.Count > 0)
-                    {
-                        foreach (var upgrade in upgrades)
-                        {
-                            mapObservers[0].Upgrade(upgrade.UpgradeType, upgrade.PlayerType);
-                        }
-                    }
                     mapObservers[0].UpdateSoldierMovement();
                     mapObservers[0].UpdateTowerActivity();
                 }

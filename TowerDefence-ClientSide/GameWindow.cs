@@ -128,12 +128,6 @@ namespace TowerDefence_ClientSide
                 case ButtonBuyTower:
                     OpenTowerSelection();
                     break;
-                case ButtonUpgradeSoldiers:
-                    OpenSoldierUpgradeSelection();
-                    break;
-                case ButtonUpgradeTowers:
-                    OpenTowerUpgradeSelection();
-                    break;
                 case ButtonDeleteTower:
                     serverConnection.SendMessage(new TowerMessage("deleteTower", MessageType.TowerDelete, playerType));
                     break;
@@ -156,18 +150,6 @@ namespace TowerDefence_ClientSide
         {
             SoldierSelectionBox.Visible = true;
             SoldierSelectionBox.DroppedDown = true;
-        }
-
-        private void OpenSoldierUpgradeSelection()
-        {
-            UpgradeSoldiersSelectionBox.Visible = true;
-            UpgradeSoldiersSelectionBox.DroppedDown = true;
-        }
-
-        private void OpenTowerUpgradeSelection()
-        {
-            UpgradeTowersSelectionBox.Visible = true;
-            UpgradeTowersSelectionBox.DroppedDown = true;
         }
 
         protected override void Mouse_Click(object sender, MouseEventArgs e)
@@ -250,44 +232,6 @@ namespace TowerDefence_ClientSide
             if (comboBox.SelectedItem != null)
             {
                 BuySoldier(comboBox.SelectedItem.ToString());
-                comboBox.Visible = false;
-            }
-        }
-
-        protected override void Upgrade_Soldier_selection_click(object sender, EventArgs e)
-        {
-            ComboBox comboBox = (ComboBox)sender;
-            if (comboBox.SelectedItem != null)
-            {
-                switch (comboBox.SelectedItem.ToString())
-                {
-                    case "Speed":
-                        upgrades.Accept(new SpeedUpgradeVisitor());
-                        break;
-                    case "Hitpoints":
-                        upgrades.Accept(new HitpointsUpgradeVisitor());
-                        break;
-                }
-                Upgrade(upgrades.upgrades.Find(upgrade => upgrade is SoldierUpgrade));
-                comboBox.Visible = false;
-            }
-        }
-
-        protected override void Upgrade_Tower_selection_click(object sender, EventArgs e)
-        {
-            ComboBox comboBox = (ComboBox)sender;
-            if (comboBox.SelectedItem != null)
-            {
-                switch (comboBox.SelectedItem.ToString())
-                {
-                    case "Gun":
-                        upgrades.Accept(new GunUpgradeVisitor());
-                        break;
-                    case "Rate Of Fire":
-                        upgrades.Accept(new RateOfFireUpgradeVisitor());
-                        break;
-                }
-                Upgrade(upgrades.upgrades.Find(upgrade => upgrade is TowerUpgrade));
                 comboBox.Visible = false;
             }
         }

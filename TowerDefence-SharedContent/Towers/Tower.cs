@@ -118,39 +118,5 @@ namespace TowerDefence_SharedContent.Towers
                 }
             }
         }
-
-        public void Upgrade(UpgradeType upgradeType)
-        {
-            if (upgradeType == UpgradeType.Gun)
-            {
-                switch (TowerType)
-                {
-                    case TowerType.Minigun:
-                        Power = new int[] { 7, 12, 17 };
-                        break;
-                    case TowerType.Laser:
-                        Power = new int[] { 4, 5, 7 };
-                        break;
-                    case TowerType.Rocket:
-                        Power = new int[] { 17, 22, 27 };
-                        break;
-                }
-            }
-            else if(upgradeType == UpgradeType.RateOfFire)
-            {
-                switch (TowerType)
-                {
-                    case TowerType.Minigun:
-                        RateOfFire = new double[] { 17, 22, 27 };
-                        break;
-                    case TowerType.Laser:
-                        RateOfFire = new double[] { 22, 22, 22 };
-                        break;
-                    case TowerType.Rocket:
-                        RateOfFire = new double[] { 7, 8, 10 };
-                        break;
-                }
-            }
-        }
     }
 }

@@ -65,10 +65,6 @@ namespace TowerDefence_ClientSide.Proxy
                     var soldierMessage = (SoldierMessage)message;
                     HubConnection.SendAsync(soldierMessage.Command, soldierMessage.PlayerType, soldierMessage.SoldierType);
                     break;
-                case MessageType.Upgrade:
-                    var upgradeMessage = (UpgradeMessage)message;
-                    HubConnection.SendAsync(upgradeMessage.Command, upgradeMessage.PlayerType, upgradeMessage.UpgradeType);
-                    break;
                 case MessageType.Map:
                     var mapMessage = (MapMessage)message;
                     HubConnection.SendAsync(mapMessage.Command, mapMessage.MapType);

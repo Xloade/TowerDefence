@@ -43,17 +43,6 @@ namespace TowerDefence_ServerSide
             mapController.AddTower(facade.CreateTower(playerType, towerType, point), playerType);
             MyConsole.WriteLineWithCount($"{playerType}: buyTower");                   
         }
-
-        public void UpgradeSoldier(PlayerType playerType, UpgradeType upgradeType)
-        {
-            MapController mapController = MapController.GetInstance();
-            mapController.Upgrade(upgradeType, playerType);
-        }
-        public void UpgradeTower(PlayerType playerType, UpgradeType upgradeType)
-        {
-            MapController mapController = MapController.GetInstance();
-            mapController.Upgrade(upgradeType, playerType);
-        }
         public void RestartGame()
         {
             MapController mapController = MapController.GetInstance();
