@@ -138,5 +138,13 @@ namespace TowerDefence_ServerSide
         public void Restart(){
             mapObservers[0].Restart();
         }
+        public void UpgradeTowers(PlayerType playerType, List<IdableObject> towers)
+        {
+            mapObservers[0].UpgradeTowers(playerType, towers);
+        }
+        public void UpgradeSoldiers(PlayerType playerType, List<IdableObject> soldier)
+        {
+            mapObservers[0].UpgradeSoldiers(playerType, soldier);
+        }
     }
 }
