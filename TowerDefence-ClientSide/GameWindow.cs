@@ -13,6 +13,7 @@ using TowerDefence_ClientSide.Prototype;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TowerDefence_ClientSide.Composite;
+using TowerDefence_ClientSide.FlyWeight;
 using TowerDefence_ClientSide.Interpreter;
 using TowerDefence_ClientSide.Proxy;
 
@@ -42,6 +43,8 @@ namespace TowerDefence_ClientSide
         private SelectionDrawing selectionDrawing = new SelectionDrawing();
         private PlatoonControl platoonControl;
         private ServerConnection serverConnection;
+        private AnalyticsFactory analyticsFactory = new AnalyticsFactory();
+        private Analytics speeAnalytics;
 
         string IPlayerStats.LifePointsText { set => LifePointsText.Text = value; }
 
@@ -69,6 +72,7 @@ namespace TowerDefence_ClientSide
             SetupServerConnection(mapType);
             MapParser.CreateInstance();
             platoonControl = new PlatoonControl(serverConnection, mapUpdater);
+            speeAnalytics = analyticsFactory.GetAnalytics(AnalyticsType.Speed);
             this.Controls.Add(platoonControl);
             renderTimer.Tick += RenderTimer_Tick;
             renderTimer.Interval = 10;
@@ -87,12 +91,14 @@ namespace TowerDefence_ClientSide
         private void RenderTimer_Tick(object sender, EventArgs e)
         {
             renderTimer.Stop();
+            speeAnalytics.Start();
             if (currentMap != null)
             {
                 mapUpdater.UpdateMap(currentMap, out BgImage, this, selectionDrawing.Selection);
                 Refresh();
             }
             renderTimer.Start();
+            speeAnalytics.Finish();
         }
 
         private void ReceiveMessage(string updatedMapJson)
