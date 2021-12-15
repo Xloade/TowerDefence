@@ -19,7 +19,7 @@ namespace TowerDefence_SharedContent.Towers
         }
 
         public LaserTower(int level, int[] price, Point coordinates, int[] range, int[] power, double[] rateOfFire,
-            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType, bool isReloading, bool isOverheated) : base(level, price, coordinates, range, power, rateOfFire,
+            string sprite, List<Ammunition.Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType, bool isReloading, bool isOverheated) : base(level, price, coordinates, range, power, rateOfFire,
             sprite, ammunition, towerType, shootingCooldown, playerType, isReloading, isOverheated)
         {
         }

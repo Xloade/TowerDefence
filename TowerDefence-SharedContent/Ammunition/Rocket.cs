@@ -6,7 +6,7 @@ using TowerDefence_SharedContent.Towers;
 
 namespace TowerDefence_SharedContent
 {
-    public class Rocket : Ammunition, IMove
+    public class Rocket : Ammunition.Ammunition, IMove
     {
         public int Width { get; set; }
 

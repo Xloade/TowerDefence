@@ -6,7 +6,7 @@ using TowerDefence_SharedContent.Towers;
 
 namespace TowerDefence_SharedContent
 {
-    public class Bullet : Ammunition, IMove
+    public class Bullet : Ammunition.Ammunition, IMove
     {
         public Bullet(Point towerCoordinates, AmmunitionType ammunitionType, int power, PlayerType playerType) : base(towerCoordinates, ammunitionType, power, playerType)
         {

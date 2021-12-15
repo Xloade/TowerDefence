@@ -6,7 +6,7 @@ using TowerDefence_SharedContent.Towers;
 
 namespace TowerDefence_SharedContent
 {
-    public class Laser : Ammunition, IMove
+    public class Laser : Ammunition.Ammunition, IMove
     {
         public Laser(Point towerCoordinates, AmmunitionType ammunitionType, int power, PlayerType playerType) : base(towerCoordinates, ammunitionType, power, playerType)
         {

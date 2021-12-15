@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using TowerDefence_ClientSide.Prototype;
 using TowerDefence_ClientSide.shapes;
+using TowerDefence_SharedContent.Ammunition;
 using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_SharedContent.Towers;
 

@@ -19,7 +19,7 @@ namespace TowerDefence_SharedContent.Towers
             };
         }
 
-        public override Ammunition CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType, int power, PlayerType playerType)
+        public override Ammunition.Ammunition CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType, int power, PlayerType playerType)
         {
             throw new NotImplementedException();
         }
