@@ -19,6 +19,7 @@ namespace TowerDefence_ClientSide.Composite
         public ShapePlatoon(PlatoonType platoonName)
         {
             PlatoonName = platoonName;
+            MyConsole.WriteLineWithCount($"Composite: shape platoon created with type {PlatoonName.ToString()}");
         }
         public List<IShapeComposite> GetShapes()
         {
@@ -37,12 +38,11 @@ namespace TowerDefence_ClientSide.Composite
                     .ToList().Count == 0
                 select shape;
             var selectionList = selections.ToList();
-
             foreach (var selection in selectionList.OfType<ShapePlatoon>())
             {
+                MyConsole.WriteLineWithCount("Chain of responsability: deepest selection removed");
                 rez.AddRange(selection.Shapes.OfType<Shape>());
                 Shapes.Remove(selection);
-
             }
             Shapes.AddRange(rez);
             foreach (var platoon in Shapes.OfType<ShapePlatoon>())
@@ -67,6 +67,7 @@ namespace TowerDefence_ClientSide.Composite
                 if (platoon.PlatoonName == PlatoonType.Selected)
                 {
                     rez.AddRange(platoon.RemoveAllSelections());
+                    MyConsole.WriteLineWithCount("Chain of responsability: selection removed (All)");
                 }
                 else
                 {

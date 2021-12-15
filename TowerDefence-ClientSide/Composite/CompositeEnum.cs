@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.Text;
 using TowerDefence_ClientSide;
+using TowerDefence_SharedContent;
 
 namespace TowerDefence_ClientSide.Composite
 {
@@ -17,6 +18,7 @@ namespace TowerDefence_ClientSide.Composite
         {
             this.root = platoon;
             this.currId = -1;
+            MyConsole.WriteLineWithCount("Composite Iterator created");
         }
 
         public Shape Current

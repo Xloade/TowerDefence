@@ -22,6 +22,7 @@ namespace TowerDefence_SharedContent.Soldiers
         {
             Soldiers = soldiers.OrderBy(x => Distance(x, info)).ToList();
             CurrentIndex = -1;
+            MyConsole.WriteLineWithCount("Soldier Iterator created");
         }
 
         private double Distance(DrawInfo info1, DrawInfo info2)

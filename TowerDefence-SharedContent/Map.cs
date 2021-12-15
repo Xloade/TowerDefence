@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.Security.AccessControl;
 using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_SharedContent.Towers;
 
@@ -72,10 +73,11 @@ namespace TowerDefence_SharedContent
             {
                 foreach (Player player in Players)
                 {
-                    if (player.PlayerType == playerType)
+                    var price = soldier.BuyPrice[soldier.Level];
+                    if (player.PlayerType == playerType && price <= player.SoldierCurrency)
                     {
+                        player.SoldierCurrency -= price;
                         player.Soldiers.Add(soldier);
-                        player.SoldierCurrency -= soldier.BuyPrice[soldier.Level];
                     }
                 }
             }
@@ -89,10 +91,11 @@ namespace TowerDefence_SharedContent
             {
                 foreach (Player player in Players)
                 {
-                    if (player.PlayerType == playerType)
+                    var price = tower.Price[tower.Level];
+                    if (player.PlayerType == playerType && price <= player.TowerCurrency)
                     {
                         player.Towers.Add(tower);
-                        player.TowerCurrency -= tower.Price[tower.Level];
+                        player.TowerCurrency -= price;
                     }
                 }
             }

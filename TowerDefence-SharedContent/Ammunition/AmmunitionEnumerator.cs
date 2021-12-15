@@ -23,6 +23,7 @@ namespace TowerDefence_SharedContent.Ammunition
         {
             Soldiers = ammunition.OrderByDescending(x => DistanceFromCenter(x)).ToList();
             CurrentIndex = -1;
+            MyConsole.WriteLineWithCount("Ammunition Iterator created");
         }
 
         private double DistanceFromCenter(DrawInfo info1)
