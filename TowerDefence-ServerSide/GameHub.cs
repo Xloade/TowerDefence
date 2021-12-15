@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using TowerDefence_SharedContent;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TowerDefence_SharedContent.Towers;
 using TowerDefence_SharedContent.Soldiers;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using TowerDefence_ServerSide.Facade;
 
@@ -70,9 +72,11 @@ namespace TowerDefence_ServerSide
 
         }
 
-        public void UpgradeSoldier(PlayerType playerType)
+        public void Upgrade(PlayerType playerType, List<IdableObject> objects)
         {
-            MyConsole.WriteLineWithCount($"{playerType}: upgradeSoldier");
+            MapController mapController = MapController.GetInstance();
+            mapController.UpgradeTowers(playerType, objects);
+            mapController.UpgradeSoldiers(playerType, objects);
         }
     }
 }

@@ -143,26 +143,28 @@ public abstract class Window : Form
             btn.Size = new Size(btnWidth, 20);
             btn.Click += new EventHandler(Btn_Click);
             this.Controls.Add(btn);
-            if(name.Equals("Buy tower"))
+            switch (name)
             {
-                TowerSelectionBox = new ComboBox
-                {
-                    Location = new Point(btnX, DrawArea.Height - 220)
-                };
-                TowerSelectionBox.Items.AddRange(new string[] { "Minigun", "Rocket", "Laser"});
-                TowerSelectionBox.DropDownClosed += new EventHandler(Tower_selection_click);
-                this.Controls.Add(TowerSelectionBox);
-                TowerSelectionBox.Visible = false;
-            } else if(name.Equals("Buy soldier"))
-            {
-                SoldierSelectionBox = new ComboBox
-                {
-                    Location = new Point(btnX, DrawArea.Height - 220)
-                };
-                SoldierSelectionBox.Items.AddRange(new string[] { "Hitpoints", "Speed" });
-                SoldierSelectionBox.DropDownClosed += new EventHandler(Soldier_selection_click);
-                this.Controls.Add(SoldierSelectionBox);
-                SoldierSelectionBox.Visible = false;
+                case "Buy tower":
+                    TowerSelectionBox = new ComboBox
+                    {
+                        Location = new Point(btnX, DrawArea.Height - 220)
+                    };
+                    TowerSelectionBox.Items.AddRange(new string[] { "Minigun", "Rocket", "Laser"});
+                    TowerSelectionBox.DropDownClosed += new EventHandler(Tower_selection_click);
+                    this.Controls.Add(TowerSelectionBox);
+                    TowerSelectionBox.Visible = false;
+                    break;
+                case "Buy soldier":
+                    SoldierSelectionBox = new ComboBox
+                    {
+                        Location = new Point(btnX, DrawArea.Height - 220)
+                    };
+                    SoldierSelectionBox.Items.AddRange(new string[] { "Hitpoints", "Speed" });
+                    SoldierSelectionBox.DropDownClosed += new EventHandler(Soldier_selection_click);
+                    this.Controls.Add(SoldierSelectionBox);
+                    SoldierSelectionBox.Visible = false;
+                    break;
             }
             btnX += margin + btnWidth;
         }
@@ -213,7 +215,6 @@ public abstract class Window : Form
 
     protected abstract void Tower_selection_click(object sender, System.EventArgs e);
     protected abstract void Soldier_selection_click(object sender, System.EventArgs e);
-
     protected abstract void Status_selection_click(object sender, System.EventArgs e);
     protected virtual void Mouse_Click(object sender, MouseEventArgs e) { }
     protected virtual void Mouse_Down(object sender, MouseEventArgs e) { }

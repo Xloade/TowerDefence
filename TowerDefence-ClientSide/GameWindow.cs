@@ -27,6 +27,8 @@ namespace TowerDefence_ClientSide
         private const string ButtonDeleteTower = "Delete tower";
         private const string ButtonUpgradeSoldier = "Upgrade soldier";
         private const string ButtonQuickBuy = "Quick buy two";
+        private const string ButtonUpgradeSoldiers = "Upgrade Soldiers";
+        private const string ButtonUpgradeTowers = "Upgrade Towers";
         private const string ServerUrl = "https://localhost:5001/GameHub";
         Map currentMap;
 
@@ -64,7 +66,7 @@ namespace TowerDefence_ClientSide
         };
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
-            1000, 700, ButtonBuySoldier, ButtonBuyTower, ButtonRestartGame, ButtonDeleteTower, ButtonUpgradeSoldier, ButtonQuickBuy)
+            1000, 700, ButtonBuySoldier, ButtonBuyTower, ButtonUpgradeSoldiers, ButtonUpgradeTowers, ButtonRestartGame, ButtonDeleteTower, ButtonUpgradeSoldier, ButtonQuickBuy)
         {
             mapUpdater = new MapUpdater(this,playerType);
             gameCursor = new GameCursor(this, playerType);
@@ -143,9 +145,6 @@ namespace TowerDefence_ClientSide
                     break;
                 case ButtonDeleteTower:
                     serverConnection.SendMessage(new TowerMessage("deleteTower", MessageType.TowerDelete, playerType));
-                    break;
-                case ButtonUpgradeSoldier:
-                    serverConnection.SendMessage(new SoldierMessage("upgradeSoldier", MessageType.SoldierUpgrade, playerType));
                     break;
                 case ButtonRestartGame:
                     serverConnection.SendMessage(new PlayerMessage("restartGame", MessageType.RestartGame));

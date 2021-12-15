@@ -127,10 +127,55 @@ namespace TowerDefence_SharedContent
 
         public void Restart()
         {
-            Players.ForEach((player)=> {
-                player.Soldiers.Clear();
-                player.Towers.Clear();
-            });
+            Map map = this;
+            lock (map)
+            {
+                Players.ForEach((player) =>
+                {
+                    player.Soldiers.Clear();
+                    player.Towers.Clear();
+                });
+            }
+        }
+
+        public void UpgradeTowers(PlayerType playerType, List<IdableObject> towers)
+        {
+            Map map = this;
+            lock (map)
+            {
+                var player = GetPlayer(playerType);
+                foreach (var tower in towers)
+                {
+                    var realTower = player.Towers.Find(x => x.Id == tower.Id);
+                    if (realTower == null) continue;
+                    var price = realTower.UpgradePrice;
+                    if (realTower.isUpgrable && realTower.UpgradePrice <= player.TowerCurrency)
+                    {
+                        realTower.Upgrade();
+                        player.TowerCurrency -= price;
+                    }
+                }
+            }
+        }
+        public void UpgradeSoldiers(PlayerType playerType, List<IdableObject> soldiers)
+        {
+            Map map = this;
+            lock (map)
+            {
+                var player = GetPlayer(playerType);
+                foreach (var soldier in soldiers)
+                {
+                    var realSoldier = player.Soldiers.Find(x => x.Id == soldier.Id);
+                    if (realSoldier == null) continue;
+                    var price = realSoldier.UpgradePrice;
+                    if (realSoldier.isUpgrable &&
+                        realSoldier.UpgradePrice <= player.SoldierCurrency)
+                    {
+                        realSoldier.Upgrade();
+                        player.SoldierCurrency -= price;
+                    }
+                }
+            }
         }
     }
 }

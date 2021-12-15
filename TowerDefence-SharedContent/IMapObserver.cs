@@ -15,5 +15,7 @@ namespace TowerDefence_SharedContent
         void UpdateTowerActivity();
         string ToJson();
         void Restart();
+        void UpgradeTowers(PlayerType playerType, List<IdableObject> towers);
+        void UpgradeSoldiers(PlayerType playerType, List<IdableObject> soldier);
     }
 }
