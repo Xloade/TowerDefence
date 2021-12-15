@@ -203,6 +203,7 @@ namespace TowerDefence_ClientSide
             if (context.CommandName == "buy")
             {
                 BuySoldier(CultureInfo.InvariantCulture.TextInfo.ToTitleCase(context.ElementType));
+                CommandInput.Clear();
             } 
         }
 
