@@ -74,7 +74,7 @@ namespace TowerDefence_ClientSide
             this.playerType = playerType;
             SetupServerConnection(mapType);
             MapParser.CreateInstance();
-            platoonControl = new PlatoonControl(serverConnection, mapUpdater);
+            platoonControl = new PlatoonControl(serverConnection, mapUpdater, playerType);
             speeAnalytics = analyticsFactory.GetAnalytics(AnalyticsType.Speed);
             memoryAnalytics = analyticsFactory.GetAnalytics(AnalyticsType.Memory);
             this.Controls.Add(platoonControl);
