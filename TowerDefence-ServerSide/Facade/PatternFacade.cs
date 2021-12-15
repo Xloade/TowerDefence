@@ -53,11 +53,11 @@ namespace TowerDefence_ServerSide.Facade
             switch (soldierType)
             {
                 case SoldierType.HitpointsSoldier:
-                    _builder = new HitpointsSoldierBuilder(playerType, soldierType, 1);
+                    _builder = new HitpointsSoldierBuilder(playerType, soldierType, 0);
                     _barrack.Train(_builder, playerType);
                     return _builder.Soldier;
                 case SoldierType.SpeedSoldier:
-                    _builder = new SpeedSoldierBuilder(playerType, soldierType, 1);
+                    _builder = new SpeedSoldierBuilder(playerType, soldierType, 0);
                     _barrack.Train(_builder, playerType);
                     return _builder.Soldier;
                 default:

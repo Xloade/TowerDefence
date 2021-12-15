@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Timers;
 using TowerDefence_SharedContent;
 using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_SharedContent.Towers;
 using System.Threading;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace TowerDefence_ServerSide
@@ -14,6 +16,7 @@ namespace TowerDefence_ServerSide
     public class MapController : IMapController
     {
         private readonly List<IMapObserver> mapObservers = new List<IMapObserver>();
+        private List<DirectUpgrade> upgrades = new List<DirectUpgrade>();
 
         static IHubContext<GameHub> _hubContext;
         private static MapController _instance;
@@ -134,6 +137,14 @@ namespace TowerDefence_ServerSide
         }
         public void Restart(){
             mapObservers[0].Restart();
+        }
+        public void UpgradeTowers(PlayerType playerType, List<IdableObject> towers)
+        {
+            mapObservers[0].UpgradeTowers(playerType, towers);
+        }
+        public void UpgradeSoldiers(PlayerType playerType, List<IdableObject> soldier)
+        {
+            mapObservers[0].UpgradeSoldiers(playerType, soldier);
         }
     }
 }

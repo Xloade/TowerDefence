@@ -29,7 +29,6 @@ namespace TowerDefence_ClientSide.Composite
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlatoonControl));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.deselectOneButton = new System.Windows.Forms.ToolStripButton();
@@ -37,6 +36,7 @@ namespace TowerDefence_ClientSide.Composite
             this.DeselectAllButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.addToOneButton = new System.Windows.Forms.ToolStripButton();
             this.removeFromOneButton = new System.Windows.Forms.ToolStripButton();
             this.addToTwoButton = new System.Windows.Forms.ToolStripButton();
@@ -44,7 +44,6 @@ namespace TowerDefence_ClientSide.Composite
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.upgradeButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,14 +59,14 @@ namespace TowerDefence_ClientSide.Composite
             this.DeselectAllButton,
             this.toolStripSeparator1,
             this.toolStripLabel2,
+            this.toolStripButton1,
             this.addToOneButton,
             this.removeFromOneButton,
             this.addToTwoButton,
             this.removeFromTwoButton,
             this.toolStripSeparator2,
             this.toolStripLabel3,
-            this.upgradeButton,
-            this.toolStripButton1});
+            this.upgradeButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0);
@@ -126,6 +125,16 @@ namespace TowerDefence_ClientSide.Composite
             this.toolStripLabel2.Size = new System.Drawing.Size(67, 24);
             this.toolStripLabel2.Text = "platoons";
             // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = global::TowerDefence_ClientSide.Properties.Resources._d3;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(29, 24);
+            this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
             // addToOneButton
             // 
             this.addToOneButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -135,6 +144,7 @@ namespace TowerDefence_ClientSide.Composite
             this.addToOneButton.Size = new System.Drawing.Size(29, 24);
             this.addToOneButton.Text = "toolStripButton5";
             this.addToOneButton.ToolTipText = "add to platoon1";
+            this.addToOneButton.Click += new System.EventHandler(this.addToOneButton_Click);
             // 
             // removeFromOneButton
             // 
@@ -145,6 +155,7 @@ namespace TowerDefence_ClientSide.Composite
             this.removeFromOneButton.Size = new System.Drawing.Size(29, 24);
             this.removeFromOneButton.Text = "toolStripButton6";
             this.removeFromOneButton.ToolTipText = "remove from platoon1";
+            this.removeFromOneButton.Click += new System.EventHandler(this.removeFromOneButton_Click);
             // 
             // addToTwoButton
             // 
@@ -155,6 +166,7 @@ namespace TowerDefence_ClientSide.Composite
             this.addToTwoButton.Size = new System.Drawing.Size(29, 24);
             this.addToTwoButton.Text = "toolStripButton8";
             this.addToTwoButton.ToolTipText = "add to platoon2";
+            this.addToTwoButton.Click += new System.EventHandler(this.addToTwoButton_Click);
             // 
             // removeFromTwoButton
             // 
@@ -165,6 +177,7 @@ namespace TowerDefence_ClientSide.Composite
             this.removeFromTwoButton.Size = new System.Drawing.Size(29, 24);
             this.removeFromTwoButton.Text = "toolStripButton9";
             this.removeFromTwoButton.ToolTipText = "remove from platoon2";
+            this.removeFromTwoButton.Click += new System.EventHandler(this.removeFromTwoButton_Click);
             // 
             // toolStripSeparator2
             // 
@@ -186,15 +199,7 @@ namespace TowerDefence_ClientSide.Composite
             this.upgradeButton.Size = new System.Drawing.Size(29, 24);
             this.upgradeButton.Text = "toolStripButton7";
             this.upgradeButton.ToolTipText = "upgrade selected";
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(29, 24);
-            this.toolStripButton1.Text = "toolStripButton1";
+            this.upgradeButton.Click += new System.EventHandler(this.upgradeButton_Click);
             // 
             // PlatoonControl
             // 

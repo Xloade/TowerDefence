@@ -13,6 +13,7 @@ using TowerDefence_ClientSide.Prototype;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TowerDefence_ClientSide.Composite;
+using TowerDefence_ClientSide.FlyWeight;
 using TowerDefence_ClientSide.Interpreter;
 using TowerDefence_ClientSide.Proxy;
 
@@ -26,6 +27,8 @@ namespace TowerDefence_ClientSide
         private const string ButtonDeleteTower = "Delete tower";
         private const string ButtonUpgradeSoldier = "Upgrade soldier";
         private const string ButtonQuickBuy = "Quick buy two";
+        private const string ButtonUpgradeSoldiers = "Upgrade Soldiers";
+        private const string ButtonUpgradeTowers = "Upgrade Towers";
         private const string ServerUrl = "https://localhost:5001/GameHub";
         Map currentMap;
 
@@ -42,6 +45,9 @@ namespace TowerDefence_ClientSide
         private SelectionDrawing selectionDrawing = new SelectionDrawing();
         private PlatoonControl platoonControl;
         private ServerConnection serverConnection;
+        private AnalyticsFactory analyticsFactory = new AnalyticsFactory();
+        private Analytics speeAnalytics;
+        private Analytics memoryAnalytics;
 
         string IPlayerStats.LifePointsText { set => LifePointsText.Text = value; }
 
@@ -60,7 +66,7 @@ namespace TowerDefence_ClientSide
         };
 
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
-            1000, 700, ButtonBuySoldier, ButtonBuyTower, ButtonRestartGame, ButtonDeleteTower, ButtonUpgradeSoldier, ButtonQuickBuy)
+            1000, 700, ButtonBuySoldier, ButtonBuyTower, ButtonUpgradeSoldiers, ButtonUpgradeTowers, ButtonRestartGame, ButtonDeleteTower, ButtonUpgradeSoldier, ButtonQuickBuy)
         {
             Shapes = new ShapePlatoon(PlatoonType.Root);
             mapUpdater = new MapUpdater(this,playerType);
@@ -69,7 +75,9 @@ namespace TowerDefence_ClientSide
             this.playerType = playerType;
             SetupServerConnection(mapType);
             MapParser.CreateInstance();
-            platoonControl = new PlatoonControl(serverConnection, mapUpdater);
+            platoonControl = new PlatoonControl(serverConnection, mapUpdater, playerType);
+            speeAnalytics = analyticsFactory.GetAnalytics(AnalyticsType.Speed);
+            memoryAnalytics = analyticsFactory.GetAnalytics(AnalyticsType.Memory);
             this.Controls.Add(platoonControl);
             renderTimer.Tick += RenderTimer_Tick;
             renderTimer.Interval = 10;
@@ -88,12 +96,18 @@ namespace TowerDefence_ClientSide
         private void RenderTimer_Tick(object sender, EventArgs e)
         {
             renderTimer.Stop();
+            speeAnalytics.Start();
+            memoryAnalytics.Start();
             if (currentMap != null)
             {
                 mapUpdater.UpdateMap(currentMap, out BgImage, this, selectionDrawing.Selection);
                 Refresh();
             }
             renderTimer.Start();
+            speeAnalytics.Finish();
+            memoryAnalytics.Finish();
+            SpeedLabel.Text = "Render speed (ticks): " + speeAnalytics.Result;
+            MemoryLabel.Text = "Memory consumption: " + memoryAnalytics.Result + "KB";
         }
 
         private void ReceiveMessage(string updatedMapJson)
@@ -132,9 +146,6 @@ namespace TowerDefence_ClientSide
                     break;
                 case ButtonDeleteTower:
                     serverConnection.SendMessage(new TowerMessage("deleteTower", MessageType.TowerDelete, playerType));
-                    break;
-                case ButtonUpgradeSoldier:
-                    serverConnection.SendMessage(new SoldierMessage("upgradeSoldier", MessageType.SoldierUpgrade, playerType));
                     break;
                 case ButtonRestartGame:
                     serverConnection.SendMessage(new PlayerMessage("restartGame", MessageType.RestartGame));
@@ -192,6 +203,7 @@ namespace TowerDefence_ClientSide
             if (context.CommandName == "buy")
             {
                 BuySoldier(CultureInfo.InvariantCulture.TextInfo.ToTitleCase(context.ElementType));
+                CommandInput.Clear();
             } 
         }
 

@@ -9,9 +9,9 @@ namespace TowerDefence_ClientSide.Proxy
         Tower,
         TowerDelete,
         Soldier,
-        SoldierUpgrade,
         Map,
         Player,
-        RestartGame
+        RestartGame,
+        Upgrade
     }
 }

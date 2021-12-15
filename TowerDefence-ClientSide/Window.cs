@@ -19,6 +19,8 @@ public abstract class Window : Form
     protected Label LifePointsText;
     protected Label TowerCurrencyText;
     protected Label SoldierCurrencyText;
+    protected Label SpeedLabel;
+    protected Label MemoryLabel;
     protected ComboBox StatusSelectionBox;
     protected TextBox CommandInput = new TextBox();
 
@@ -50,6 +52,7 @@ public abstract class Window : Form
         CreateStatusLine();
         this.Text = title;
         CreateCommandInput();
+        CreateAnalyticsLabels();
         InitializeComponent();
     }
 
@@ -61,6 +64,21 @@ public abstract class Window : Form
         CommandInput.Location = new Point(20, 450);
         CommandInput.KeyDown += Command_input_submitted;
         this.Controls.Add(CommandInput);
+    }
+
+    private void CreateAnalyticsLabels()
+    {
+        SpeedLabel = new Label();
+        SpeedLabel.ForeColor = Color.Black;
+        SpeedLabel.Location = new Point(620, DrawArea.Height - 700);
+        SpeedLabel.Size = new Size(180, 20);
+        this.Controls.Add(SpeedLabel);
+
+        MemoryLabel = new Label();
+        MemoryLabel.ForeColor = Color.Black;
+        MemoryLabel.Location = new Point(620, DrawArea.Height - 680);
+        MemoryLabel.Size = new Size(180, 20);
+        this.Controls.Add(MemoryLabel);
     }
 
     private void CreateStatusLine()
@@ -125,26 +143,28 @@ public abstract class Window : Form
             btn.Size = new Size(btnWidth, 20);
             btn.Click += new EventHandler(Btn_Click);
             this.Controls.Add(btn);
-            if(name.Equals("Buy tower"))
+            switch (name)
             {
-                TowerSelectionBox = new ComboBox
-                {
-                    Location = new Point(btnX, DrawArea.Height - 220)
-                };
-                TowerSelectionBox.Items.AddRange(new string[] { "Minigun", "Rocket", "Laser"});
-                TowerSelectionBox.DropDownClosed += new EventHandler(Tower_selection_click);
-                this.Controls.Add(TowerSelectionBox);
-                TowerSelectionBox.Visible = false;
-            } else if(name.Equals("Buy soldier"))
-            {
-                SoldierSelectionBox = new ComboBox
-                {
-                    Location = new Point(btnX, DrawArea.Height - 220)
-                };
-                SoldierSelectionBox.Items.AddRange(new string[] { "Hitpoints", "Speed" });
-                SoldierSelectionBox.DropDownClosed += new EventHandler(Soldier_selection_click);
-                this.Controls.Add(SoldierSelectionBox);
-                SoldierSelectionBox.Visible = false;
+                case "Buy tower":
+                    TowerSelectionBox = new ComboBox
+                    {
+                        Location = new Point(btnX, DrawArea.Height - 220)
+                    };
+                    TowerSelectionBox.Items.AddRange(new string[] { "Minigun", "Rocket", "Laser"});
+                    TowerSelectionBox.DropDownClosed += new EventHandler(Tower_selection_click);
+                    this.Controls.Add(TowerSelectionBox);
+                    TowerSelectionBox.Visible = false;
+                    break;
+                case "Buy soldier":
+                    SoldierSelectionBox = new ComboBox
+                    {
+                        Location = new Point(btnX, DrawArea.Height - 220)
+                    };
+                    SoldierSelectionBox.Items.AddRange(new string[] { "Hitpoints", "Speed" });
+                    SoldierSelectionBox.DropDownClosed += new EventHandler(Soldier_selection_click);
+                    this.Controls.Add(SoldierSelectionBox);
+                    SoldierSelectionBox.Visible = false;
+                    break;
             }
             btnX += margin + btnWidth;
         }
@@ -195,7 +215,6 @@ public abstract class Window : Form
 
     protected abstract void Tower_selection_click(object sender, System.EventArgs e);
     protected abstract void Soldier_selection_click(object sender, System.EventArgs e);
-
     protected abstract void Status_selection_click(object sender, System.EventArgs e);
     protected virtual void Mouse_Click(object sender, MouseEventArgs e) { }
     protected virtual void Mouse_Down(object sender, MouseEventArgs e) { }
