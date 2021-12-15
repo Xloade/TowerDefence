@@ -47,7 +47,7 @@ namespace TowerDefence_SharedContent
                 var towerCurrency = player["TowerCurrency"].ToObject<int>();
                 var soldierCurrency = player["SoldierCurrency"].ToObject<int>();
                 var playerType = player["PlayerType"].ToObject<PlayerType>();
-                var soldiers = player["Ammunition"].ToObject<List<Soldier>>();
+                var soldiers = player["Soldiers"].ToObject<List<Soldier>>();
                 var towersJson = player["Towers"].Children();
                 
 
