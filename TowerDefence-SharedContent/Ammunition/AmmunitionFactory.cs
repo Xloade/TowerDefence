@@ -13,7 +13,7 @@ namespace TowerDefence_SharedContent
             throw new NotImplementedException();
         }
 
-        public override Ammunition CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType, int power, PlayerType playerType)
+        public override Ammunition.Ammunition CreateAmmunition(Point towerCoordinates, AmmunitionType ammunitionType, int power, PlayerType playerType)
         {
             return ammunitionType switch
             {

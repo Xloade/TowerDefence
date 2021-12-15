@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Text;
 using TowerDefence_SharedContent.Towers;
 
-namespace TowerDefence_SharedContent
+namespace TowerDefence_SharedContent.Ammunition
 {
     public abstract class Ammunition : DrawInfo, IMove
     {

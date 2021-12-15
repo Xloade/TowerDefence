@@ -79,7 +79,7 @@ namespace TowerDefence_SharedContent
             var isReloading = token["IsReloading"].ToObject<bool>();
             var isOverheated = token["IsReloading"].ToObject<bool>();
 
-            var ammunition = new List<Ammunition>();
+            var ammunition = new List<Ammunition.Ammunition>();
             foreach (JToken amm in ammunitionJson)
             {
                 ammunition.Add(ParseAmmunition(amm));
@@ -96,7 +96,7 @@ namespace TowerDefence_SharedContent
             return tower;
         }
 
-        public Ammunition ParseAmmunition(JToken token)
+        public Ammunition.Ammunition ParseAmmunition(JToken token)
         {
             var type = token["AmmunitionType"].ToObject<AmmunitionType>();
             return type switch
