@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TowerDefence_SharedContent.Soldiers
 {
-    class SoldierList:IEnumerable<Soldier>
+    class SoldierList : IEnumerable<Soldier>
     {
         private List<Soldier> Soldiers;
         private DrawInfo DrawInfo;

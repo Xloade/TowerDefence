@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_SharedContent.Towers;
+using TowerDefence_SharedContent.Memento;
 
 namespace TowerDefence_SharedContent
 {
@@ -11,7 +12,6 @@ namespace TowerDefence_SharedContent
         public int Hitpoints { get; set; }
         public int TowerCurrency { get; set; }
         public int SoldierCurrency { get; set; }
-
         public PlayerType PlayerType { get; set; }
         public List<Tower> Towers { get; set; }
         public List<Soldier> Soldiers { get; set; }
@@ -51,11 +51,21 @@ namespace TowerDefence_SharedContent
 
         public void UpdateTowerActivity(List<Soldier> enemySoldiers)
         {
-            foreach(var tower in Towers)
+            foreach (var tower in Towers)
             {
                 tower.MoveAmmunition(PlayerType);
                 tower.Scan(enemySoldiers, PlayerType);
             }
+        }
+
+        public void setSoldierCurency(int soldierCurrency)
+        {
+            SoldierCurrency = soldierCurrency;
+        }
+
+        public MementoPlayer saveSoldierCurency()
+        {
+            return new MementoPlayer(PlayerType, SoldierCurrency);
         }
     }
 }

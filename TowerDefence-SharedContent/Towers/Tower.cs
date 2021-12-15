@@ -11,11 +11,11 @@ using TowerDefence_SharedContent.Ammunition;
 
 namespace TowerDefence_SharedContent.Towers
 {
-    public class Tower: DrawInfo, ILevel, IUpgradable
+    public class Tower : DrawInfo, ILevel, IUpgradable
     {
         protected ICanShootAlgorithm CanShootAlgorithm;
         public int Level { get; set; }
-        public int[] Price  { get; set; }
+        public int[] Price { get; set; }
         public int[] Range { get; set; }
         public int[] Power { get; set; }
         public double[] RateOfFire { get; set; }
@@ -46,7 +46,7 @@ namespace TowerDefence_SharedContent.Towers
             ShotsFired = 0;
         }
 
-        public Tower(int level, int[] price, Point coordinates, int[] range, int[]power, double[]rateOfFire,
+        public Tower(int level, int[] price, Point coordinates, int[] range, int[] power, double[] rateOfFire,
             string sprite, List<Ammunition.Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType, bool isReloading, bool isOverheated)
         {
             Level = level;
@@ -79,7 +79,7 @@ namespace TowerDefence_SharedContent.Towers
                     break;
                 }
             }
-            ammunitionRemoveList.ForEach(x=>Ammunition.Remove(x));
+            ammunitionRemoveList.ForEach(x => Ammunition.Remove(x));
             foreach (var currentAmmunition in Ammunition)
             {
                 currentAmmunition.MoveForward(type);

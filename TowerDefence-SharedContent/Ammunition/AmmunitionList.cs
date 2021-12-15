@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TowerDefence_SharedContent.Ammunition
 {
-    class AmmunitionList:IEnumerable<Ammunition>
+    class AmmunitionList : IEnumerable<Ammunition>
     {
         private List<Ammunition> Ammunitions;
         private DrawInfo DrawInfo;
