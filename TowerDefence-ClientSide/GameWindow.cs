@@ -15,7 +15,6 @@ using Newtonsoft.Json;
 using TowerDefence_ClientSide.Composite;
 using TowerDefence_ClientSide.Interpreter;
 using TowerDefence_ClientSide.Proxy;
-using TowerDefence_ClientSide.Visitor;
 
 namespace TowerDefence_ClientSide
 {
@@ -45,7 +44,6 @@ namespace TowerDefence_ClientSide
         private SelectionDrawing selectionDrawing = new SelectionDrawing();
         private PlatoonControl platoonControl;
         private ServerConnection serverConnection;
-        private Upgrades upgrades = new Upgrades();
 
         string IPlayerStats.LifePointsText { set => LifePointsText.Text = value; }
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using TowerDefence_SharedContent;
-using UpgradeType = TowerDefence_ClientSide.Visitor.UpgradeType;
 
 namespace TowerDefence_ClientSide.Proxy
 {
