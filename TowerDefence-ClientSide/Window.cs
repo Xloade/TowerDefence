@@ -152,6 +152,7 @@ public abstract class Window : Form
                     };
                     TowerSelectionBox.Items.AddRange(new string[] { "Minigun", "Rocket", "Laser"});
                     TowerSelectionBox.DropDownClosed += new EventHandler(Tower_selection_click);
+                    TowerSelectionBox.LostFocus += new EventHandler((sender, e) => ((ComboBox) sender).Visible = false);
                     this.Controls.Add(TowerSelectionBox);
                     TowerSelectionBox.Visible = false;
                     break;
@@ -162,6 +163,7 @@ public abstract class Window : Form
                     };
                     SoldierSelectionBox.Items.AddRange(new string[] { "Hitpoints", "Speed" });
                     SoldierSelectionBox.DropDownClosed += new EventHandler(Soldier_selection_click);
+                    SoldierSelectionBox.LostFocus += new EventHandler((sender, e) => ((ComboBox)sender).Visible = false);
                     this.Controls.Add(SoldierSelectionBox);
                     SoldierSelectionBox.Visible = false;
                     break;
