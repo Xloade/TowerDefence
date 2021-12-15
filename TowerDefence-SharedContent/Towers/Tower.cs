@@ -7,6 +7,7 @@ using System.Text;
 using Newtonsoft.Json;
 using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_SharedContent.Towers.State;
+using TowerDefence_SharedContent.Ammunition;
 
 namespace TowerDefence_SharedContent.Towers
 {
@@ -19,7 +20,7 @@ namespace TowerDefence_SharedContent.Towers
         public int[] Power { get; set; }
         public double[] RateOfFire { get; set; }
 
-        public List<Ammunition> Ammunition { get; set; }
+        public List<Ammunition.Ammunition> Ammunition { get; set; }
         public TowerType TowerType { get; set; }
         public int ShootingCooldown { get; set; }
         public PlayerType PlayerType { get; set; }
@@ -35,7 +36,7 @@ namespace TowerDefence_SharedContent.Towers
         {
             Level = 0;
             Coordinates = coordinates;
-            Ammunition = new List<Ammunition>();
+            Ammunition = new List<Ammunition.Ammunition>();
             TowerType = towerType;
             Sprite = SpritePaths.GetTower(playerType, towerType);
             ShootingCooldown = 0;
@@ -46,7 +47,7 @@ namespace TowerDefence_SharedContent.Towers
         }
 
         public Tower(int level, int[] price, Point coordinates, int[] range, int[]power, double[]rateOfFire,
-            string sprite, List<Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType, bool isReloading, bool isOverheated)
+            string sprite, List<Ammunition.Ammunition> ammunition, TowerType towerType, int shootingCooldown, PlayerType playerType, bool isReloading, bool isOverheated)
         {
             Level = level;
             Price = price;
@@ -79,9 +80,8 @@ namespace TowerDefence_SharedContent.Towers
         public void Scan(List<Soldier> soldiers, PlayerType playerType)
         {
             ShootingCooldown--;
-            for (var i = 0; i < soldiers.Count; i++)
+            foreach (var soldier in soldiers)
             {
-                var soldier = soldiers[i];
                 switch (State)
                 {
                     case ShootingState _:
@@ -97,25 +97,32 @@ namespace TowerDefence_SharedContent.Towers
                         State.Check(CanShootAlgorithm, soldier.Coordinates);
                         break;
                 }
-                for (var k = 0; k < Ammunition.Count; k++)
+            }
+            var ammunitionRemoveList = new List<Ammunition.Ammunition>();
+            foreach (var currentAmmunition in Ammunition)
+            {
+                var soldierRemoveList = new List<Soldier>();
+                foreach (var soldier in new SoldierList(soldiers, currentAmmunition))
                 {
-                    if (!Ammunition[k].CanDestroy(soldier.Coordinates, playerType)) continue;
-                    soldier.CurrentHitpoints -= Ammunition[k].Power;
+                    //closests sorted first so after first not destroyable break
+                    if (!currentAmmunition.CanDestroy(soldier.Coordinates, playerType)) break;
+                    soldier.CurrentHitpoints -= currentAmmunition.Power;
                     if (soldier.CurrentHitpoints <= 0)
                     {
-                        soldiers.RemoveAt(i);
-                        i--;
-                        if (TowerType == TowerType.Laser)
-                        {
-                            Ammunition.Clear();
-                            k = 0;
-                        }
+                        soldierRemoveList.Add(soldier);
                     }
-
-                    if (TowerType == TowerType.Laser) continue;
-                    Ammunition.RemoveAt(k);
-                    k--;
+                    ammunitionRemoveList.Add(currentAmmunition);
+                    break;
                 }
+                soldierRemoveList.ForEach(x => soldiers.Remove(x));
+            }
+            if (TowerType == TowerType.Laser)
+            {
+                Ammunition.Clear();
+            }
+            else
+            {
+                ammunitionRemoveList.ForEach(x => Ammunition.Remove(x));
             }
         }
 
