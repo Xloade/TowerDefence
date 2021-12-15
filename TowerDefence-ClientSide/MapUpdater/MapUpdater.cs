@@ -68,14 +68,9 @@ namespace TowerDefence_ClientSide
         }
         private void UpdateTempSelection(MouseSelection selection)
         {
-            foreach (var shape in Root)
-            {
-                if (shape.CenterX > selection.Left && shape.CenterX < selection.Right &&
-                    shape.CenterY > selection.Top && shape.CenterY < selection.Bot && selection.Selected)
-                {
-                    shape.Selected = true;
-                }
-            }
+            Root.Where(shape => shape.PlatoonType != PlatoonType.Enemy && shape.CenterX > selection.Left && shape.CenterX < selection.Right &&
+                                                shape.CenterY > selection.Top && shape.CenterY < selection.Bot && selection.Selected).ToList()
+                .ForEach(x => x.Selected = true);
         }
         public void SaveSelection(MouseSelection selection)
         {
