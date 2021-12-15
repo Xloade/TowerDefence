@@ -74,8 +74,12 @@ namespace TowerDefence_SharedContent
                 {
                     if (player.PlayerType == playerType)
                     {
-                        player.Soldiers.Add(soldier);
-                        player.SoldierCurrency -= soldier.BuyPrice[soldier.Level];
+                        var price = soldier.BuyPrice[soldier.Level];
+                        if (price <= player.SoldierCurrency)
+                        {
+                            player.SoldierCurrency -= soldier.BuyPrice[soldier.Level];
+                            player.Soldiers.Add(soldier);
+                        }
                     }
                 }
             }
