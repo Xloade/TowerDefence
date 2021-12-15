@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Security.AccessControl;
 using TowerDefence_SharedContent.Soldiers;
 using TowerDefence_SharedContent.Towers;
+using TowerDefence_SharedContent.Memento;
 
 namespace TowerDefence_SharedContent
 {
@@ -14,6 +15,7 @@ namespace TowerDefence_SharedContent
     {
         public List<Player> Players { get; set; }
         public string BackgroundImageDir { get; set; }
+        public CareTaker ct = new CareTaker();
 
         public Map()
         {
@@ -76,8 +78,14 @@ namespace TowerDefence_SharedContent
                     var price = soldier.BuyPrice[soldier.Level];
                     if (player.PlayerType == playerType && price <= player.SoldierCurrency)
                     {
-                        player.SoldierCurrency -= price;
-                        player.Soldiers.Add(soldier);
+                        if (price <= player.SoldierCurrency)
+                        {
+                            MementoPlayer memento = player.saveSoldierCurency();
+                            ct.soldierCurrencyList.Add(memento);
+
+                            player.SoldierCurrency -= soldier.BuyPrice[soldier.Level];
+                            player.Soldiers.Add(soldier);
+                        }
                     }
                 }
             }

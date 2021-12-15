@@ -10,16 +10,12 @@ namespace TowerDefence_ClientSide
     {
         public float Width { get; set; }
         public float Height { get; set; }
-
         public PlatoonType PlatoonType { get; set; }
-
         public DrawInfo Info { get; set; }
         public float CenterX => Info.Coordinates.X;
         public float CenterY => Info.Coordinates.Y;
         public float Rotation => Info.Rotation;
-
         public Image SpriteImage;
-
         public IDraw DecoratedDrawInterface { get; set; }
         public bool Selected { get; set; }
 
