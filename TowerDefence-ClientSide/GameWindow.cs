@@ -29,7 +29,7 @@ namespace TowerDefence_ClientSide
         private const string ServerUrl = "https://localhost:5001/GameHub";
         Map currentMap;
 
-        public ShapePlatoon Shapes { get; set; } = new ShapePlatoon(PlatoonType.Root);
+        public ShapePlatoon Shapes { get; set; }
         private readonly MapUpdater mapUpdater;
 
         private readonly PlayerType playerType;
@@ -62,6 +62,7 @@ namespace TowerDefence_ClientSide
         public GameWindow(PlayerType playerType, String mapType) : base(mapType, playerType.ToString(),
             1000, 700, ButtonBuySoldier, ButtonBuyTower, ButtonRestartGame, ButtonDeleteTower, ButtonUpgradeSoldier, ButtonQuickBuy)
         {
+            Shapes = new ShapePlatoon(PlatoonType.Root);
             mapUpdater = new MapUpdater(this,playerType);
             gameCursor = new GameCursor(this, playerType);
             cursorCommand = new CursorCommand(gameCursor);

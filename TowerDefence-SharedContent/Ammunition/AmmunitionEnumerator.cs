@@ -14,7 +14,10 @@ namespace TowerDefence_SharedContent.Ammunition
 
         private int CurrentIndex;
 
-        object IEnumerator.Current => Current;
+        object IEnumerator.Current
+        {
+            get { return Current; }
+        }
 
         public AmmunitionEnumerator(List<Ammunition> ammunition)
         {

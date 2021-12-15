@@ -13,7 +13,10 @@ namespace TowerDefence_SharedContent.Soldiers
 
         private int CurrentIndex;
 
-        object IEnumerator.Current =>Current;
+        object IEnumerator.Current
+        {
+            get { return Current; }
+        }
 
         public SoldierEnumerator(List<Soldier> soldiers, DrawInfo info)
         {

@@ -31,7 +31,10 @@ namespace TowerDefence_ClientSide.Composite
             }
         }
 
-        object IEnumerator.Current => Current;
+        object IEnumerator.Current
+        {
+            get { return Current; }
+        }
 
         public void Dispose()
         {
