@@ -67,13 +67,22 @@ namespace TowerDefence_SharedContent.Towers
 
         public void MoveAmmunition(PlayerType type)
         {
-            for (var i = 0; i < Ammunition.Count; i++)
+            var ammunitionRemoveList = new List<Ammunition.Ammunition>();
+            foreach (var currentAmmunition in new AmmunitionList(Ammunition))
             {
-                Ammunition[i].MoveForward(type);
-
-                if (!Ammunition[i].IsOutOfMap(type)) continue;
-                Ammunition.Remove(Ammunition[i]);
-                i--;
+                if (currentAmmunition.IsOutOfMap(type))
+                {
+                    ammunitionRemoveList.Add(currentAmmunition);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            ammunitionRemoveList.ForEach(x=>Ammunition.Remove(x));
+            foreach (var currentAmmunition in Ammunition)
+            {
+                currentAmmunition.MoveForward(type);
             }
         }
 

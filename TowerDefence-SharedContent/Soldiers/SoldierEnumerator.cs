@@ -15,9 +15,9 @@ namespace TowerDefence_SharedContent.Soldiers
 
         object IEnumerator.Current =>Current;
 
-        public SoldierEnumerator(List<Soldier> ammunition, DrawInfo info)
+        public SoldierEnumerator(List<Soldier> soldiers, DrawInfo info)
         {
-            Soldiers = ammunition.OrderBy(x => Distance(x, info)).ToList();
+            Soldiers = soldiers.OrderBy(x => Distance(x, info)).ToList();
             CurrentIndex = -1;
         }
 
