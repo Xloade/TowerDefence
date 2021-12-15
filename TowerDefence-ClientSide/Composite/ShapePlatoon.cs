@@ -148,17 +148,14 @@ namespace TowerDefence_ClientSide.Composite
         public void SaveSelection(MouseSelection mouseSelection)
         {
             Shapes.ForEach(shape => shape.SaveSelection(mouseSelection));
-            var filteredShapes = Shapes.FindAll(shape => shape is Shape && 
-                                                         ((Shape)shape).CenterX > mouseSelection.Left && ((Shape)shape).CenterX < mouseSelection.Right &&
-                                                         ((Shape)shape).CenterY > mouseSelection.Top && ((Shape)shape).CenterY < mouseSelection.Bot);
+            var filteredShapes = Shapes.OfType<Shape>().Where( shape => shape.PlatoonType != PlatoonType.Enemy && shape.CenterX > mouseSelection.Left && shape.CenterX < mouseSelection.Right &&
+                                                                            shape.CenterY > mouseSelection.Top && shape.CenterY < mouseSelection.Bot).ToList();
             if (filteredShapes.Count > 0)
             {
                 var selectedPlatoon = new ShapePlatoon(PlatoonType.Selected);
                 Shapes.Add(selectedPlatoon);
                 selectedPlatoon.Shapes.AddRange(filteredShapes);
-                Shapes.RemoveAll(shape => shape is Shape &&
-                                          ((Shape)shape).CenterX > mouseSelection.Left && ((Shape)shape).CenterX < mouseSelection.Right &&
-                                          ((Shape)shape).CenterY > mouseSelection.Top && ((Shape)shape).CenterY < mouseSelection.Bot);
+                filteredShapes.ForEach(x=> Shapes.Remove(x));
             }
         }
     }
