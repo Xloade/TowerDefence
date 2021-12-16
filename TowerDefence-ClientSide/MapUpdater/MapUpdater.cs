@@ -227,6 +227,15 @@ namespace TowerDefence_ClientSide
             Root.UpdatePlatoon(PlatoonType.DefaultPlatoon);
         }
 
+        public void SelectPlatoon(PlatoonType platoonType)
+        {
+            var platoon = GetPlatoon(platoonType);
+            var select = new ShapePlatoon(PlatoonType.Selected);
+            select.Shapes.AddRange(platoon.Shapes);
+            platoon.Shapes.Clear();
+            platoon.Shapes.Add(select);
+            this.UpdatePermaSelection();
+        }
         public List<Shape> GetSelectedShapes()
         {
             return Root.OfType<Shape>().Where(x => x.Selected).ToList();

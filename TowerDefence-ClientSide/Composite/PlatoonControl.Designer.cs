@@ -37,8 +37,10 @@ namespace TowerDefence_ClientSide.Composite
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.selectPlatoon1 = new System.Windows.Forms.ToolStripButton();
             this.addToOneButton = new System.Windows.Forms.ToolStripButton();
             this.removeFromOneButton = new System.Windows.Forms.ToolStripButton();
+            this.selectPlatoon2 = new System.Windows.Forms.ToolStripButton();
             this.addToTwoButton = new System.Windows.Forms.ToolStripButton();
             this.removeFromTwoButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -60,8 +62,10 @@ namespace TowerDefence_ClientSide.Composite
             this.toolStripSeparator1,
             this.toolStripLabel2,
             this.toolStripButton1,
+            this.selectPlatoon1,
             this.addToOneButton,
             this.removeFromOneButton,
+            this.selectPlatoon2,
             this.addToTwoButton,
             this.removeFromTwoButton,
             this.toolStripSeparator2,
@@ -135,6 +139,17 @@ namespace TowerDefence_ClientSide.Composite
             this.toolStripButton1.Text = "toolStripButton1";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
+            // selectPlatoon1
+            // 
+            this.selectPlatoon1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.selectPlatoon1.Image = global::TowerDefence_ClientSide.Properties.Resources._1;
+            this.selectPlatoon1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.selectPlatoon1.Name = "selectPlatoon1";
+            this.selectPlatoon1.Size = new System.Drawing.Size(29, 24);
+            this.selectPlatoon1.Text = "Select platoon 1";
+            this.selectPlatoon1.ToolTipText = "Select platoon 1";
+            this.selectPlatoon1.Click += new System.EventHandler(this.selectPlatoon1_Click);
+            // 
             // addToOneButton
             // 
             this.addToOneButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -156,6 +171,17 @@ namespace TowerDefence_ClientSide.Composite
             this.removeFromOneButton.Text = "toolStripButton6";
             this.removeFromOneButton.ToolTipText = "remove from platoon1";
             this.removeFromOneButton.Click += new System.EventHandler(this.removeFromOneButton_Click);
+            // 
+            // selectPlatoon2
+            // 
+            this.selectPlatoon2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.selectPlatoon2.Image = global::TowerDefence_ClientSide.Properties.Resources._2;
+            this.selectPlatoon2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.selectPlatoon2.Name = "selectPlatoon2";
+            this.selectPlatoon2.Size = new System.Drawing.Size(29, 24);
+            this.selectPlatoon2.Text = "Select platoon 2";
+            this.selectPlatoon2.ToolTipText = "Select platoon 2";
+            this.selectPlatoon2.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
             // addToTwoButton
             // 
@@ -232,5 +258,7 @@ namespace TowerDefence_ClientSide.Composite
         private System.Windows.Forms.ToolStripButton removeFromTwoButton;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton selectPlatoon1;
+        private System.Windows.Forms.ToolStripButton selectPlatoon2;
     }
 }

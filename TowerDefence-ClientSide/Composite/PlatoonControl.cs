@@ -72,5 +72,15 @@ namespace TowerDefence_ClientSide.Composite
             var objects = MapUpdater.GetSelectedShapes().Select(x => x.Info).OfType<IdableObject>().ToList();
             ServerConnection.SendMessage(new UpgradeMessage("Upgrade", MessageType.Upgrade, PlayerStats, objects));
         }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            MapUpdater.SelectPlatoon(PlatoonType.Platoon2);
+        }
+
+        private void selectPlatoon1_Click(object sender, EventArgs e)
+        {
+            MapUpdater.SelectPlatoon(PlatoonType.Platoon1);
+        }
     }
 }
